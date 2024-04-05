@@ -10,8 +10,8 @@ java {
 }
 
 dependencies {
-    implementation(libs.arrow.core)
-    implementation(libs.arrow.fx.coroutines)
+    api(libs.arrow.core)
+    api(libs.arrow.fx.coroutines)
 }
 
 ktfmt {
