@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.ncorti.ktfmt.gradle") version "0.17.0"
+    alias(libs.plugins.ktfmt)
 }
 
 android {
