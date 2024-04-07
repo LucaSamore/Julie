@@ -19,7 +19,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 internal data class UserProfileImpl(
-    override val userId: UserId,
+    override val id: UserId,
     override val firstName: FirstName,
     override val lastName: LastName,
     override val userName: Username,

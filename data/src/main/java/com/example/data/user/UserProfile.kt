@@ -1,11 +1,12 @@
 package com.example.data.user
 
 import arrow.core.NonEmptySet
+import com.example.data.Entity
+import com.example.data.Identifier
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 
-interface UserProfile {
-    val userId: UserId
+interface UserProfile : Entity<UserId> {
 
     val firstName: FirstName
 
@@ -26,7 +27,7 @@ interface UserProfile {
     val pastStreaks: PastStreaks
 }
 
-@JvmInline value class UserId(private val userId: String)
+@JvmInline value class UserId(private val userId: String) : Identifier
 
 @JvmInline value class FirstName(private val firstName: String)
 
