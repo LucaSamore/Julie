@@ -23,7 +23,7 @@ interface UserProfile {
 
     val currentStreak: Streak
 
-    val pastStreaks: Sequence<Streak>
+    val pastStreaks: PastStreaks
 }
 
 @JvmInline value class UserId(private val userId: String)
@@ -43,3 +43,5 @@ data class Interest(val name: Name, val category: Category)
 @JvmInline value class Name(private val name: String)
 
 @JvmInline value class Category(private val category: String)
+
+@JvmInline value class PastStreaks(private val pastStreaks: Sequence<Streak>)
