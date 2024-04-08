@@ -9,6 +9,7 @@ import com.example.data.gamification.EndDate
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakValue
+import com.example.data.user.BirthDate
 import com.example.data.user.EmailAddress
 import com.example.data.user.FirstName
 import com.example.data.user.Interest
@@ -59,6 +60,20 @@ private constructor(
                 )
             }
         }
+
+    override fun changeBirthDate(
+        newBirthDate: BirthDate
+    ): Either<UserValidationErrors, UserProfile> = either {
+        zipOrAccumulate({}, {}) { _, _ ->
+            UserProfileImpl(
+                id,
+                userDetails.copy(birthDate = newBirthDate),
+                points,
+                currentStreak,
+                pastStreaks
+            )
+        }
+    }
 
     override fun changeUsername(newUsername: Username): Either<UserValidationErrors, UserProfile> =
         either {
@@ -123,7 +138,7 @@ private constructor(
         UserProfileImpl(id, userDetails, Points(0), currentStreak, pastStreaks)
 
     override fun incrementCurrentStreak(): UserProfile =
-        UserProfileImpl(id, userDetails, points, currentStreak.inc(), pastStreaks)
+        UserProfileImpl(id, userDetails, points, currentStreak incrementBy 1, pastStreaks)
 
     override fun endCurrentStreak(): Either<UserValidationErrors, UserProfile> {
         TODO("Not yet implemented")
@@ -160,6 +175,7 @@ private constructor(
 fun UserProfile.createNewAccount(
     firstName: String,
     lastName: String,
+    birthDate: LocalDate,
     username: String,
     emailAddress: String,
     password: String,
@@ -170,6 +186,7 @@ fun UserProfile.createNewAccount(
         UserDetails(
             FirstName(firstName),
             LastName(lastName),
+            BirthDate(birthDate),
             Username(username),
             EmailAddress(emailAddress),
             Password(password),

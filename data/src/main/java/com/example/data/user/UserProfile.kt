@@ -6,6 +6,7 @@ import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
+import java.time.LocalDate
 
 typealias UserValidationErrors = NonEmptyList<UserValidationError>
 
@@ -21,6 +22,8 @@ interface UserProfile : Entity<UserId> {
     fun changeFirstName(newFirstName: FirstName): Either<UserValidationErrors, UserProfile>
 
     fun changeLastName(newLastName: LastName): Either<UserValidationErrors, UserProfile>
+
+    fun changeBirthDate(newBirthDate: BirthDate): Either<UserValidationErrors, UserProfile>
 
     fun changeUsername(newUsername: Username): Either<UserValidationErrors, UserProfile>
 
@@ -48,6 +51,7 @@ sealed interface UserValidationError {
 data class UserDetails(
     val firstName: FirstName,
     val lastName: LastName,
+    val birthDate: BirthDate,
     val username: Username,
     val emailAddress: EmailAddress,
     val password: Password,
@@ -57,6 +61,8 @@ data class UserDetails(
 @JvmInline value class FirstName(private val firstName: String)
 
 @JvmInline value class LastName(private val lastName: String)
+
+@JvmInline value class BirthDate(private val birthDate: LocalDate)
 
 @JvmInline value class Username(private val username: String)
 
