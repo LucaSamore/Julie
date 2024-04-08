@@ -1,9 +1,13 @@
 package com.example.data.user
 
+import arrow.core.Either
+import arrow.core.NonEmptyList
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
+
+typealias UserValidationErrors = NonEmptyList<UserValidationError>
 
 interface UserProfile : Entity<UserId> {
     val userDetails: UserDetails
@@ -13,6 +17,26 @@ interface UserProfile : Entity<UserId> {
     val currentStreak: Streak
 
     val pastStreaks: PastStreaks
+
+    fun changeFirstName(newFirstName: FirstName): Either<UserValidationErrors, UserProfile>
+
+    fun changeLastName(newLastName: LastName): Either<UserValidationErrors, UserProfile>
+
+    fun changeUsername(newUsername: Username): Either<UserValidationErrors, UserProfile>
+
+    fun changeEmailAddress(newEmailAddress: EmailAddress): Either<UserValidationErrors, UserProfile>
+
+    fun changePassword(newPassword: Password): Either<UserValidationErrors, UserProfile>
+
+    fun changeInterest(newInterest: Iterable<Interest>): Either<UserValidationErrors, UserProfile>
+
+    fun addPoints(pointsToAdd: Points): Either<UserValidationError, UserProfile>
+
+    fun resetPoints(): UserProfile
+
+    fun incrementCurrentStreak(): UserProfile
+
+    fun endCurrentStreak(): Either<UserValidationErrors, UserProfile>
 }
 
 sealed interface UserValidationError {
@@ -47,13 +71,3 @@ data class Interest(val name: Name, val category: Category)
 @JvmInline value class Category(private val category: String)
 
 @JvmInline value class PastStreaks(private val pastStreaks: Iterable<Streak>)
-
-fun UserProfile.changeFirstName(newFirstName: FirstName): UserProfile = TODO()
-
-fun UserProfile.changeLastName(newLastName: LastName): UserProfile = TODO()
-
-fun UserProfile.changeUsername(newUsername: Username): UserProfile = TODO()
-
-fun UserProfile.changeEmailAddress(newEmailAddress: EmailAddress): UserProfile = TODO()
-
-fun UserProfile.changePassword(newPassword: Password): UserProfile = TODO()
