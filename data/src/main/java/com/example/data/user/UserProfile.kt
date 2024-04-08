@@ -1,6 +1,5 @@
 package com.example.data.user
 
-import arrow.core.NonEmptySet
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.gamification.Points
@@ -28,7 +27,7 @@ data class UserDetails(
     val username: Username,
     val emailAddress: EmailAddress,
     val password: Password,
-    val interest: NonEmptySet<Interest>
+    val interest: Iterable<Interest>
 )
 
 @JvmInline value class FirstName(private val firstName: String)
@@ -47,4 +46,14 @@ data class Interest(val name: Name, val category: Category)
 
 @JvmInline value class Category(private val category: String)
 
-@JvmInline value class PastStreaks(private val pastStreaks: Sequence<Streak>)
+@JvmInline value class PastStreaks(private val pastStreaks: Iterable<Streak>)
+
+fun UserProfile.changeFirstName(newFirstName: FirstName): UserProfile = TODO()
+
+fun UserProfile.changeLastName(newLastName: LastName): UserProfile = TODO()
+
+fun UserProfile.changeUsername(newUsername: Username): UserProfile = TODO()
+
+fun UserProfile.changeEmailAddress(newEmailAddress: EmailAddress): UserProfile = TODO()
+
+fun UserProfile.changePassword(newPassword: Password): UserProfile = TODO()

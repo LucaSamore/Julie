@@ -2,7 +2,6 @@ package com.example.data.user.implementation
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
-import arrow.core.NonEmptySet
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.gamification.BeginDate
@@ -34,28 +33,14 @@ private constructor(
 ) : UserProfile {
     companion object {
         operator fun invoke(
-            firstName: String,
-            lastName: String,
-            username: String,
-            emailAddress: String,
-            password: String,
-            vararg interest: Interest
+            id: UserId,
+            userDetails: UserDetails,
+            points: Points,
+            currentStreak: Streak,
+            pastStreaks: PastStreaks
         ): Either<NonEmptyList<UserValidationError>, UserProfile> = either {
-            zipOrAccumulate({}, {}, {}, {}, {}, {}) { _, _, _, _, _, _ ->
-                UserProfileImpl(
-                    UserId(UUID.randomUUID().toString()),
-                    UserDetails(
-                        FirstName(firstName),
-                        LastName(lastName),
-                        Username(username),
-                        EmailAddress(emailAddress),
-                        Password(password),
-                        NonEmptySet(interest.first(), interest.slice(1 until interest.size).toSet())
-                    ),
-                    Points(0),
-                    Streak(StreakValue(0), BeginDate(LocalDate.now()), EndDate(null)),
-                    PastStreaks(emptySequence())
-                )
+            zipOrAccumulate({}, {}, {}, {}) { _, _, _, _ ->
+                UserProfileImpl(id, userDetails, points, currentStreak, pastStreaks)
             }
         }
     }
@@ -74,12 +59,25 @@ private constructor(
     }
 }
 
-fun UserProfile.changeFirstName(newFirstName: FirstName): UserProfile = TODO()
-
-fun UserProfile.changeLastName(newLastName: LastName): UserProfile = TODO()
-
-fun UserProfile.changeUsername(newUsername: Username): UserProfile = TODO()
-
-fun UserProfile.changeEmailAddress(newEmailAddress: EmailAddress): UserProfile = TODO()
-
-fun UserProfile.changePassword(newPassword: Password): UserProfile = TODO()
+fun UserProfile.createNewAccount(
+    firstName: String,
+    lastName: String,
+    username: String,
+    emailAddress: String,
+    password: String,
+    interest: Iterable<Interest>
+): Either<NonEmptyList<UserValidationError>, UserProfile> =
+    UserProfileImpl(
+        UserId(UUID.randomUUID().toString()),
+        UserDetails(
+            FirstName(firstName),
+            LastName(lastName),
+            Username(username),
+            EmailAddress(emailAddress),
+            Password(password),
+            interest
+        ),
+        Points(0),
+        Streak(StreakValue(0), BeginDate(LocalDate.now()), EndDate(null)),
+        PastStreaks(emptyList())
+    )
