@@ -11,5 +11,5 @@ interface Repository<E, I : Identifier> where E : Entity<I> {
 
     suspend fun update(entity: E): Either<Nothing, Nothing>
 
-    suspend fun delete(entity: E): Either<Nothing, Nothing>
+    suspend fun delete(id: I): Either<Nothing, Nothing>
 }

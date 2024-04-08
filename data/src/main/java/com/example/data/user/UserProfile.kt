@@ -7,18 +7,7 @@ import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 
 interface UserProfile : Entity<UserId> {
-
-    val firstName: FirstName
-
-    val lastName: LastName
-
-    val userName: Username
-
-    val emailAddress: EmailAddress
-
-    val password: Password
-
-    val interest: NonEmptySet<Interest>
+    val userDetails: UserDetails
 
     val points: Points
 
@@ -27,7 +16,20 @@ interface UserProfile : Entity<UserId> {
     val pastStreaks: PastStreaks
 }
 
+sealed interface UserValidationError {
+    data object Error : UserValidationError
+}
+
 @JvmInline value class UserId(private val userId: String) : Identifier
+
+data class UserDetails(
+    val firstName: FirstName,
+    val lastName: LastName,
+    val username: Username,
+    val emailAddress: EmailAddress,
+    val password: Password,
+    val interest: NonEmptySet<Interest>
+)
 
 @JvmInline value class FirstName(private val firstName: String)
 
