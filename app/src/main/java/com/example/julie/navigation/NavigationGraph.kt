@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.julie.TestScreen
 import com.example.julie.signin.SignInScreen
 
 @Composable
@@ -21,11 +22,20 @@ internal fun NavigationGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        composable(route = Destination.Test.name) {
+            TestScreen(modifier = modifier, paddingValues = paddingValues)
+        }
+
         composable(route = Destination.SignIn.name) {
             SignInScreen(
                 modifier = modifier,
                 signInViewModel = hiltViewModel(),
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                onSignedIn = {
+                    navController.navigate(Destination.Test.name) {
+                        popUpTo(Destination.Test.name) { inclusive = true }
+                    }
+                }
             )
         }
     }

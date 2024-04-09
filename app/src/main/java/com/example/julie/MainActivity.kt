@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.JulieTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    JulieApplication(startDestination = "")
+                    JulieApplication(startDestination = Destination.SignIn.name)
                 }
             }
         }

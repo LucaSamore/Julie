@@ -4,4 +4,6 @@ sealed class Destination(val name: String) {
     data object SignIn : Destination("Sign In")
 
     data object Home : Destination("Home")
+
+    data object Test : Destination("Test")
 }
