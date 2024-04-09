@@ -13,6 +13,8 @@ appcompat = "1.6.1"
 material = "1.10.0"
 ktfmt = "0.17.0"
 arrow = "1.2.1"
+googleServices = "4.4.1"
+firebase = "32.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +35,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version = "" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version = "" }
 
 [bundles]
 arrow = ["arrow-core", "arrow-fx-coroutines"]
@@ -43,3 +48,4 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
