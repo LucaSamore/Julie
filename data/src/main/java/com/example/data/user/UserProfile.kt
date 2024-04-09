@@ -17,8 +17,6 @@ interface UserProfile : Entity<UserId> {
 
     val currentStreak: Streak
 
-    val pastStreaks: PastStreaks
-
     fun changeFirstName(newFirstName: FirstName): Either<UserValidationErrors, UserProfile>
 
     fun changeLastName(newLastName: LastName): Either<UserValidationErrors, UserProfile>
@@ -39,7 +37,7 @@ interface UserProfile : Entity<UserId> {
 
     fun incrementCurrentStreak(): UserProfile
 
-    fun endCurrentStreak(): Either<UserValidationErrors, UserProfile>
+    fun endCurrentStreak(): UserProfile
 }
 
 sealed interface UserValidationError {
@@ -75,5 +73,3 @@ data class Interest(val name: Name, val category: Category)
 @JvmInline value class Name(private val name: String)
 
 @JvmInline value class Category(private val category: String)
-
-@JvmInline value class PastStreaks(private val pastStreaks: Iterable<Streak>)

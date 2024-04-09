@@ -9,13 +9,13 @@ import com.example.data.gamification.EndDate
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakValue
+import com.example.data.gamification.today
 import com.example.data.user.BirthDate
 import com.example.data.user.EmailAddress
 import com.example.data.user.FirstName
 import com.example.data.user.Interest
 import com.example.data.user.LastName
 import com.example.data.user.Password
-import com.example.data.user.PastStreaks
 import com.example.data.user.UserDetails
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
@@ -30,34 +30,21 @@ private constructor(
     override val id: UserId,
     override val userDetails: UserDetails,
     override val points: Points,
-    override val currentStreak: Streak,
-    override val pastStreaks: PastStreaks
+    override val currentStreak: Streak
 ) : UserProfile {
 
     override fun changeFirstName(
         newFirstName: FirstName
     ): Either<UserValidationErrors, UserProfile> = either {
         zipOrAccumulate({}, {}) { _, _ ->
-            UserProfileImpl(
-                id,
-                userDetails.copy(firstName = newFirstName),
-                points,
-                currentStreak,
-                pastStreaks
-            )
+            UserProfileImpl(id, userDetails.copy(firstName = newFirstName), points, currentStreak)
         }
     }
 
     override fun changeLastName(newLastName: LastName): Either<UserValidationErrors, UserProfile> =
         either {
             zipOrAccumulate({}, {}) { _, _ ->
-                UserProfileImpl(
-                    id,
-                    userDetails.copy(lastName = newLastName),
-                    points,
-                    currentStreak,
-                    pastStreaks
-                )
+                UserProfileImpl(id, userDetails.copy(lastName = newLastName), points, currentStreak)
             }
         }
 
@@ -65,26 +52,14 @@ private constructor(
         newBirthDate: BirthDate
     ): Either<UserValidationErrors, UserProfile> = either {
         zipOrAccumulate({}, {}) { _, _ ->
-            UserProfileImpl(
-                id,
-                userDetails.copy(birthDate = newBirthDate),
-                points,
-                currentStreak,
-                pastStreaks
-            )
+            UserProfileImpl(id, userDetails.copy(birthDate = newBirthDate), points, currentStreak)
         }
     }
 
     override fun changeUsername(newUsername: Username): Either<UserValidationErrors, UserProfile> =
         either {
             zipOrAccumulate({}, {}) { _, _ ->
-                UserProfileImpl(
-                    id,
-                    userDetails.copy(username = newUsername),
-                    points,
-                    currentStreak,
-                    pastStreaks
-                )
+                UserProfileImpl(id, userDetails.copy(username = newUsername), points, currentStreak)
             }
         }
 
@@ -96,8 +71,7 @@ private constructor(
                 id,
                 userDetails.copy(emailAddress = newEmailAddress),
                 points,
-                currentStreak,
-                pastStreaks
+                currentStreak
             )
         }
     }
@@ -105,13 +79,7 @@ private constructor(
     override fun changePassword(newPassword: Password): Either<UserValidationErrors, UserProfile> =
         either {
             zipOrAccumulate({}, {}) { _, _ ->
-                UserProfileImpl(
-                    id,
-                    userDetails.copy(password = newPassword),
-                    points,
-                    currentStreak,
-                    pastStreaks
-                )
+                UserProfileImpl(id, userDetails.copy(password = newPassword), points, currentStreak)
             }
         }
 
@@ -119,41 +87,33 @@ private constructor(
         newInterest: Iterable<Interest>
     ): Either<UserValidationErrors, UserProfile> = either {
         zipOrAccumulate({}, {}) { _, _ ->
-            UserProfileImpl(
-                id,
-                userDetails.copy(interest = newInterest),
-                points,
-                currentStreak,
-                pastStreaks
-            )
+            UserProfileImpl(id, userDetails.copy(interest = newInterest), points, currentStreak)
         }
     }
 
     override fun addPoints(pointsToAdd: Points): Either<UserValidationError, UserProfile> = either {
         ensure(points > 0) { UserValidationError.Error }
-        UserProfileImpl(id, userDetails, points + pointsToAdd, currentStreak, pastStreaks)
+        UserProfileImpl(id, userDetails, points + pointsToAdd, currentStreak)
     }
 
     override fun resetPoints(): UserProfile =
-        UserProfileImpl(id, userDetails, Points(0), currentStreak, pastStreaks)
+        UserProfileImpl(id, userDetails, Points(0), currentStreak)
 
     override fun incrementCurrentStreak(): UserProfile =
-        UserProfileImpl(id, userDetails, points, currentStreak incrementBy 1, pastStreaks)
+        UserProfileImpl(id, userDetails, points, currentStreak incrementBy 1)
 
-    override fun endCurrentStreak(): Either<UserValidationErrors, UserProfile> {
-        TODO("Not yet implemented")
-    }
+    override fun endCurrentStreak(): UserProfile =
+        UserProfileImpl(id, userDetails, points, currentStreak ends today())
 
     companion object {
         operator fun invoke(
             id: UserId,
             userDetails: UserDetails,
             points: Points,
-            currentStreak: Streak,
-            pastStreaks: PastStreaks
+            currentStreak: Streak
         ): Either<UserValidationErrors, UserProfile> = either {
             zipOrAccumulate({}, {}, {}, {}) { _, _, _, _ ->
-                UserProfileImpl(id, userDetails, points, currentStreak, pastStreaks)
+                UserProfileImpl(id, userDetails, points, currentStreak)
             }
         }
     }
@@ -180,9 +140,11 @@ fun UserProfile.createNewAccount(
     emailAddress: String,
     password: String,
     interest: Iterable<Interest>
-): Either<UserValidationErrors, UserProfile> =
-    UserProfileImpl(
-        UserId(UUID.randomUUID().toString()),
+): Either<UserValidationErrors, UserProfile> {
+    val userId = UserId(UUID.randomUUID().toString())
+
+    return UserProfileImpl(
+        userId,
         UserDetails(
             FirstName(firstName),
             LastName(lastName),
@@ -193,6 +155,6 @@ fun UserProfile.createNewAccount(
             interest
         ),
         Points(0),
-        Streak(StreakValue(0), BeginDate(LocalDate.now()), EndDate(null)),
-        PastStreaks(emptyList())
+        Streak(userId, StreakValue(0), BeginDate(LocalDate.now()), EndDate(null))
     )
+}
