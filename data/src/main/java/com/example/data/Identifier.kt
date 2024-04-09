@@ -1,3 +1,3 @@
 package com.example.data
 
-interface Identifier
+internal interface Identifier

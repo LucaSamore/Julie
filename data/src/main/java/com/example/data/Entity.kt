@@ -1,5 +1,5 @@
 package com.example.data
 
-interface Entity<I> where I : Identifier {
+internal interface Entity<I> where I : Identifier {
     val id: I
 }
