@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.julie.TestScreen
 import com.example.julie.signin.SignInScreen
+import com.example.julie.signup.SignUpScreen
 
 @Composable
 internal fun NavigationGraph(
@@ -31,12 +32,25 @@ internal fun NavigationGraph(
                 modifier = modifier,
                 signInViewModel = hiltViewModel(),
                 paddingValues = paddingValues,
-                onSignedIn = {
-                    navController.navigate(Destination.Test.name) {
-                        popUpTo(Destination.Test.name) { inclusive = true }
-                    }
+                onGoToSignUpScreen = { navController.navigate(Destination.SignUp.name) }
+            ) {
+                navController.navigate(Destination.Test.name) {
+                    popUpTo(Destination.SignIn.name) { inclusive = true }
                 }
-            )
+            }
+        }
+
+        composable(route = Destination.SignUp.name) {
+            SignUpScreen(
+                modifier = modifier,
+                signUpViewModel = hiltViewModel(),
+                paddingValues = paddingValues,
+                onBackToSignInScreen = { navController.popBackStack() }
+            ) {
+                navController.navigate(Destination.Test.name) {
+                    popUpTo(Destination.SignIn.name) { inclusive = true }
+                }
+            }
         }
     }
 }

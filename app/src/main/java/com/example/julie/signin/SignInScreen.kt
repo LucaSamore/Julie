@@ -30,6 +30,7 @@ internal fun SignInScreen(
     modifier: Modifier,
     signInViewModel: SignInViewModel,
     paddingValues: PaddingValues,
+    onGoToSignUpScreen: () -> Unit,
     onSignedIn: () -> Unit
 ) {
     var emailAddress by rememberSaveable { mutableStateOf("") }
@@ -72,5 +73,7 @@ internal fun SignInScreen(
         )
 
         Button(onClick = onSignedIn) { Text(text = "Sign In") }
+
+        Button(onClick = onGoToSignUpScreen) { Text(text = "Go to sign up") }
     }
 }
