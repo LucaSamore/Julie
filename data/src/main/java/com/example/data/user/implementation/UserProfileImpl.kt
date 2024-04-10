@@ -1,6 +1,7 @@
 package com.example.data.user.implementation
 
 import arrow.core.Either
+import arrow.core.NonEmptySet
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import arrow.core.raise.zipOrAccumulate
@@ -84,7 +85,7 @@ private constructor(
         }
 
     override fun changeInterest(
-        newInterest: Iterable<Interest>
+        newInterest: NonEmptySet<Interest>
     ): Either<UserValidationErrors, UserProfile> = either {
         zipOrAccumulate({}, {}) { _, _ ->
             UserProfileImpl(id, userDetails.copy(interest = newInterest), points, currentStreak)
@@ -139,7 +140,7 @@ fun UserProfile.createNewAccount(
     username: String,
     emailAddress: String,
     password: String,
-    interest: Iterable<Interest>
+    interest: NonEmptySet<Interest>
 ): Either<UserValidationErrors, UserProfile> {
     val userId = UserId(UUID.randomUUID().toString())
 

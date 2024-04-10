@@ -1,0 +1,47 @@
+package com.example.data.authentication
+
+import arrow.core.Either
+import com.example.data.user.UserId
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+
+internal class AuthenticationServiceImpl(private val ioDispatcher: CoroutineDispatcher) :
+    AuthenticationService {
+
+    private val auth = Firebase.auth
+
+    override suspend fun signInWithEmailAndPassword(
+        signInCredentials: Credentials.SignInDto
+    ): Either<AuthenticationError, UserSignedIn> =
+        withContext(ioDispatcher) {
+            Either.catch {
+                    auth
+                        .signInWithEmailAndPassword(
+                            signInCredentials.emailAddress.emailAddress,
+                            signInCredentials.password.password
+                        )
+                        .await()
+                }
+                .mapLeft { AuthenticationError(it.message ?: UnknownError) }
+                .map { UserSignedIn }
+        }
+
+    override suspend fun signUpWithEmailAndPassword(
+        signInCredentials: Credentials.SignUpDto
+    ): Either<AuthenticationError, UserSignedUp> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun isUserLoggedIn(userId: UserId): Either<AuthenticationError, Boolean> {
+        TODO("Not yet implemented")
+    }
+}
+
+internal const val UnknownError = "Unknown error"

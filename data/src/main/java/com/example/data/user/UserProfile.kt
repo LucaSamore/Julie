@@ -2,6 +2,7 @@ package com.example.data.user
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
+import arrow.core.NonEmptySet
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.gamification.Points
@@ -29,7 +30,9 @@ interface UserProfile : Entity<UserId> {
 
     fun changePassword(newPassword: Password): Either<UserValidationErrors, UserProfile>
 
-    fun changeInterest(newInterest: Iterable<Interest>): Either<UserValidationErrors, UserProfile>
+    fun changeInterest(
+        newInterest: NonEmptySet<Interest>
+    ): Either<UserValidationErrors, UserProfile>
 
     fun addPoints(pointsToAdd: Points): Either<UserValidationError, UserProfile>
 
@@ -53,7 +56,7 @@ data class UserDetails(
     val username: Username,
     val emailAddress: EmailAddress,
     val password: Password,
-    val interest: Iterable<Interest>
+    val interest: NonEmptySet<Interest>
 )
 
 @JvmInline value class FirstName(private val firstName: String)
@@ -64,9 +67,9 @@ data class UserDetails(
 
 @JvmInline value class Username(private val username: String)
 
-@JvmInline value class EmailAddress(private val emailAddress: String)
+@JvmInline value class EmailAddress(val emailAddress: String)
 
-@JvmInline value class Password(private val password: String)
+@JvmInline value class Password(val password: String)
 
 data class Interest(val name: Name, val category: Category)
 
