@@ -7,7 +7,6 @@ import com.example.data.authentication.Credentials
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
-import com.example.data.user.UserId
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import javax.inject.Inject
@@ -47,9 +46,10 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
         TODO("Not yet implemented")
     }
 
-    override suspend fun isUserLoggedIn(userId: UserId): Either<AuthenticationError, Boolean> {
-        TODO("Not yet implemented")
-    }
+    override fun isUserLoggedIn(): Either<AuthenticationError, Boolean> =
+        Either.catch { auth.currentUser }
+            .mapLeft { AuthenticationError(it.message ?: UnknownError) }
+            .map { it != null }
 }
 
 internal const val UnknownError = "Unknown error"

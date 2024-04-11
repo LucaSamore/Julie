@@ -7,7 +7,6 @@ import com.example.data.user.FirstName
 import com.example.data.user.Interest
 import com.example.data.user.LastName
 import com.example.data.user.Password
-import com.example.data.user.UserId
 import com.example.data.user.Username
 
 interface AuthenticationService {
@@ -21,7 +20,7 @@ interface AuthenticationService {
 
     suspend fun signOut(): Either<AuthenticationError, UserSignedOut>
 
-    suspend fun isUserLoggedIn(userId: UserId): Either<AuthenticationError, Boolean>
+    fun isUserLoggedIn(): Either<AuthenticationError, Boolean>
 }
 
 sealed interface Credentials {

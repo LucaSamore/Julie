@@ -16,6 +16,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import com.example.julie.Lce
 import com.example.julie.components.PasswordTextField
 
@@ -31,6 +33,8 @@ internal fun SignInScreen(
 
     var emailAddress by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
+    var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize().padding(paddingValues),
@@ -45,21 +49,28 @@ internal fun SignInScreen(
             label = { Text(text = "Email address") }
         )
 
+        if (!errorMessageHidden) {
+            Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+        }
+
         PasswordTextField(modifier = modifier, password = password) { password = it }
 
-        Button(onClick = onSignedIn) { Text(text = "Sign In") }
+        Button(onClick = { signInViewModel.signIn(emailAddress, password) }) {
+            Text(text = "Sign In")
+        }
 
-        Button(onClick = onGoToSignUpScreen) { Text(text = "Go to sign up") }
+        Button(onClick = onGoToSignUpScreen) { Text(text = "Goto Sign Up") }
 
-        when (state) {
+        when (val currentState = state) {
             is Lce.Loading -> {
-                TODO()
+                errorMessageHidden = true
             }
             is Lce.Content -> {
-                TODO()
+                onSignedIn()
             }
             is Lce.Failure -> {
-                TODO()
+                errorMessage = currentState.error.message
+                errorMessageHidden = false
             }
         }
     }
