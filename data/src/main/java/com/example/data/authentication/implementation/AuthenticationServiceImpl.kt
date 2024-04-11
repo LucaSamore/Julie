@@ -15,8 +15,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class AuthenticationServiceImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher) :
-    AuthenticationService {
+internal class AuthenticationServiceImpl
+@Inject
+constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationService {
 
     private val auth = Firebase.auth
 

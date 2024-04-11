@@ -9,12 +9,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.julie.Lce
 import com.example.julie.components.PasswordTextField
 
 @Composable
@@ -25,6 +27,8 @@ internal fun SignInScreen(
     onGoToSignUpScreen: () -> Unit,
     onSignedIn: () -> Unit
 ) {
+    val state by signInViewModel.signInScreenState.collectAsState()
+
     var emailAddress by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -46,5 +50,17 @@ internal fun SignInScreen(
         Button(onClick = onSignedIn) { Text(text = "Sign In") }
 
         Button(onClick = onGoToSignUpScreen) { Text(text = "Go to sign up") }
+
+        when (state) {
+            is Lce.Loading -> {
+                TODO()
+            }
+            is Lce.Content -> {
+                TODO()
+            }
+            is Lce.Failure -> {
+                TODO()
+            }
+        }
     }
 }

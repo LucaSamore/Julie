@@ -1,5 +1,8 @@
 package com.example.julie
 
+import com.example.data.authentication.AuthenticationError
+import com.example.data.authentication.UserSignedIn
+
 sealed interface Lce<out E, out A> {
     data object Loading : Lce<Nothing, Nothing>
 
@@ -7,3 +10,5 @@ sealed interface Lce<out E, out A> {
 
     data class Failure<E>(val error: E) : Lce<E, Nothing>
 }
+
+typealias SignInScreenState = Lce<AuthenticationError, UserSignedIn>
