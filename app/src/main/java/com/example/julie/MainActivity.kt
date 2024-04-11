@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        Log.i(TAG, "on start")
         authenticationService
             .isUserLoggedIn()
             .fold(
@@ -46,7 +47,10 @@ class MainActivity : ComponentActivity() {
                     Log.e(TAG, it.message)
                     startDestination = Destination.SignIn.name
                 },
-                { if (it) startDestination = Destination.Test.name else Destination.SignIn.name }
+                {
+                    if (it) startDestination = Destination.Test.name else Destination.SignIn.name
+                    Log.i(TAG, startDestination)
+                }
             )
     }
 }

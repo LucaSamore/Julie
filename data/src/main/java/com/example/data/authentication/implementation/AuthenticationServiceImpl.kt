@@ -42,14 +42,18 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
         TODO("Not yet implemented")
     }
 
-    override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> =
+        withContext(ioDispatcher) {
+            Either.catch { auth.signOut() }
+                .mapLeft { AuthenticationError(it.message ?: UnknownError) }
+                .map { UserSignedOut }
+        }
 
-    override fun isUserLoggedIn(): Either<AuthenticationError, Boolean> =
-        Either.catch { auth.currentUser }
+    override fun isUserLoggedIn(): Either<AuthenticationError, Boolean> {
+        return Either.catch { auth.currentUser }
             .mapLeft { AuthenticationError(it.message ?: UnknownError) }
             .map { it != null }
+    }
 }
 
 internal const val UnknownError = "Unknown error"

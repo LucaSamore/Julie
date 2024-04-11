@@ -24,7 +24,15 @@ internal fun NavigationGraph(
         modifier = modifier
     ) {
         composable(route = Destination.Test.name) {
-            TestScreen(modifier = modifier, paddingValues = paddingValues)
+            TestScreen(
+                modifier = modifier,
+                testScreenViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            ) {
+                navController.navigate(Destination.SignIn.name) {
+                    popUpTo(Destination.Test.name) { inclusive = true }
+                }
+            }
         }
 
         composable(route = Destination.SignIn.name) {
