@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ktfmt)
-    id("com.google.gms.google-services")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
