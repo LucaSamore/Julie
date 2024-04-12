@@ -18,7 +18,7 @@ data class Streak(
     val begin: BeginDate,
     val end: EndDate
 ) {
-    infix fun incrementBy(amount: Int): Streak = copy(value = value + amount)
+    infix fun incrementedBy(amount: Int): Streak = copy(value = value + amount)
 
     infix fun ends(endDate: LocalDate): Streak = copy(end = EndDate(endDate))
 }

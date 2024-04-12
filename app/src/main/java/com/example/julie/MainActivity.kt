@@ -1,7 +1,6 @@
 package com.example.julie
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,20 +38,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        Log.i(TAG, "on start")
-        authenticationService
-            .isUserLoggedIn()
-            .fold(
-                {
-                    Log.e(TAG, it.message)
-                    startDestination = Destination.SignIn.name
-                },
-                {
-                    if (it) startDestination = Destination.Test.name else Destination.SignIn.name
-                    Log.i(TAG, startDestination)
-                }
-            )
+        startDestination =
+            if (authenticationService.isUserLoggedIn()) Destination.Test.name
+            else Destination.SignIn.name
     }
 }
-
-const val TAG = "start"

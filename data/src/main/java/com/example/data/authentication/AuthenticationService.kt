@@ -16,7 +16,7 @@ interface AuthenticationService {
 
     suspend fun signOut(): Either<AuthenticationError, UserSignedOut>
 
-    fun isUserLoggedIn(): Either<AuthenticationError, Boolean>
+    fun isUserLoggedIn(): Boolean
 }
 
 sealed interface Credentials {

@@ -49,11 +49,7 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
                 .map { UserSignedOut }
         }
 
-    override fun isUserLoggedIn(): Either<AuthenticationError, Boolean> {
-        return Either.catch { auth.currentUser }
-            .mapLeft { AuthenticationError(it.message ?: UnknownError) }
-            .map { it != null }
-    }
+    override fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }
 
 internal const val UnknownError = "Unknown error"
