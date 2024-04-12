@@ -6,6 +6,7 @@ import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
+import java.time.LocalDate
 
 typealias UserProblems = NonEmptyList<String>
 
@@ -40,3 +41,13 @@ interface UserProfile : Entity<UserId> {
 }
 
 @JvmInline value class UserId(private val userId: String) : Identifier
+
+data class CreateAccountDto(
+    val firstName: String,
+    val lastName: String,
+    val birthDate: LocalDate,
+    val username: String,
+    val emailAddress: String,
+    val password: String,
+    val interest: NonEmptySet<Interest>
+)

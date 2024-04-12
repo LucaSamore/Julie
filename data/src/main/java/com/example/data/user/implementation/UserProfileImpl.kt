@@ -11,6 +11,7 @@ import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakValue
 import com.example.data.gamification.today
 import com.example.data.user.BirthDate
+import com.example.data.user.CreateAccountDto
 import com.example.data.user.EmailAddress
 import com.example.data.user.FirstName
 import com.example.data.user.Interest
@@ -75,26 +76,28 @@ internal class UserProfileImpl(
 }
 
 fun UserProfile.createNewAccount(
-    firstName: String,
-    lastName: String,
-    birthDate: LocalDate,
-    username: String,
-    emailAddress: String,
-    password: String,
-    interest: NonEmptySet<Interest>
+    createAccountDto: CreateAccountDto
 ): Either<UserProblems, UserProfile> = either {
     zipOrAccumulate(
-        { FirstName(firstName).bind() },
-        { LastName(lastName).bind() },
-        { BirthDate(birthDate).bind() },
-        { Username(username).bind() },
-        { EmailAddress(emailAddress).bind() },
-        { Password(password).bind() },
+        { FirstName(createAccountDto.firstName).bind() },
+        { LastName(createAccountDto.lastName).bind() },
+        { BirthDate(createAccountDto.birthDate).bind() },
+        { Username(createAccountDto.username).bind() },
+        { EmailAddress(createAccountDto.emailAddress).bind() },
+        { Password(createAccountDto.password).bind() },
     ) { firstName, lastName, birthDate, username, emailAddress, password ->
         val userId = UserId(UUID.randomUUID().toString())
         UserProfileImpl(
             userId,
-            UserDetails(firstName, lastName, birthDate, username, emailAddress, password, interest),
+            UserDetails(
+                firstName,
+                lastName,
+                birthDate,
+                username,
+                emailAddress,
+                password,
+                createAccountDto.interest
+            ),
             Points(0),
             Streak(userId, StreakValue(0), BeginDate(LocalDate.now()), EndDate(null))
         )

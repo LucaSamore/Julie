@@ -24,17 +24,15 @@ data class Interest(val name: Name, val category: Category)
 value class FirstName private constructor(private val firstName: String) {
     companion object {
         operator fun invoke(firstName: String): Either<String, FirstName> = either {
-            ensure(firstName.isNotBlank()) {
-                "First name cannot be empty"
-            }
+            ensure(firstName.isNotBlank()) { "First name cannot be empty" }
 
-            ensure(firstName lengthIsBetween FIRST_LAST_NAME_MIN_LENGTH..FIRST_LAST_NAME_MAX_LENGTH) {
+            ensure(
+                firstName lengthIsBetween FIRST_LAST_NAME_MIN_LENGTH..FIRST_LAST_NAME_MAX_LENGTH
+            ) {
                 "First name cannot be more than 50 characters"
             }
 
-            ensure(!firstName.isDigitsOnly()) {
-                "First name cannot be numbers only"
-            }
+            ensure(!firstName.isDigitsOnly()) { "First name cannot be numbers only" }
 
             FirstName(firstName)
         }
@@ -47,13 +45,13 @@ value class LastName private constructor(private val lastName: String) {
         operator fun invoke(lastName: String): Either<String, LastName> = either {
             ensure(lastName.isNotBlank()) { "First name cannot be empty" }
 
-            ensure(lastName lengthIsBetween FIRST_LAST_NAME_MIN_LENGTH..FIRST_LAST_NAME_MAX_LENGTH) {
+            ensure(
+                lastName lengthIsBetween FIRST_LAST_NAME_MIN_LENGTH..FIRST_LAST_NAME_MAX_LENGTH
+            ) {
                 "First name cannot be more than 50 characters"
             }
 
-            ensure(!lastName.isDigitsOnly()) {
-                "First name cannot be numbers only"
-            }
+            ensure(!lastName.isDigitsOnly()) { "First name cannot be numbers only" }
 
             LastName(lastName)
         }
