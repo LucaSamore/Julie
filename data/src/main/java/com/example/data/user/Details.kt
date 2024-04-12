@@ -6,6 +6,20 @@ import arrow.core.NonEmptySet
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import com.example.data.gamification.today
+import com.example.data.user.implementation.FIRST_LAST_NAME_MAX_LENGTH
+import com.example.data.user.implementation.FIRST_LAST_NAME_MIN_LENGTH
+import com.example.data.user.implementation.MAX_AGE
+import com.example.data.user.implementation.MIN_AGE
+import com.example.data.user.implementation.PASSWORD_MAX_LENGTH
+import com.example.data.user.implementation.PASSWORD_MIN_LENGTH
+import com.example.data.user.implementation.USERNAME_MAX_LENGTH
+import com.example.data.user.implementation.USERNAME_MIN_LENGTH
+import com.example.data.user.implementation.containsAtLeastOneLetterAndOneNumber
+import com.example.data.user.implementation.containsAtLeastOneLowerCaseLetter
+import com.example.data.user.implementation.containsAtLeastOneNumber
+import com.example.data.user.implementation.containsAtLeastOneUpperCaseLetter
+import com.example.data.user.implementation.isEmailValid
+import com.example.data.user.implementation.lengthIsBetween
 import java.time.LocalDate
 
 data class UserDetails(
@@ -137,33 +151,3 @@ value class Password private constructor(private val password: String) {
 @JvmInline value class Name(private val name: String)
 
 @JvmInline value class Category(private val category: String)
-
-private const val FIRST_LAST_NAME_MIN_LENGTH = 1
-
-private const val FIRST_LAST_NAME_MAX_LENGTH = 50
-
-private const val MIN_AGE = 6
-
-private const val MAX_AGE = 100
-
-private const val USERNAME_MIN_LENGTH = 2
-
-private const val USERNAME_MAX_LENGTH = 2
-
-private const val PASSWORD_MIN_LENGTH = 8
-
-private const val PASSWORD_MAX_LENGTH = 50
-
-private infix fun String.lengthIsBetween(range: IntRange): Boolean = length in range
-
-private fun String.isEmailValid(): Boolean =
-    matches(Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$\n"))
-
-private fun String.containsAtLeastOneNumber(): Boolean = matches(Regex(".*[0-9].*"))
-
-private fun String.containsAtLeastOneUpperCaseLetter(): Boolean = matches(Regex(".*[A-Z].*"))
-
-private fun String.containsAtLeastOneLowerCaseLetter(): Boolean = matches(Regex(".*[a-z].*"))
-
-private fun String.containsAtLeastOneLetterAndOneNumber(): Boolean =
-    matches(Regex("(?=.*[0-9])(?=.*[a-zA-Z]).*"))
