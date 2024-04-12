@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.Credentials
 import com.example.data.di.FirebaseService
-import com.example.data.user.EmailAddress
-import com.example.data.user.Password
 import com.example.julie.Lce
 import com.example.julie.SignInScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +26,7 @@ constructor(@FirebaseService private val authenticationService: AuthenticationSe
     fun signIn(emailAddress: String, password: String) =
         viewModelScope.launch {
             _signInScreenState.update { Lce.Loading }
-            val credentials = Credentials.SignInDto(EmailAddress(emailAddress), Password(password))
+            val credentials = Credentials.SignInDto(emailAddress, password)
             authenticationService
                 .signInWithEmailAndPassword(credentials)
                 .fold(

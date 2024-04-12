@@ -1,13 +1,9 @@
 package com.example.data.authentication
 
 import arrow.core.Either
-import com.example.data.user.BirthDate
-import com.example.data.user.EmailAddress
-import com.example.data.user.FirstName
+import arrow.core.NonEmptySet
 import com.example.data.user.Interest
-import com.example.data.user.LastName
-import com.example.data.user.Password
-import com.example.data.user.Username
+import java.time.LocalDate
 
 interface AuthenticationService {
     suspend fun signInWithEmailAndPassword(
@@ -24,20 +20,20 @@ interface AuthenticationService {
 }
 
 sealed interface Credentials {
-    val emailAddress: EmailAddress
-    val password: Password
+    val emailAddress: String
+    val password: String
 
-    data class SignInDto(override val emailAddress: EmailAddress, override val password: Password) :
+    data class SignInDto(override val emailAddress: String, override val password: String) :
         Credentials
 
     data class SignUpDto(
-        override val emailAddress: EmailAddress,
-        override val password: Password,
-        val firstName: FirstName,
-        val lastName: LastName,
-        val username: Username,
-        val birthDate: BirthDate,
-        val interest: Interest
+        override val emailAddress: String,
+        override val password: String,
+        val firstName: String,
+        val lastName: String,
+        val username: String,
+        val birthDate: LocalDate,
+        val interest: NonEmptySet<Interest>
     ) : Credentials
 }
 

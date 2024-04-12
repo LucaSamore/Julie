@@ -27,8 +27,8 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
             Either.catch {
                     auth
                         .signInWithEmailAndPassword(
-                            signInCredentials.emailAddress.emailAddress,
-                            signInCredentials.password.password
+                            signInCredentials.emailAddress,
+                            signInCredentials.password
                         )
                         .await()
                 }
