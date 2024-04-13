@@ -1,6 +1,5 @@
-package com.example.data
+package com.example.data.user
 
-import com.example.data.user.Username
 import org.junit.Test
 
 class TestUsername {

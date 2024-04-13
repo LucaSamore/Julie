@@ -1,10 +1,8 @@
-package com.example.data
+package com.example.data.user
 
-import com.example.data.user.FirstName
-import com.example.data.user.LastName
 import org.junit.Test
 
-class TestFirstAndLastNameValidation {
+class TestFirstAndLastName {
 
     @Test
     fun `Test first name is empty`() {
