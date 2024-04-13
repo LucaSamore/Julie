@@ -1,6 +1,8 @@
 package com.example.data.user.implementation
 
-internal const val FIRST_LAST_NAME_MIN_LENGTH = 1
+import org.apache.commons.validator.routines.EmailValidator
+
+internal const val FIRST_LAST_NAME_MIN_LENGTH = 2
 
 internal const val FIRST_LAST_NAME_MAX_LENGTH = 50
 
@@ -10,7 +12,7 @@ internal const val MAX_AGE = 100
 
 internal const val USERNAME_MIN_LENGTH = 2
 
-internal const val USERNAME_MAX_LENGTH = 2
+internal const val USERNAME_MAX_LENGTH = 8
 
 internal const val PASSWORD_MIN_LENGTH = 8
 
@@ -18,8 +20,9 @@ internal const val PASSWORD_MAX_LENGTH = 50
 
 internal infix fun String.lengthIsBetween(range: IntRange): Boolean = length in range
 
-internal fun String.isEmailValid(): Boolean =
-    matches(Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$\n"))
+internal fun String.isNumeric(): Boolean = matches(Regex("-?[0-9]+(\\\\.[0-9]+)?"))
+
+internal fun String.isEmailValid(): Boolean = EmailValidator.getInstance().isValid(this)
 
 internal fun String.containsAtLeastOneNumber(): Boolean = matches(Regex(".*[0-9].*"))
 
@@ -29,3 +32,6 @@ internal fun String.containsAtLeastOneLowerCaseLetter(): Boolean = matches(Regex
 
 internal fun String.containsAtLeastOneLetterAndOneNumber(): Boolean =
     matches(Regex("(?=.*[0-9])(?=.*[a-zA-Z]).*"))
+
+internal fun String.containsAtLeastOneSpecialCharacter(): Boolean =
+    matches(Regex("^(?=.*[!@#\$%^&*()_+{}|:<>?~`\\-=\\\\;',./]).*\$"))

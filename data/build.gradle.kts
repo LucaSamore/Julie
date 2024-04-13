@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.commons.validator)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
