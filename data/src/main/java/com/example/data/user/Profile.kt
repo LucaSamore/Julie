@@ -7,7 +7,6 @@ import com.example.data.Identifier
 import com.example.data.Problem
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
-import java.time.LocalDate
 
 interface UserProfile : Entity<UserId> {
     val userDetails: UserDetails
@@ -56,13 +55,3 @@ sealed interface UserProblem : Problem
 @JvmInline value class EmailAddressProblem(override val message: String) : UserProblem
 
 @JvmInline value class PasswordProblem(override val message: String) : UserProblem
-
-data class CreateAccountDto(
-    val firstName: String,
-    val lastName: String,
-    val birthDate: LocalDate,
-    val username: String,
-    val emailAddress: String,
-    val password: String,
-    val interest: NonEmptySet<Interest>
-)
