@@ -1,6 +1,5 @@
 package com.example.data.user
 
-import androidx.core.text.isDigitsOnly
 import arrow.core.Either
 import arrow.core.NonEmptySet
 import arrow.core.raise.either
@@ -17,8 +16,10 @@ import com.example.data.user.implementation.USERNAME_MIN_LENGTH
 import com.example.data.user.implementation.containsAtLeastOneLetterAndOneNumber
 import com.example.data.user.implementation.containsAtLeastOneLowerCaseLetter
 import com.example.data.user.implementation.containsAtLeastOneNumber
+import com.example.data.user.implementation.containsAtLeastOneSpecialCharacter
 import com.example.data.user.implementation.containsAtLeastOneUpperCaseLetter
 import com.example.data.user.implementation.isEmailValid
+import com.example.data.user.implementation.isNumeric
 import com.example.data.user.implementation.lengthIsBetween
 import java.time.LocalDate
 
@@ -46,7 +47,7 @@ value class FirstName private constructor(private val firstName: String) {
                 "First name cannot be more than 50 characters"
             }
 
-            ensure(!firstName.isDigitsOnly()) { "First name cannot be numbers only" }
+            ensure(!firstName.isNumeric()) { "First name cannot be numbers only" }
 
             FirstName(firstName)
         }
@@ -65,7 +66,7 @@ value class LastName private constructor(private val lastName: String) {
                 "First name cannot be more than 50 characters"
             }
 
-            ensure(!lastName.isDigitsOnly()) { "First name cannot be numbers only" }
+            ensure(!lastName.isNumeric()) { "First name cannot be numbers only" }
 
             LastName(lastName)
         }
@@ -80,7 +81,7 @@ value class BirthDate private constructor(private val birthDate: LocalDate) {
                 "Birth date cannot be too young"
             }
 
-            ensure(birthDate.isAfter(today().plusYears(MAX_AGE.toLong()))) {
+            ensure(birthDate.isAfter(today().minusYears(MAX_AGE.toLong()))) {
                 "Birth date cannot be too old"
             }
 
@@ -141,6 +142,10 @@ value class Password private constructor(private val password: String) {
 
             ensure(password.containsAtLeastOneLetterAndOneNumber()) {
                 "Password must contain at least one letter and one number"
+            }
+
+            ensure(password.containsAtLeastOneSpecialCharacter()) {
+                "Password must contain at least one special character"
             }
 
             Password(password)
