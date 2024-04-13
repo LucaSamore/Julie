@@ -19,6 +19,7 @@ class SignInViewModel
 @Inject
 constructor(@FirebaseService private val authenticationService: AuthenticationService) :
     ViewModel() {
+
     private val _signInScreenState = MutableStateFlow<SignInScreenState>(value = Lce.Loading)
 
     val signInScreenState = _signInScreenState.asStateFlow()

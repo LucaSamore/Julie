@@ -8,8 +8,6 @@ import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 import java.time.LocalDate
 
-typealias UserProblems = NonEmptyList<String>
-
 interface UserProfile : Entity<UserId> {
     val userDetails: UserDetails
 
@@ -40,7 +38,25 @@ interface UserProfile : Entity<UserId> {
     fun endCurrentStreak(): UserProfile
 }
 
+typealias UserProblems = NonEmptyList<UserProblem>
+
 @JvmInline value class UserId(private val userId: String) : Identifier
+
+sealed interface UserProblem {
+    val message: String
+}
+
+@JvmInline value class FirstNameProblem(override val message: String) : UserProblem
+
+@JvmInline value class LastNameProblem(override val message: String) : UserProblem
+
+@JvmInline value class BirthDateProblem(override val message: String) : UserProblem
+
+@JvmInline value class UsernameProblem(override val message: String) : UserProblem
+
+@JvmInline value class EmailAddressProblem(override val message: String) : UserProblem
+
+@JvmInline value class PasswordProblem(override val message: String) : UserProblem
 
 data class CreateAccountDto(
     val firstName: String,

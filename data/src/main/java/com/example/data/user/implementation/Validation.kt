@@ -2,9 +2,9 @@ package com.example.data.user.implementation
 
 import org.apache.commons.validator.routines.EmailValidator
 
-internal const val FIRST_LAST_NAME_MIN_LENGTH = 2
+internal const val NAME_MIN_LENGTH = 2
 
-internal const val FIRST_LAST_NAME_MAX_LENGTH = 50
+internal const val NAME_MAX_LENGTH = 50
 
 internal const val MIN_AGE = 6
 
