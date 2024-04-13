@@ -1,7 +1,5 @@
-package com.example.domain.authentication
+package com.example.data.user
 
-import arrow.core.NonEmptySet
-import com.example.data.user.Interest
 import java.time.LocalDate
 
 data class CreateAccountDto(
@@ -11,5 +9,5 @@ data class CreateAccountDto(
     val username: String,
     val emailAddress: String,
     val password: String,
-    val interest: NonEmptySet<Interest>
+    val interest: List<Interest>
 )

@@ -1,7 +1,6 @@
 package com.example.data.user
 
 import arrow.core.NonEmptyList
-import arrow.core.NonEmptySet
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.Problem
@@ -27,7 +26,7 @@ interface UserProfile : Entity<UserId> {
 
     fun changePassword(newPassword: Password): UserProfile
 
-    fun changeInterest(newInterest: NonEmptySet<Interest>): UserProfile
+    fun changeInterest(newInterest: List<Interest>): UserProfile
 
     fun addPoints(pointsToAdd: Points): UserProfile
 

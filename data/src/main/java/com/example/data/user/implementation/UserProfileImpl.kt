@@ -1,7 +1,6 @@
 package com.example.data.user.implementation
 
 import arrow.core.Either
-import arrow.core.NonEmptySet
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.gamification.BeginDate
@@ -50,7 +49,7 @@ internal class UserProfileImpl(
     override fun changePassword(newPassword: Password): UserProfile =
         UserProfileImpl(id, userDetails.copy(password = newPassword), points, currentStreak)
 
-    override fun changeInterest(newInterest: NonEmptySet<Interest>): UserProfile =
+    override fun changeInterest(newInterest: List<Interest>): UserProfile =
         UserProfileImpl(id, userDetails.copy(interest = newInterest), points, currentStreak)
 
     override fun addPoints(pointsToAdd: Points): UserProfile =

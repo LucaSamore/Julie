@@ -2,9 +2,8 @@ package com.example.julie.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.NonEmptySet
+import com.example.data.user.CreateAccountDto
 import com.example.data.user.Interest
-import com.example.domain.authentication.CreateAccountDto
 import com.example.domain.authentication.SignUpUseCase
 import com.example.julie.Lce
 import com.example.julie.SignUpScreenState
@@ -30,7 +29,7 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
         username: String,
         emailAddress: String,
         password: String,
-        interest: NonEmptySet<Interest>
+        interest: List<Interest>
     ) =
         viewModelScope.launch {
             _signUpScreenState.update { Lce.Loading }

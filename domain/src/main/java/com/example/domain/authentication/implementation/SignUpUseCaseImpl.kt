@@ -5,8 +5,8 @@ import arrow.core.NonEmptyList
 import com.example.data.Problem
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.UserSignedUp
+import com.example.data.user.CreateAccountDto
 import com.example.data.user.UserProfileRepository
-import com.example.domain.authentication.CreateAccountDto
 import com.example.domain.authentication.SignUpUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
