@@ -3,8 +3,9 @@ package com.example.julie.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.authentication.AuthenticationService
-import com.example.data.authentication.Credentials
 import com.example.data.di.FirebaseService
+import com.example.domain.authentication.Credentials
+import com.example.domain.authentication.SignInUseCase
 import com.example.julie.Lce
 import com.example.julie.SignInScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SignInViewModel
 @Inject
-constructor(@FirebaseService private val authenticationService: AuthenticationService) :
+constructor(private val signInUseCase: SignInUseCase) :
     ViewModel() {
 
     private val _signInScreenState = MutableStateFlow<SignInScreenState>(value = Lce.Loading)
@@ -28,11 +29,9 @@ constructor(@FirebaseService private val authenticationService: AuthenticationSe
         viewModelScope.launch {
             _signInScreenState.update { Lce.Loading }
             val credentials = Credentials.SignInDto(emailAddress, password)
-            authenticationService
-                .signInWithEmailAndPassword(credentials)
-                .fold(
-                    { error -> _signInScreenState.update { Lce.Failure(error) } },
-                    { success -> _signInScreenState.update { Lce.Content(success) } }
-                )
+            signInUseCase(credentials).fold(
+                { errors -> _signInScreenState.update { Lce.Failure(errors) }},
+                { success -> _signInScreenState.update { Lce.Content(success) }}
+            )
         }
 }

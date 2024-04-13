@@ -4,6 +4,7 @@ import arrow.core.NonEmptyList
 import arrow.core.NonEmptySet
 import com.example.data.Entity
 import com.example.data.Identifier
+import com.example.data.Problem
 import com.example.data.gamification.Points
 import com.example.data.gamification.Streak
 import java.time.LocalDate
@@ -42,9 +43,7 @@ typealias UserProblems = NonEmptyList<UserProblem>
 
 @JvmInline value class UserId(private val userId: String) : Identifier
 
-sealed interface UserProblem {
-    val message: String
-}
+sealed interface UserProblem: Problem
 
 @JvmInline value class FirstNameProblem(override val message: String) : UserProblem
 

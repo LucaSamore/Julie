@@ -3,10 +3,12 @@ package com.example.data.authentication.implementation
 import arrow.core.Either
 import com.example.data.authentication.AuthenticationError
 import com.example.data.authentication.AuthenticationService
-import com.example.data.authentication.Credentials
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
+import com.example.data.authentication.ValidatedCredentials
+import com.example.data.user.EmailAddress
+import com.example.data.user.Password
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import javax.inject.Inject
@@ -21,14 +23,14 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
     private val auth = Firebase.auth
 
     override suspend fun signInWithEmailAndPassword(
-        signInCredentials: Credentials.SignInDto
+        signInCredentials: ValidatedCredentials.SignInDto
     ): Either<AuthenticationError, UserSignedIn> =
         withContext(ioDispatcher) {
             Either.catch {
                     auth
                         .signInWithEmailAndPassword(
-                            signInCredentials.emailAddress,
-                            signInCredentials.password
+                            signInCredentials.emailAddress.emailAddress,
+                            signInCredentials.password.password
                         )
                         .await()
                 }
@@ -37,7 +39,7 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
         }
 
     override suspend fun signUpWithEmailAndPassword(
-        signInCredentials: Credentials.SignUpDto
+        signUpCredentials: ValidatedCredentials.SignUpDto
     ): Either<AuthenticationError, UserSignedUp> {
         TODO("Not yet implemented")
     }

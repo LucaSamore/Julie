@@ -104,7 +104,7 @@ value class Username private constructor(private val username: String) {
 }
 
 @JvmInline
-value class EmailAddress private constructor(private val emailAddress: String) {
+value class EmailAddress private constructor(val emailAddress: String) {
     companion object {
         operator fun invoke(emailAddress: String): Either<UserProblem, EmailAddress> = either {
             ensure(emailAddress.isNotBlank()) {
@@ -119,7 +119,7 @@ value class EmailAddress private constructor(private val emailAddress: String) {
 }
 
 @JvmInline
-value class Password private constructor(private val password: String) {
+value class Password private constructor(val password: String) {
     companion object {
         operator fun invoke(password: String): Either<UserProblem, Password> = either {
             ensure(password.isNotBlank()) { PasswordProblem("Password cannot be empty") }
