@@ -9,14 +9,15 @@ import com.example.domain.authentication.SignUpUseCase
 import com.example.julie.Lce
 import com.example.julie.SignUpScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import javax.inject.Inject
 
-@HiltViewModel class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) : ViewModel() {
 
     private val _signUpScreenState = MutableStateFlow<SignUpScreenState>(value = Lce.Loading)
 
@@ -30,21 +31,23 @@ import javax.inject.Inject
         emailAddress: String,
         password: String,
         interest: NonEmptySet<Interest>
-    ) = viewModelScope.launch {
-        _signUpScreenState.update { Lce.Loading }
-        signUpUseCase(
-            CreateAccountDto(
-                firstName,
-                lastName,
-                birthDate,
-                username,
-                emailAddress,
-                password,
-                interest
-            )
-        ).fold(
-            { errors -> _signUpScreenState.update { Lce.Failure(errors) } },
-            { success -> _signUpScreenState.update { Lce.Content(success) } }
-        )
-    }
+    ) =
+        viewModelScope.launch {
+            _signUpScreenState.update { Lce.Loading }
+            signUpUseCase(
+                    CreateAccountDto(
+                        firstName,
+                        lastName,
+                        birthDate,
+                        username,
+                        emailAddress,
+                        password,
+                        interest
+                    )
+                )
+                .fold(
+                    { errors -> _signUpScreenState.update { Lce.Failure(errors) } },
+                    { success -> _signUpScreenState.update { Lce.Content(success) } }
+                )
+        }
 }

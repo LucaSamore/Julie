@@ -5,10 +5,12 @@ import com.example.data.gamification.Streak
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 
-internal class UserProfileRepositoryImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher): UserProfileRepository {
+internal class UserProfileRepositoryImpl
+@Inject
+constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileRepository {
 
     override suspend fun create(entity: UserProfile): Either<Nothing, Nothing> {
         TODO("Not yet implemented")
