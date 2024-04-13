@@ -2,7 +2,6 @@ package com.example.julie
 
 import arrow.core.NonEmptyList
 import com.example.data.Problem
-import com.example.data.authentication.AuthenticationError
 import com.example.data.authentication.AuthenticationProblem
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut

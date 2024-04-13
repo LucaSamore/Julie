@@ -43,7 +43,7 @@ typealias UserProblems = NonEmptyList<UserProblem>
 
 @JvmInline value class UserId(private val userId: String) : Identifier
 
-sealed interface UserProblem: Problem
+sealed interface UserProblem : Problem
 
 @JvmInline value class FirstNameProblem(override val message: String) : UserProblem
 

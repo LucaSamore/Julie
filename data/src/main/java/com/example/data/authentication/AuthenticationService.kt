@@ -12,9 +12,13 @@ import com.example.data.user.Password
 import com.example.data.user.Username
 
 interface AuthenticationService {
-    suspend fun signInWithEmailAndPassword(signInCredentials: ValidatedCredentials.SignInDto): Either<AuthenticationProblem, UserSignedIn>
+    suspend fun signInWithEmailAndPassword(
+        signInCredentials: ValidatedCredentials.SignInDto
+    ): Either<AuthenticationProblem, UserSignedIn>
 
-    suspend fun signUpWithEmailAndPassword(signUpCredentials: ValidatedCredentials.SignUpDto): Either<AuthenticationProblem, UserSignedUp>
+    suspend fun signUpWithEmailAndPassword(
+        signUpCredentials: ValidatedCredentials.SignUpDto
+    ): Either<AuthenticationProblem, UserSignedUp>
 
     suspend fun signOut(): Either<AuthenticationProblem, UserSignedOut>
 
@@ -45,6 +49,6 @@ data object UserSignedUp
 
 data object UserSignedOut
 
-sealed interface AuthenticationProblem: Problem
+sealed interface AuthenticationProblem : Problem
 
-@JvmInline value class AuthenticationError(override val message: String): AuthenticationProblem
+@JvmInline value class AuthenticationError(override val message: String) : AuthenticationProblem

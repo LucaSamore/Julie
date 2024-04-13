@@ -87,7 +87,7 @@ internal fun SignInScreen(
                 onSignedIn()
             }
             is Lce.Failure -> {
-                currentState.error.forEach{ problem ->
+                currentState.error.forEach { problem ->
                     when (problem) {
                         is AuthenticationProblem -> {
                             errorMessage = problem.message

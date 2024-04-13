@@ -7,8 +7,6 @@ import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.ValidatedCredentials
-import com.example.data.user.EmailAddress
-import com.example.data.user.Password
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import javax.inject.Inject

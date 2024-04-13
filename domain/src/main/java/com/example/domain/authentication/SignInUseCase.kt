@@ -6,5 +6,8 @@ import com.example.data.Problem
 import com.example.data.authentication.UserSignedIn
 
 interface SignInUseCase {
-    operator fun invoke(signInCredentials: Credentials.SignInDto): Either<NonEmptyList<Problem>, UserSignedIn>
+    suspend operator fun invoke(
+        emailAddress: String,
+        password: String
+    ): Either<NonEmptyList<Problem>, UserSignedIn>
 }
