@@ -39,7 +39,7 @@ interface UserProfile : Entity<UserId> {
 
 typealias UserProblems = NonEmptyList<UserProblem>
 
-@JvmInline value class UserId(private val userId: String) : Identifier
+@JvmInline value class UserId(val userId: String) : Identifier
 
 sealed interface UserProblem : Problem
 

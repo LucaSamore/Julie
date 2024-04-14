@@ -4,13 +4,13 @@ import com.example.data.user.UserId
 import java.time.LocalDate
 
 @JvmInline
-value class StreakValue(private val value: Int) {
+value class StreakValue(val value: Int) {
     operator fun plus(other: Int): StreakValue = StreakValue(value + other)
 }
 
-@JvmInline value class BeginDate(private val value: LocalDate)
+@JvmInline value class BeginDate(val value: LocalDate)
 
-@JvmInline value class EndDate(private val value: LocalDate?)
+@JvmInline value class EndDate(val value: LocalDate?)
 
 data class Streak(
     val userId: UserId,

@@ -1,7 +1,7 @@
 package com.example.data.gamification
 
 @JvmInline
-value class Points(private val points: Int) : Comparable<Int> {
+value class Points(val points: Int) : Comparable<Int> {
     operator fun plus(other: Points) = Points(points + other.points)
 
     operator fun minus(other: Points) = Points(points - other.points)

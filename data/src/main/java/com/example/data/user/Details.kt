@@ -35,7 +35,7 @@ data class UserDetails(
 data class Interest(val name: Name, val category: Category)
 
 @JvmInline
-value class FirstName private constructor(private val firstName: String) {
+value class FirstName private constructor(val firstName: String) {
     companion object {
         operator fun invoke(firstName: String): Either<UserProblem, FirstName> = either {
             ensure(firstName.isNotBlank()) { FirstNameProblem("First name cannot be empty") }
@@ -52,7 +52,7 @@ value class FirstName private constructor(private val firstName: String) {
 }
 
 @JvmInline
-value class LastName private constructor(private val lastName: String) {
+value class LastName private constructor(val lastName: String) {
     companion object {
         operator fun invoke(lastName: String): Either<UserProblem, LastName> = either {
             ensure(lastName.isNotBlank()) { LastNameProblem("Last name cannot be empty") }
@@ -69,7 +69,7 @@ value class LastName private constructor(private val lastName: String) {
 }
 
 @JvmInline
-value class BirthDate private constructor(private val birthDate: LocalDate) {
+value class BirthDate private constructor(val birthDate: LocalDate) {
     companion object {
         operator fun invoke(birthDate: LocalDate): Either<UserProblem, BirthDate> = either {
             ensure(birthDate.isBefore(today().minusYears(MIN_AGE.toLong()))) {
@@ -86,7 +86,7 @@ value class BirthDate private constructor(private val birthDate: LocalDate) {
 }
 
 @JvmInline
-value class Username private constructor(private val username: String) {
+value class Username private constructor(val username: String) {
     companion object {
         operator fun invoke(username: String): Either<UserProblem, Username> = either {
             ensure(username.isNotBlank()) { UsernameProblem("Username cannot be empty") }
@@ -154,6 +154,6 @@ value class Password private constructor(val password: String) {
     }
 }
 
-@JvmInline value class Name(private val name: String)
+@JvmInline value class Name(val name: String)
 
-@JvmInline value class Category(private val category: String)
+@JvmInline value class Category(val category: String)

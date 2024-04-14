@@ -6,21 +6,16 @@ import com.example.data.gamification.Streak
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 
 internal class UserProfileRepositoryImpl
 @Inject
 constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileRepository {
-    override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getPastStreaks(
-        userId: UserId
-    ): Either<RepositoryProblem, Iterable<Streak>> {
-        TODO("Not yet implemented")
-    }
+    private val db = Firebase.firestore
 
     override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
@@ -39,6 +34,16 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileReposito
     }
 
     override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPastStreaks(
+        userId: UserId
+    ): Either<RepositoryProblem, Iterable<Streak>> {
         TODO("Not yet implemented")
     }
 }
