@@ -4,9 +4,11 @@ import arrow.core.Either
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
+import com.example.data.user.EmailAddress
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
+import com.example.data.user.Username
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -44,6 +46,30 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun isEmailAddressAlreadyInUse(
+        emailAddress: EmailAddress
+    ): Either<RepositoryProblem, Boolean> =
+        Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .whereEqualTo("emailAddress", emailAddress.emailAddress)
+                    .get()
+                    .await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { documents -> !documents.isEmpty }
+
+    override suspend fun isUsernameAlreadyInUse(
+        username: Username
+    ): Either<RepositoryProblem, Boolean> =
+        Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .whereEqualTo("username", username.username)
+                    .get()
+                    .await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { documents -> !documents.isEmpty }
 
     override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")

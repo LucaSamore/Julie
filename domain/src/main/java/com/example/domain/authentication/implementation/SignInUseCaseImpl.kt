@@ -2,7 +2,6 @@ package com.example.domain.authentication.implementation
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
-import arrow.core.nonEmptyListOf
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
@@ -12,6 +11,7 @@ import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.domain.authentication.SignInUseCase
+import com.example.domain.util.single
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -29,8 +29,10 @@ constructor(
         withContext(ioDispatcher) {
             either {
                 val validatedCredentials = validateCredentials(emailAddress, password).bind()
-                val signedUser = doSignUp(validatedCredentials).bind()
-                signedUser
+                authenticationService
+                    .signInWithEmailAndPassword(validatedCredentials)
+                    .single()
+                    .bind()
             }
         }
 
@@ -45,7 +47,4 @@ constructor(
             ValidatedCredentials.SignInDto(emailAddress, password)
         }
     }
-
-    private suspend fun doSignUp(credentials: ValidatedCredentials.SignInDto) =
-        authenticationService.signInWithEmailAndPassword(credentials).mapLeft { nonEmptyListOf(it) }
 }
