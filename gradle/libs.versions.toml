@@ -19,6 +19,7 @@ daggerHilt = "2.49"
 navigationCompose = "2.7.7"
 hiltNavigationCompose = "1.2.0"
 apacheCommonsValidator = "1.8.0"
+bcrypt = "0.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 commons-validator = { group = "commons-validator", name = "commons-validator", version.ref = "apacheCommonsValidator" }
+bcrypt = { group = "at.favre.lib", name = "bcrypt", version.ref = "bcrypt" }
 
 [bundles]
 arrow = ["arrow-core", "arrow-fx-coroutines"]

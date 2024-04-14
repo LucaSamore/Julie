@@ -1,6 +1,7 @@
 package com.example.data.user.implementation
 
 import arrow.core.Either
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
 import com.example.data.user.UserId
@@ -19,7 +20,10 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
         Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .document(entity.id.userId)
-                    .set(FirestoreUserDto.fromEntity(entity))
+                    .set(
+                        FirestoreUserDto.fromEntity(entity)
+                            .copy(password = hashPassword(entity.userDetails.password.password))
+                    )
                     .await()
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
@@ -49,5 +53,12 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
         userId: UserId
     ): Either<RepositoryProblem, Iterable<Streak>> {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        private const val BCRYPT_COST = 12
+
+        fun hashPassword(plainPassword: String): String =
+            BCrypt.withDefaults().hashToString(BCRYPT_COST, plainPassword.toCharArray())
     }
 }
