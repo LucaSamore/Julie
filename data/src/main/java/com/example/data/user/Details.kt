@@ -55,13 +55,13 @@ value class FirstName private constructor(private val firstName: String) {
 value class LastName private constructor(private val lastName: String) {
     companion object {
         operator fun invoke(lastName: String): Either<UserProblem, LastName> = either {
-            ensure(lastName.isNotBlank()) { LastNameProblem("First name cannot be empty") }
+            ensure(lastName.isNotBlank()) { LastNameProblem("Last name cannot be empty") }
 
             ensure(lastName lengthIsBetween NAME_MIN_LENGTH..NAME_MAX_LENGTH) {
-                LastNameProblem("First name cannot be more than 50 characters")
+                LastNameProblem("Last name cannot be more than 50 characters")
             }
 
-            ensure(!lastName.isNumeric()) { LastNameProblem("First name cannot be numbers only") }
+            ensure(!lastName.isNumeric()) { LastNameProblem("Last name cannot be numbers only") }
 
             LastName(lastName)
         }

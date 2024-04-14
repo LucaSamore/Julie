@@ -7,9 +7,11 @@ import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.UserSignedUp
 import com.example.data.user.CreateAccountDto
 import com.example.data.user.UserProfileRepository
+import com.example.data.user.implementation.createNewAccount
 import com.example.domain.authentication.SignUpUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 internal class SignUpUseCaseImpl
 @Inject
@@ -21,7 +23,11 @@ constructor(
 
     override suspend fun invoke(
         userData: CreateAccountDto
-    ): Either<NonEmptyList<Problem>, UserSignedUp> {
-        TODO("Not yet implemented")
-    }
+    ): Either<NonEmptyList<Problem>, UserSignedUp> =
+        withContext(ioDispatcher) {
+            return@withContext when (val newUserOrErrors = createNewAccount(userData)) {
+                is Either.Left -> newUserOrErrors
+                is Either.Right -> TODO()
+            }
+        }
 }

@@ -74,31 +74,31 @@ internal class UserProfileImpl(
     override fun hashCode(): Int = id.hashCode()
 }
 
-fun UserProfile.createNewAccount(
-    createAccountDto: CreateAccountDto
-): Either<UserProblems, UserProfile> = either {
-    zipOrAccumulate(
-        { FirstName(createAccountDto.firstName).bind() },
-        { LastName(createAccountDto.lastName).bind() },
-        { BirthDate(createAccountDto.birthDate).bind() },
-        { Username(createAccountDto.username).bind() },
-        { EmailAddress(createAccountDto.emailAddress).bind() },
-        { Password(createAccountDto.password).bind() },
-    ) { firstName, lastName, birthDate, username, emailAddress, password ->
-        val userId = UserId(UUID.randomUUID().toString())
-        UserProfileImpl(
-            userId,
-            UserDetails(
-                firstName,
-                lastName,
-                birthDate,
-                username,
-                emailAddress,
-                password,
-                createAccountDto.interest
-            ),
-            Points(0),
-            Streak(userId, StreakValue(0), BeginDate(LocalDate.now()), EndDate(null))
-        )
+fun createNewAccount(createAccountDto: CreateAccountDto): Either<UserProblems, UserProfile> =
+    either {
+        zipOrAccumulate(
+            { FirstName(createAccountDto.firstName).bind() },
+            { LastName(createAccountDto.lastName).bind() },
+            { BirthDate(createAccountDto.birthDate).bind() },
+            { Username(createAccountDto.username).bind() },
+            { EmailAddress(createAccountDto.emailAddress).bind() },
+            { Password(createAccountDto.password).bind() },
+        ) { firstName, lastName, birthDate, username, emailAddress, password ->
+            val userId = UserId(UUID.randomUUID().toString())
+            UserProfileImpl(
+                id = userId,
+                UserDetails(
+                    firstName = firstName,
+                    lastName = lastName,
+                    birthDate = birthDate,
+                    username = username,
+                    emailAddress = emailAddress,
+                    password = password,
+                    interest = createAccountDto.interest
+                ),
+                points = Points(0),
+                currentStreak =
+                    Streak(userId, StreakValue(0), BeginDate(LocalDate.now()), EndDate(null))
+            )
+        }
     }
-}
