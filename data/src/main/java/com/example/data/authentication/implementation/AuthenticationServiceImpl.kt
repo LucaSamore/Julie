@@ -2,11 +2,14 @@ package com.example.data.authentication.implementation
 
 import arrow.core.Either
 import com.example.data.authentication.AuthenticationError
+import com.example.data.authentication.AuthenticationProblem
 import com.example.data.authentication.AuthenticationService
+import com.example.data.authentication.PasswordReset
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.ValidatedCredentials
+import com.example.data.user.EmailAddress
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
@@ -42,6 +45,13 @@ internal class AuthenticationServiceImpl : AuthenticationService {
             }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { UserSignedUp }
+
+    override suspend fun passwordReset(
+        emailAddress: EmailAddress
+    ): Either<AuthenticationProblem, PasswordReset> =
+        Either.catch { auth.sendPasswordResetEmail(emailAddress.emailAddress).await() }
+            .mapLeft { AuthenticationError.fromThrowable(it) }
+            .map { PasswordReset }
 
     override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> =
         Either.catch { auth.signOut() }

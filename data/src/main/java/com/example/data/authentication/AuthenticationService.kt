@@ -19,6 +19,10 @@ interface AuthenticationService {
         signUpCredentials: ValidatedCredentials.SignUpDto
     ): Either<AuthenticationProblem, UserSignedUp>
 
+    suspend fun passwordReset(
+        emailAddress: EmailAddress
+    ): Either<AuthenticationProblem, PasswordReset>
+
     suspend fun signOut(): Either<AuthenticationProblem, UserSignedOut>
 
     fun isUserLoggedIn(): Boolean
@@ -47,6 +51,8 @@ data object UserSignedIn
 data object UserSignedUp
 
 data object UserSignedOut
+
+data object PasswordReset
 
 sealed interface AuthenticationProblem : Problem
 
