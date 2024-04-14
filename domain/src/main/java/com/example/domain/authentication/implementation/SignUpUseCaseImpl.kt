@@ -27,7 +27,12 @@ constructor(
         withContext(ioDispatcher) {
             return@withContext when (val newUserOrErrors = createNewAccount(userData)) {
                 is Either.Left -> newUserOrErrors
-                is Either.Right -> TODO()
+                is Either.Right -> {
+                    // save user to db using repository
+
+                    // sign in user
+                    TODO()
+                }
             }
         }
 }

@@ -37,6 +37,7 @@ internal fun SignInScreen(
 
     var emailAddress by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
     var emailValidationError by rememberSaveable { mutableStateOf("") }
     var emailValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
     var passwordValidationError by rememberSaveable { mutableStateOf("") }

@@ -16,7 +16,7 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileReposito
         TODO("Not yet implemented")
     }
 
-    override suspend fun findMany(): Either<Nothing, Sequence<UserProfile>> {
+    override suspend fun findMany(): Either<Nothing, Iterable<UserProfile>> {
         TODO("Not yet implemented")
     }
 

@@ -2,8 +2,10 @@ package com.example.domain.authentication.implementation
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
+import arrow.core.left
 import arrow.core.nonEmptyListOf
 import arrow.core.raise.either
+import arrow.core.raise.fold
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
 import com.example.data.authentication.AuthenticationService
@@ -27,10 +29,11 @@ constructor(
         password: String
     ): Either<NonEmptyList<Problem>, UserSignedIn> =
         withContext(ioDispatcher) {
-            return@withContext when (val result = validateCredentials(emailAddress, password)) {
-                is Either.Left -> result
-                is Either.Right -> doSignUp(result.value)
-            }
+            fold(
+                block = { validateCredentials(emailAddress, password).bind() },
+                recover = { errors -> errors.left() },
+                transform = { validatedCredentials -> doSignUp(validatedCredentials) }
+            )
         }
 
     private fun validateCredentials(
