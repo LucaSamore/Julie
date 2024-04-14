@@ -32,24 +32,32 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
                         )
                         .await()
                 }
-                .mapLeft { AuthenticationError(it.message ?: UnknownError) }
+                .mapLeft { AuthenticationError.fromThrowable(it) }
                 .map { UserSignedIn }
         }
 
     override suspend fun signUpWithEmailAndPassword(
         signUpCredentials: ValidatedCredentials.SignUpDto
-    ): Either<AuthenticationError, UserSignedUp> {
-        TODO("Not yet implemented")
-    }
+    ): Either<AuthenticationError, UserSignedUp> =
+        withContext(ioDispatcher) {
+            Either.catch {
+                    auth
+                        .createUserWithEmailAndPassword(
+                            signUpCredentials.emailAddress.emailAddress,
+                            signUpCredentials.password.password
+                        )
+                        .await()
+                }
+                .mapLeft { AuthenticationError.fromThrowable(it) }
+                .map { UserSignedUp }
+        }
 
     override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> =
         withContext(ioDispatcher) {
             Either.catch { auth.signOut() }
-                .mapLeft { AuthenticationError(it.message ?: UnknownError) }
+                .mapLeft { AuthenticationError.fromThrowable(it) }
                 .map { UserSignedOut }
         }
 
     override fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }
-
-internal const val UnknownError = "Unknown error"

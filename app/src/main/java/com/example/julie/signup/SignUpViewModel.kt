@@ -1,7 +1,5 @@
 package com.example.julie.signup
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.user.CreateAccountDto

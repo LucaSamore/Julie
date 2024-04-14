@@ -50,4 +50,12 @@ data object UserSignedOut
 
 sealed interface AuthenticationProblem : Problem
 
-@JvmInline value class AuthenticationError(override val message: String) : AuthenticationProblem
+@JvmInline
+value class AuthenticationError(override val message: String) : AuthenticationProblem {
+    companion object {
+        fun fromThrowable(throwable: Throwable): AuthenticationError =
+            AuthenticationError(throwable.message ?: UnknownError)
+    }
+}
+
+const val UnknownError = "Unknown error"
