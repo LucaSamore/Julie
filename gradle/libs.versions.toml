@@ -20,6 +20,7 @@ navigationCompose = "2.7.7"
 hiltNavigationCompose = "1.2.0"
 apacheCommonsValidator = "1.8.0"
 bcrypt = "0.10.2"
+datastore = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 commons-validator = { group = "commons-validator", name = "commons-validator", version.ref = "apacheCommonsValidator" }
 bcrypt = { group = "at.favre.lib", name = "bcrypt", version.ref = "bcrypt" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [bundles]
 arrow = ["arrow-core", "arrow-fx-coroutines"]

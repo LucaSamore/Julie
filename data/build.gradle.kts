@@ -44,6 +44,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.commons.validator)
     implementation(libs.bcrypt)
+    implementation(libs.datastore.preferences)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
