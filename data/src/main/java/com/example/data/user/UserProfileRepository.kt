@@ -6,7 +6,7 @@ import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
 
 interface UserProfileRepository : Repository<UserProfile, UserId> {
-    suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, Nothing>
+    suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile>
 
     suspend fun getPastStreaks(userId: UserId): Either<RepositoryProblem, Iterable<Streak>>
 }

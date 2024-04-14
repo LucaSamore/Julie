@@ -1,7 +1,6 @@
 package com.example.data.authentication
 
 import arrow.core.Either
-import arrow.core.NonEmptySet
 import com.example.data.Problem
 import com.example.data.user.BirthDate
 import com.example.data.user.EmailAddress
@@ -39,7 +38,7 @@ sealed interface ValidatedCredentials {
         val lastName: LastName,
         val username: Username,
         val birthDate: BirthDate,
-        val interest: NonEmptySet<Interest>
+        val interest: List<Interest>
     ) : ValidatedCredentials
 }
 

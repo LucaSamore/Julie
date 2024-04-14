@@ -1,6 +1,7 @@
 package com.example.data.user.implementation
 
 import arrow.core.Either
+import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
@@ -11,32 +12,33 @@ import kotlinx.coroutines.CoroutineDispatcher
 internal class UserProfileRepositoryImpl
 @Inject
 constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileRepository {
-
-    override suspend fun create(entity: UserProfile): Either<Nothing, Nothing> {
+    override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findMany(): Either<Nothing, Iterable<UserProfile>> {
+    override suspend fun getPastStreaks(
+        userId: UserId
+    ): Either<RepositoryProblem, Iterable<Streak>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findOne(id: UserId): Either<Nothing, UserProfile> {
+    override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun update(entity: UserProfile): Either<Nothing, Nothing> {
+    override suspend fun findMany(): Either<RepositoryProblem, Iterable<UserProfile>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun delete(id: UserId): Either<Nothing, Nothing> {
+    override suspend fun findOne(id: UserId): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addEndedStreak(streak: Streak): Either<Nothing, Nothing> {
+    override suspend fun update(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPastStreaks(userId: UserId): Either<Nothing, Iterable<Streak>> {
+    override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
 }
