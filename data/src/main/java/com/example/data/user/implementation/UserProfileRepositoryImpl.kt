@@ -10,6 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.tasks.await
 
 internal class UserProfileRepositoryImpl
 @Inject
@@ -17,9 +18,15 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileReposito
 
     private val db = Firebase.firestore
 
-    override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> =
+        Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .document(entity.id.userId)
+                    .set(FirestoreUserDto.fromEntity(entity))
+                    .await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { entity }
 
     override suspend fun findMany(): Either<RepositoryProblem, Iterable<UserProfile>> {
         TODO("Not yet implemented")

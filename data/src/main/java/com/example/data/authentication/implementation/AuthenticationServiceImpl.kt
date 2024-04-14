@@ -12,7 +12,6 @@ import com.google.firebase.auth.auth
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 internal class AuthenticationServiceImpl
 @Inject
@@ -23,41 +22,35 @@ constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationServi
     override suspend fun signInWithEmailAndPassword(
         signInCredentials: ValidatedCredentials.SignInDto
     ): Either<AuthenticationError, UserSignedIn> =
-        withContext(ioDispatcher) {
-            Either.catch {
-                    auth
-                        .signInWithEmailAndPassword(
-                            signInCredentials.emailAddress.emailAddress,
-                            signInCredentials.password.password
-                        )
-                        .await()
-                }
-                .mapLeft { AuthenticationError.fromThrowable(it) }
-                .map { UserSignedIn }
-        }
+        Either.catch {
+                auth
+                    .signInWithEmailAndPassword(
+                        signInCredentials.emailAddress.emailAddress,
+                        signInCredentials.password.password
+                    )
+                    .await()
+            }
+            .mapLeft { AuthenticationError.fromThrowable(it) }
+            .map { UserSignedIn }
 
     override suspend fun signUpWithEmailAndPassword(
         signUpCredentials: ValidatedCredentials.SignUpDto
     ): Either<AuthenticationError, UserSignedUp> =
-        withContext(ioDispatcher) {
-            Either.catch {
-                    auth
-                        .createUserWithEmailAndPassword(
-                            signUpCredentials.emailAddress.emailAddress,
-                            signUpCredentials.password.password
-                        )
-                        .await()
-                }
-                .mapLeft { AuthenticationError.fromThrowable(it) }
-                .map { UserSignedUp }
-        }
+        Either.catch {
+                auth
+                    .createUserWithEmailAndPassword(
+                        signUpCredentials.emailAddress.emailAddress,
+                        signUpCredentials.password.password
+                    )
+                    .await()
+            }
+            .mapLeft { AuthenticationError.fromThrowable(it) }
+            .map { UserSignedUp }
 
     override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> =
-        withContext(ioDispatcher) {
-            Either.catch { auth.signOut() }
-                .mapLeft { AuthenticationError.fromThrowable(it) }
-                .map { UserSignedOut }
-        }
+        Either.catch { auth.signOut() }
+            .mapLeft { AuthenticationError.fromThrowable(it) }
+            .map { UserSignedOut }
 
     override fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }

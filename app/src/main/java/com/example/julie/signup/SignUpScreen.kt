@@ -156,7 +156,7 @@ internal fun SignUpScreen(
                 signUpViewModel.signUp(
                     firstName,
                     lastName,
-                    LocalDate.now(),
+                    LocalDate.of(2000, 4, 14),
                     username,
                     emailAddress,
                     password,
