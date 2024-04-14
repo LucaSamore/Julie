@@ -7,16 +7,13 @@ import com.example.data.user.UserId
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 
-internal class UserProfileRepositoryImpl
-@Inject
-constructor(private val ioDispatcher: CoroutineDispatcher) : UserProfileRepository {
+internal class UserProfileRepositoryImpl : UserProfileRepository {
 
-    private val db = Firebase.firestore
+    private val db: FirebaseFirestore = Firebase.firestore
 
     override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> =
         Either.catch {

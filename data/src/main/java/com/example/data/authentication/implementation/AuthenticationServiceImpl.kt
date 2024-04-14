@@ -9,13 +9,9 @@ import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.ValidatedCredentials
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 
-internal class AuthenticationServiceImpl
-@Inject
-constructor(private val ioDispatcher: CoroutineDispatcher) : AuthenticationService {
+internal class AuthenticationServiceImpl : AuthenticationService {
 
     private val auth = Firebase.auth
 

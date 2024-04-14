@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -17,9 +16,7 @@ object ServiceModule {
     @FirebaseService
     @Singleton
     @Provides
-    fun provideAuthenticationService(
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): AuthenticationService = AuthenticationServiceImpl(ioDispatcher)
+    fun provideAuthenticationService(): AuthenticationService = AuthenticationServiceImpl()
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseService

@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -17,9 +16,7 @@ object RepositoryModule {
     @FirebaseRepository
     @Singleton
     @Provides
-    fun provideUserProfileRepository(
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): UserProfileRepository = UserProfileRepositoryImpl(ioDispatcher)
+    fun provideUserProfileRepository(): UserProfileRepository = UserProfileRepositoryImpl()
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseRepository

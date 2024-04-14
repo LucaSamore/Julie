@@ -4,6 +4,7 @@ import com.example.data.gamification.Streak
 import com.example.data.user.Interest
 import com.example.data.user.UserProfile
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 internal data class FirestoreUserDto(
     val id: String? = null,
@@ -15,7 +16,8 @@ internal data class FirestoreUserDto(
     val password: String? = null,
     val interest: List<FirestoreInterestDto>? = null,
     val points: Int? = null,
-    val currentStreak: FirestoreCurrentStreakDto? = null
+    val currentStreak: FirestoreCurrentStreakDto? = null,
+    val createdAt: LocalDateTime? = LocalDateTime.now()
 ) {
     companion object {
         const val COLLECTION = "users"
