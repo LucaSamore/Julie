@@ -30,23 +30,22 @@ constructor(
         withContext(ioDispatcher) {
             either {
                 val newUser = createNewAccount(userData).bind()
-                val userCreated =
-                    userProfileRepository.create(newUser).mapLeft { nonEmptyListOf(it) }.bind()
                 val signedUser =
                     authenticationService
                         .signUpWithEmailAndPassword(
                             ValidatedCredentials.SignUpDto(
-                                emailAddress = userCreated.userDetails.emailAddress,
-                                password = userCreated.userDetails.password,
-                                firstName = userCreated.userDetails.firstName,
-                                lastName = userCreated.userDetails.lastName,
-                                username = userCreated.userDetails.username,
-                                birthDate = userCreated.userDetails.birthDate,
-                                interest = userCreated.userDetails.interest
+                                emailAddress = newUser.userDetails.emailAddress,
+                                password = newUser.userDetails.password,
+                                firstName = newUser.userDetails.firstName,
+                                lastName = newUser.userDetails.lastName,
+                                username = newUser.userDetails.username,
+                                birthDate = newUser.userDetails.birthDate,
+                                interest = newUser.userDetails.interest
                             )
                         )
                         .mapLeft { nonEmptyListOf(it) }
                         .bind()
+                userProfileRepository.create(newUser).mapLeft { nonEmptyListOf(it) }.bind()
                 signedUser
             }
         }
