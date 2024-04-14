@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.julie.TestScreen
+import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
 
@@ -40,7 +41,10 @@ internal fun NavigationGraph(
                 modifier = modifier,
                 signInViewModel = hiltViewModel(),
                 paddingValues = paddingValues,
-                onGoToSignUpScreen = { navController.navigate(Destination.SignUp.name) }
+                onGoToSignUpScreen = { navController.navigate(Destination.SignUp.name) },
+                onGoToPasswordResetScreen = {
+                    navController.navigate(Destination.PasswordReset.name)
+                }
             ) {
                 navController.navigate(Destination.Test.name) {
                     popUpTo(Destination.SignIn.name) { inclusive = true }
@@ -58,6 +62,16 @@ internal fun NavigationGraph(
                 navController.navigate(Destination.Test.name) {
                     popUpTo(Destination.SignIn.name) { inclusive = true }
                 }
+            }
+        }
+
+        composable(route = Destination.PasswordReset.name) {
+            PasswordResetScreen(
+                modifier = modifier,
+                passwordResetViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            ) {
+                navController.popBackStack()
             }
         }
     }

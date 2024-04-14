@@ -31,7 +31,8 @@ internal fun SignInScreen(
     signInViewModel: SignInViewModel,
     paddingValues: PaddingValues,
     onGoToSignUpScreen: () -> Unit,
-    onSignedIn: () -> Unit
+    onGoToPasswordResetScreen: () -> Unit,
+    onSignedIn: () -> Unit,
 ) {
     val state by signInViewModel.signInScreenState.collectAsState()
 
@@ -73,6 +74,8 @@ internal fun SignInScreen(
         }
 
         Button(onClick = onGoToSignUpScreen) { Text(text = "Goto Sign Up") }
+
+        Button(onClick = onGoToPasswordResetScreen) { Text(text = "Forgot password?") }
 
         if (!errorMessageHidden) {
             Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
