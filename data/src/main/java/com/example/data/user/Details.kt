@@ -73,7 +73,7 @@ value class BirthDate private constructor(val birthDate: LocalDate) {
     companion object {
         operator fun invoke(birthDate: LocalDate): Either<UserProblem, BirthDate> = either {
             ensure(birthDate.isBefore(today().minusYears(MIN_AGE.toLong()))) {
-                BirthDateProblem("Birth date cannot be too young")
+                BirthDateProblem("Birth date is not valid")
             }
 
             ensure(birthDate.isAfter(today().minusYears(MAX_AGE.toLong()))) {

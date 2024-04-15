@@ -8,7 +8,7 @@ internal const val NAME_MAX_LENGTH = 50
 
 internal const val MIN_AGE = 6
 
-internal const val MAX_AGE = 100
+internal const val MAX_AGE = 110
 
 internal const val USERNAME_MIN_LENGTH = 2
 

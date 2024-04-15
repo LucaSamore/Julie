@@ -35,7 +35,9 @@ import com.example.data.user.UsernameProblem
 import com.example.julie.Lce
 import com.example.julie.components.InterestModalBottomSheet
 import com.example.julie.components.PasswordTextField
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +58,8 @@ internal fun SignUpScreen(
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     var showInterestSheet by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
+
+    val test = datePickerState.selectedDateMillis
 
     var firstNameValidationError by rememberSaveable { mutableStateOf("") }
     var firstNameValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
@@ -155,7 +159,11 @@ internal fun SignUpScreen(
                 signUpViewModel.signUp(
                     firstName,
                     lastName,
-                    LocalDate.of(2000, 4, 14),
+                    if (datePickerState.selectedDateMillis == null) LocalDate.now()
+                    else
+                        Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate(),
                     username,
                     emailAddress,
                     password,

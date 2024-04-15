@@ -3,7 +3,6 @@ package com.example.data.user.implementation
 import com.example.data.gamification.Streak
 import com.example.data.user.Interest
 import com.example.data.user.UserProfile
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -28,7 +27,7 @@ internal data class FirestoreUserDto(
                 id = user.id.userId,
                 firstName = user.userDetails.firstName.firstName,
                 lastName = user.userDetails.lastName.lastName,
-                birthDate = user.userDetails.birthDate.birthDate.betterFormat(),
+                birthDate = user.userDetails.birthDate.birthDate.toString(),
                 username = user.userDetails.username.username,
                 emailAddress = user.userDetails.emailAddress.emailAddress,
                 password = user.userDetails.password.password,
@@ -48,8 +47,8 @@ internal data class FirestoreCurrentStreakDto(
         fun fromEntity(currentStreak: Streak): FirestoreCurrentStreakDto =
             FirestoreCurrentStreakDto(
                 value = currentStreak.value.value,
-                started = currentStreak.begin.value.betterFormat(),
-                ended = currentStreak.end.value?.betterFormat()
+                started = currentStreak.begin.value.toString(),
+                ended = currentStreak.end.value?.toString()
             )
     }
 }
@@ -61,8 +60,5 @@ internal data class FirestoreInterestDto(val name: String? = null, val category:
     }
 }
 
-private fun LocalDate.betterFormat(pattern: String = "yyyy-MM-dd"): String =
-    format(DateTimeFormatter.ofPattern(pattern))
-
-private fun LocalDateTime.betterFormat(pattern: String = "yyyy-MM-dd"): String =
+private fun LocalDateTime.betterFormat(pattern: String = "yyyy-MM-dd HH:mm:ss"): String =
     format(DateTimeFormatter.ofPattern(pattern))
