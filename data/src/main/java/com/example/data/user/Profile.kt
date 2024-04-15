@@ -1,6 +1,9 @@
 package com.example.data.user
 
+import arrow.core.Either
 import arrow.core.NonEmptyList
+import arrow.core.raise.either
+import arrow.core.raise.ensure
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.Problem
@@ -39,9 +42,20 @@ interface UserProfile : Entity<UserId> {
 
 typealias UserProblems = NonEmptyList<UserProblem>
 
-@JvmInline value class UserId(val userId: String) : Identifier
+@JvmInline
+value class UserId private constructor(val userId: String) : Identifier {
+    companion object {
+        operator fun invoke(userId: String): Either<UserProblem, UserId> = either {
+            ensure(userId.isNotEmpty()) { UserIdProblem("User id cannot be empty") }
+
+            UserId(userId)
+        }
+    }
+}
 
 sealed interface UserProblem : Problem
+
+@JvmInline value class UserIdProblem(override val message: String) : UserProblem
 
 @JvmInline value class FirstNameProblem(override val message: String) : UserProblem
 

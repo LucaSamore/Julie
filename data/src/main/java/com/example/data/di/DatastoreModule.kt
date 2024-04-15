@@ -15,5 +15,6 @@ object DatastoreModule {
 
     @Singleton
     @Provides
-    fun provideUserDatastore(@ApplicationContext context: Context): UserDatastore = UserDatastore(context)
+    fun provideUserDatastore(@ApplicationContext context: Context): UserDatastore =
+        UserDatastore(context)
 }

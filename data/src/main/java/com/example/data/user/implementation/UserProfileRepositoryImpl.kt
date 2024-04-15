@@ -1,7 +1,9 @@
 package com.example.data.user.implementation
 
 import arrow.core.Either
+import arrow.core.flatMap
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.data.Problem
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
 import com.example.data.user.EmailAddress
@@ -46,6 +48,19 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getUserIdByEmailAddress(
+        emailAddress: EmailAddress
+    ): Either<Problem, UserId> =
+        Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .whereEqualTo("emailAddress", emailAddress.emailAddress)
+                    .get()
+                    .await()
+                    .toObjects(FirestoreUserDto::class.java)
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .flatMap { documents -> UserId(documents.first().id ?: "") }
 
     override suspend fun isEmailAddressAlreadyInUse(
         emailAddress: EmailAddress

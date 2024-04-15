@@ -10,6 +10,7 @@ import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
+import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.util.single
@@ -21,6 +22,7 @@ internal class SignInUseCaseImpl
 @Inject
 constructor(
     private val authenticationService: AuthenticationService,
+    private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
     private val userDatastore: UserDatastore
 ) : SignInUseCase {
@@ -31,10 +33,18 @@ constructor(
         withContext(ioDispatcher) {
             either {
                 val validatedCredentials = validateCredentials(emailAddress, password).bind()
-                authenticationService
-                    .signInWithEmailAndPassword(validatedCredentials)
-                    .single()
-                    .bind()
+                val signedInEvent =
+                    authenticationService
+                        .signInWithEmailAndPassword(validatedCredentials)
+                        .single()
+                        .bind()
+                val userId =
+                    userProfileRepository
+                        .getUserIdByEmailAddress(validatedCredentials.emailAddress)
+                        .single()
+                        .bind()
+                userDatastore.saveUserIdToDataStore(userId.userId)
+                signedInEvent
             }
         }
 

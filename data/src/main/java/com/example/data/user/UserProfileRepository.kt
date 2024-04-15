@@ -1,11 +1,15 @@
 package com.example.data.user
 
 import arrow.core.Either
+import com.example.data.Problem
 import com.example.data.Repository
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
 
 interface UserProfileRepository : Repository<UserProfile, UserId> {
+
+    suspend fun getUserIdByEmailAddress(emailAddress: EmailAddress): Either<Problem, UserId>
+
     suspend fun isEmailAddressAlreadyInUse(
         emailAddress: EmailAddress
     ): Either<RepositoryProblem, Boolean>

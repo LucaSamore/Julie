@@ -77,14 +77,14 @@ internal class UserProfileImpl(
 fun createNewAccount(createAccountDto: CreateAccountDto): Either<UserProblems, UserProfile> =
     either {
         zipOrAccumulate(
+            { UserId(UUID.randomUUID().toString()).bind() },
             { FirstName(createAccountDto.firstName).bind() },
             { LastName(createAccountDto.lastName).bind() },
             { BirthDate(createAccountDto.birthDate).bind() },
             { Username(createAccountDto.username).bind() },
             { EmailAddress(createAccountDto.emailAddress).bind() },
             { Password(createAccountDto.password).bind() },
-        ) { firstName, lastName, birthDate, username, emailAddress, password ->
-            val userId = UserId(UUID.randomUUID().toString())
+        ) { userId, firstName, lastName, birthDate, username, emailAddress, password ->
             UserProfileImpl(
                 id = userId,
                 UserDetails(

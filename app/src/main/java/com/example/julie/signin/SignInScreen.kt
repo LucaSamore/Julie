@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.example.data.authentication.AuthenticationProblem
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.PasswordProblem
 import com.example.data.user.UserProblem
@@ -93,10 +92,6 @@ internal fun SignInScreen(
             is Lce.Failure -> {
                 currentState.error.forEach { problem ->
                     when (problem) {
-                        is AuthenticationProblem -> {
-                            errorMessage = problem.message
-                            errorMessageHidden = false
-                        }
                         is UserProblem -> {
                             when (problem) {
                                 is EmailAddressProblem -> {
@@ -110,7 +105,10 @@ internal fun SignInScreen(
                                 else -> Unit
                             }
                         }
-                        else -> Unit
+                        else -> {
+                            errorMessage = problem.message
+                            errorMessageHidden = false
+                        }
                     }
                 }
             }

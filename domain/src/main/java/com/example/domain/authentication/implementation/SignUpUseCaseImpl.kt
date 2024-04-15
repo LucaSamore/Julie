@@ -40,7 +40,9 @@ constructor(
                 checkEmailAddressAlreadyInUse(newUser.userDetails.emailAddress).single().bind()
                 checkUsernameAlreadyInUse(newUser.userDetails.username).single().bind()
                 storeNewAccount(newUser).single().bind()
-                signUser(newUser).single().bind()
+                val signedUser = signUser(newUser).single().bind()
+                userDatastore.saveUserIdToDataStore(newUser.id.userId)
+                signedUser
             }
         }
 

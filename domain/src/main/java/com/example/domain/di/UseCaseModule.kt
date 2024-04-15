@@ -29,9 +29,11 @@ object UseCaseModule {
     @Provides
     fun provideSignInUseCase(
         @FirebaseService authenticationService: AuthenticationService,
+        @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         userDatastore: UserDatastore
-    ): SignInUseCase = SignInUseCaseImpl(authenticationService, ioDispatcher, userDatastore)
+    ): SignInUseCase =
+        SignInUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
 
     @Singleton
     @Provides
@@ -40,7 +42,8 @@ object UseCaseModule {
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         userDatastore: UserDatastore
-    ): SignUpUseCase = SignUpUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
+    ): SignUpUseCase =
+        SignUpUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
 
     @Singleton
     @Provides
