@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-internal class UserDatastore(private val context: Context) {
+class UserDatastore(private val context: Context) {
 
     private val userId: Flow<String> =
         context.datastore.data.map { preferences -> preferences[USER_ID] ?: "" }

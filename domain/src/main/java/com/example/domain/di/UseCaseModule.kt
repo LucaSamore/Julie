@@ -5,6 +5,7 @@ import com.example.data.di.FirebaseRepository
 import com.example.data.di.FirebaseService
 import com.example.data.di.IoDispatcher
 import com.example.data.user.UserProfileRepository
+import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.PasswordResetUseCase
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.authentication.SignOutUseCase
@@ -28,23 +29,26 @@ object UseCaseModule {
     @Provides
     fun provideSignInUseCase(
         @FirebaseService authenticationService: AuthenticationService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): SignInUseCase = SignInUseCaseImpl(authenticationService, ioDispatcher)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        userDatastore: UserDatastore
+    ): SignInUseCase = SignInUseCaseImpl(authenticationService, ioDispatcher, userDatastore)
 
     @Singleton
     @Provides
     fun provideSignUpUseCase(
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): SignUpUseCase = SignUpUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        userDatastore: UserDatastore
+    ): SignUpUseCase = SignUpUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
 
     @Singleton
     @Provides
     fun provideSignOutUseCase(
         @FirebaseService authenticationService: AuthenticationService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        userDatastore: UserDatastore
+    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher, userDatastore)
 
     @Singleton
     @Provides

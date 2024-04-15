@@ -14,6 +14,7 @@ import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.Username
 import com.example.data.user.UsernameProblem
+import com.example.data.user.implementation.UserDatastore
 import com.example.data.user.implementation.createNewAccount
 import com.example.domain.authentication.SignUpUseCase
 import com.example.domain.util.single
@@ -26,7 +27,8 @@ internal class SignUpUseCaseImpl
 constructor(
     private val authenticationService: AuthenticationService,
     private val userProfileRepository: UserProfileRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val userDatastore: UserDatastore
 ) : SignUpUseCase {
 
     override suspend fun invoke(

@@ -10,6 +10,7 @@ import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
+import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.util.single
 import javax.inject.Inject
@@ -20,7 +21,8 @@ internal class SignInUseCaseImpl
 @Inject
 constructor(
     private val authenticationService: AuthenticationService,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val userDatastore: UserDatastore
 ) : SignInUseCase {
     override suspend fun invoke(
         emailAddress: String,
