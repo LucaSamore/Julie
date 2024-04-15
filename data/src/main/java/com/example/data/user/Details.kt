@@ -125,7 +125,7 @@ value class Password private constructor(val password: String) {
 
             ensure(password lengthIsBetween PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH) {
                 PasswordProblem(
-                    "Password length must be between $PASSWORD_MIN_LENGTH and $PASSWORD_MAX_LENGTH"
+                    "Password length must be at least $PASSWORD_MIN_LENGTH characters long"
                 )
             }
 
