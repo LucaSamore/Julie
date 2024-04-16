@@ -30,5 +30,14 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Create Google Services file
+        run: cat /home/runner/work/Julie/Julie/app/google-services.json | base64
+
+      - name: Put data in Google Services file
+        working-directory: ./app
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA > google-services.json
+
       - name: Build and test
         run: ./gradlew build
