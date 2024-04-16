@@ -6,7 +6,6 @@ import com.example.data.Problem
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.PasswordReset
 import com.example.data.user.EmailAddress
-import com.example.data.user.UserProfileRepository
 import com.example.domain.authentication.PasswordResetUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +15,6 @@ internal class PasswordResetUseCaseImpl
 @Inject
 constructor(
     private val authenticationService: AuthenticationService,
-    private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : PasswordResetUseCase {
     override suspend fun invoke(emailAddress: String): Either<Problem, PasswordReset> =
@@ -24,7 +22,6 @@ constructor(
             either {
                 val email = EmailAddress(emailAddress).bind()
                 val passwordResetEvent = authenticationService.passwordReset(email).bind()
-                // TODO: Update user password in firestore
                 passwordResetEvent
             }
         }

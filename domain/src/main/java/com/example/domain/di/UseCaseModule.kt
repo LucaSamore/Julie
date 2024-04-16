@@ -57,8 +57,6 @@ object UseCaseModule {
     @Provides
     fun providePasswordResetUseCase(
         @FirebaseService authenticationService: AuthenticationService,
-        @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): PasswordResetUseCase =
-        PasswordResetUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher)
+    ): PasswordResetUseCase = PasswordResetUseCaseImpl(authenticationService, ioDispatcher)
 }

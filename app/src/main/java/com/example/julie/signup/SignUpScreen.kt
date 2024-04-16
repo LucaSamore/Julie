@@ -59,8 +59,6 @@ internal fun SignUpScreen(
     var showInterestSheet by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
-    val test = datePickerState.selectedDateMillis
-
     var firstNameValidationError by rememberSaveable { mutableStateOf("") }
     var firstNameValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
     var lastNameValidationError by rememberSaveable { mutableStateOf("") }
