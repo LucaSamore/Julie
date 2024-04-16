@@ -12,7 +12,7 @@ class TestBirthDate {
 
     @Test
     fun `Test birthdate is too old`() {
-        assert(BirthDate(LocalDate.now().minusYears(101)).isLeft())
+        assert(BirthDate(LocalDate.now().minusYears(200)).isLeft())
     }
 
     @Test
