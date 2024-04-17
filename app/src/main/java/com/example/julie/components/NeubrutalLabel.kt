@@ -21,7 +21,7 @@ fun NeubrutalLabel(modifier: Modifier, text: String, textAlign: TextAlign = Text
             textAlign = textAlign,
             fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
             color = NeobrutalismTheme.colors.background,
-            fontSize = 28.sp
+            fontSize = 24.sp
         )
 
         Text(text = text, textAlign = textAlign, style = NeobrutalismTheme.typography.lables)

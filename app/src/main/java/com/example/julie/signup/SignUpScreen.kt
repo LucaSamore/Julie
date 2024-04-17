@@ -1,19 +1,21 @@
 package com.example.julie.signup
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,8 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.data.user.BirthDateProblem
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.FirstNameProblem
@@ -34,7 +35,14 @@ import com.example.data.user.UserProblem
 import com.example.data.user.UsernameProblem
 import com.example.julie.Lce
 import com.example.julie.components.InterestModalBottomSheet
+import com.example.julie.components.NeubrutalErrorMessage
+import com.example.julie.components.NeubrutalLabel
 import com.example.julie.components.NeubrutalPasswordTextField
+import com.example.julie.components.NeubrutalPrimaryButton
+import com.example.julie.components.NeubrutalSecondaryButton
+import com.example.julie.components.NeubrutalTextField
+import com.example.julie.ui.theme.NeobrutalismTheme
+import com.example.julie.ui.theme.neubrutalismElevation
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -77,156 +85,202 @@ internal fun SignUpScreen(
     Column(
         modifier =
             modifier.fillMaxSize().padding(paddingValues).verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Sign Up Screen")
-
-        if (!firstNameValidationErrorHidden) {
-            Text(text = firstNameValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        TextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = { Text(text = "First name") }
-        )
-
-        if (!lastNameValidationErrorHidden) {
-            Text(text = lastNameValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        TextField(
-            value = lastName,
-            onValueChange = { lastName = it },
-            label = { Text(text = "Last name") }
-        )
-
-        if (!birthdateValidationErrorHidden) {
-            Text(text = birthdateValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        Button(onClick = { showDateDialog = true }) { Text(text = "Select Birth Date") }
-
-        if (!usernameValidationErrorHidden) {
-            Text(text = usernameValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(text = "Username") }
-        )
-
-        if (!emailValidationErrorHidden) {
-            Text(text = emailValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        TextField(
-            value = emailAddress,
-            onValueChange = { emailAddress = it },
-            label = { Text(text = "Email address") }
-        )
-
-        if (!passwordValidationErrorHidden) {
-            Text(text = passwordValidationError, color = Color.Red, textAlign = TextAlign.Center)
-        }
-
-        NeubrutalPasswordTextField(modifier = modifier, password = password) { password = it }
-
-        if (showInterestSheet) {
-            InterestModalBottomSheet(onDismiss = { showInterestSheet = false }, modifier = modifier)
-        }
-
-        if (showDateDialog) {
-            DatePickerDialog(
-                onDismissRequest = { showDateDialog = false },
-                confirmButton = { TextButton(onClick = { showDateDialog = false }) { Text("Ok") } },
-                dismissButton = {
-                    TextButton(onClick = { showDateDialog = false }) { Text("Cancel") }
-                }
-            ) {
-                DatePicker(state = datePickerState)
-            }
-        }
-
-        Button(onClick = { showInterestSheet = true }) { Text(text = "Select Interest") }
-
-        Button(
-            onClick = {
-                signUpViewModel.signUp(
-                    firstName,
-                    lastName,
-                    if (datePickerState.selectedDateMillis == null) LocalDate.now()
-                    else
-                        Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate(),
-                    username,
-                    emailAddress,
-                    password,
-                    emptyList()
-                )
-            }
+        Box(
+            modifier = modifier.fillMaxWidth(0.9f).padding(vertical = 16.dp).neubrutalismElevation()
         ) {
-            Text(text = "Sign Up")
+            Column(
+                modifier =
+                    modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (!errorMessageHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "First Name"
+                )
+
+                if (!firstNameValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = firstNameValidationError)
+                }
+
+                NeubrutalTextField(modifier = modifier, value = firstName, placeholder = "Mario") {
+                    firstName = it
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Last Name"
+                )
+
+                if (!lastNameValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = lastNameValidationError)
+                }
+
+                NeubrutalTextField(modifier = modifier, value = lastName, placeholder = "Rossi") {
+                    lastName = it
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Birth Date"
+                )
+
+                if (!birthdateValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = birthdateValidationError)
+                }
+
+                NeubrutalSecondaryButton(modifier = modifier, text = "Select Date", width = 0.8f) {
+                    showDateDialog = true
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Username"
+                )
+
+                if (!usernameValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = usernameValidationError)
+                }
+
+                NeubrutalTextField(modifier = modifier, value = username, placeholder = "marione") {
+                    username = it
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Email Address"
+                )
+
+                if (!emailValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
+                }
+
+                NeubrutalTextField(
+                    modifier = modifier,
+                    value = emailAddress,
+                    placeholder = "test@gmail.com"
+                ) {
+                    emailAddress = it
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Password"
+                )
+
+                if (!passwordValidationErrorHidden) {
+                    NeubrutalErrorMessage(modifier = modifier, message = passwordValidationError)
+                }
+
+                NeubrutalPasswordTextField(modifier = modifier, password = password) {
+                    password = it
+                }
+
+                NeubrutalLabel(
+                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
+                    text = "Interests"
+                )
+
+                NeubrutalSecondaryButton(
+                    modifier = modifier,
+                    text = "Select interests",
+                    width = 0.8f
+                ) {
+                    showInterestSheet = true
+                }
+
+                Spacer(modifier = modifier.padding(vertical = 16.dp))
+            }
         }
 
-        Button(onClick = onBackToSignInScreen) { Text(text = "Back to sign in") }
-
-        if (!errorMessageHidden) {
-            Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+        NeubrutalPrimaryButton(modifier = modifier, text = "REGISTER") {
+            signUpViewModel.signUp(
+                firstName,
+                lastName,
+                if (datePickerState.selectedDateMillis == null) LocalDate.now()
+                else
+                    Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate(),
+                username,
+                emailAddress,
+                password,
+                emptyList()
+            )
         }
 
-        when (val currentState = state) {
-            is Lce.Loading -> {
-                firstNameValidationErrorHidden = true
-                lastNameValidationErrorHidden = true
-                birthdateValidationErrorHidden = true
-                usernameValidationErrorHidden = true
-                emailValidationErrorHidden = true
-                passwordValidationErrorHidden = true
-                errorMessageHidden = true
-            }
-            is Lce.Content -> {
-                onSignedUp()
-            }
-            is Lce.Failure -> {
-                currentState.error.forEach { problem ->
-                    when (problem) {
-                        is UserProblem -> {
-                            when (problem) {
-                                is FirstNameProblem -> {
-                                    firstNameValidationError = problem.message
-                                    firstNameValidationErrorHidden = false
-                                }
-                                is LastNameProblem -> {
-                                    lastNameValidationError = problem.message
-                                    lastNameValidationErrorHidden = false
-                                }
-                                is BirthDateProblem -> {
-                                    birthdateValidationError = problem.message
-                                    birthdateValidationErrorHidden = false
-                                }
-                                is UsernameProblem -> {
-                                    usernameValidationError = problem.message
-                                    usernameValidationErrorHidden = false
-                                }
-                                is EmailAddressProblem -> {
-                                    emailValidationError = problem.message
-                                    emailValidationErrorHidden = false
-                                }
-                                is PasswordProblem -> {
-                                    passwordValidationError = problem.message
-                                    passwordValidationErrorHidden = false
-                                }
-                                else -> Unit
+        Spacer(modifier = modifier.padding(vertical = 8.dp))
+    }
+
+    if (showInterestSheet) {
+        InterestModalBottomSheet(onDismiss = { showInterestSheet = false }, modifier = modifier)
+    }
+
+    if (showDateDialog) {
+        DatePickerDialog(
+            onDismissRequest = { showDateDialog = false },
+            confirmButton = { TextButton(onClick = { showDateDialog = false }) { Text("Ok") } },
+            dismissButton = { TextButton(onClick = { showDateDialog = false }) { Text("Cancel") } }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    when (val currentState = state) {
+        is Lce.Loading -> {
+            firstNameValidationErrorHidden = true
+            lastNameValidationErrorHidden = true
+            birthdateValidationErrorHidden = true
+            usernameValidationErrorHidden = true
+            emailValidationErrorHidden = true
+            passwordValidationErrorHidden = true
+            errorMessageHidden = true
+        }
+        is Lce.Content -> {
+            onSignedUp()
+        }
+        is Lce.Failure -> {
+            currentState.error.forEach { problem ->
+                when (problem) {
+                    is UserProblem -> {
+                        when (problem) {
+                            is FirstNameProblem -> {
+                                firstNameValidationError = problem.message
+                                firstNameValidationErrorHidden = false
                             }
+                            is LastNameProblem -> {
+                                lastNameValidationError = problem.message
+                                lastNameValidationErrorHidden = false
+                            }
+                            is BirthDateProblem -> {
+                                birthdateValidationError = problem.message
+                                birthdateValidationErrorHidden = false
+                            }
+                            is UsernameProblem -> {
+                                usernameValidationError = problem.message
+                                usernameValidationErrorHidden = false
+                            }
+                            is EmailAddressProblem -> {
+                                emailValidationError = problem.message
+                                emailValidationErrorHidden = false
+                            }
+                            is PasswordProblem -> {
+                                passwordValidationError = problem.message
+                                passwordValidationErrorHidden = false
+                            }
+                            else -> Unit
                         }
-                        else -> {
-                            errorMessage = problem.message
-                            errorMessageHidden = false
-                        }
+                    }
+                    else -> {
+                        errorMessage = problem.message
+                        errorMessageHidden = false
                     }
                 }
             }

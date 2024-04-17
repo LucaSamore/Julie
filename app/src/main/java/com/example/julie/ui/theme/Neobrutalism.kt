@@ -109,7 +109,7 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                 ),
             lables =
                 TextStyle(
-                    fontSize = 28.sp,
+                    fontSize = 24.sp,
                     fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
                     color = textColor,
                     drawStyle = Stroke(width = 3f, join = StrokeJoin.Round)

@@ -73,7 +73,7 @@ internal fun SignInScreen(
             textAlign = TextAlign.Center
         )
 
-        Box(modifier = modifier.fillMaxWidth(.9f).fillMaxHeight(.5f).neubrutalismElevation()) {
+        Box(modifier = modifier.fillMaxWidth(.9f).fillMaxHeight(.4f).neubrutalismElevation()) {
             Column(
                 modifier =
                     modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),

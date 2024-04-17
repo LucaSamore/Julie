@@ -8,14 +8,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
-fun NeubrutalSecondaryButton(modifier: Modifier, text: String, onClick: () -> Unit) {
+fun NeubrutalSecondaryButton(
+    modifier: Modifier,
+    text: String,
+    width: Float = .5f,
+    height: Dp = 48.dp,
+    onClick: () -> Unit
+) {
     Button(
-        modifier = modifier.fillMaxWidth(.5f).height(48.dp).neubrutalismElevation(),
+        modifier = modifier.fillMaxWidth(width).height(height).neubrutalismElevation(),
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = NeobrutalismTheme.colors.buttonSecondary,
