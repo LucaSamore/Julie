@@ -10,9 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,6 +69,7 @@ val LocalNeobrutalismShapes = staticCompositionLocalOf {
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun NeobrutalismTheme(content: @Composable () -> Unit) {
     val neobrutalismColors =
@@ -85,10 +88,17 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
             mainTitle =
                 TextStyle(
                     fontSize = 48.sp,
-                    fontFamily = FontFamily(Font(R.font.nunito_variable)),
-                    fontWeight = FontWeight.W900,
-                    color = textColor,
-                    drawStyle = Stroke(width = 6f, join = StrokeJoin.Round)
+                    fontFamily =
+                        FontFamily(
+                            Font(
+                                R.font.nunito_variable,
+                                variationSettings =
+                                    FontVariation.Settings(
+                                        FontVariation.weight(500),
+                                    )
+                            )
+                        ),
+                    color = textColor
                 ),
             screenTitle =
                 TextStyle(
@@ -99,10 +109,10 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                 ),
             lables =
                 TextStyle(
-                    fontSize = 48.sp,
+                    fontSize = 28.sp,
                     fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
                     color = textColor,
-                    drawStyle = Stroke(width = 6f, join = StrokeJoin.Round)
+                    drawStyle = Stroke(width = 3f, join = StrokeJoin.Round)
                 ),
             buttons =
                 TextStyle(

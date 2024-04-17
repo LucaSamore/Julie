@@ -34,7 +34,7 @@ import com.example.data.user.UserProblem
 import com.example.data.user.UsernameProblem
 import com.example.julie.Lce
 import com.example.julie.components.InterestModalBottomSheet
-import com.example.julie.components.PasswordTextField
+import com.example.julie.components.NeubrutalPasswordTextField
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -132,7 +132,7 @@ internal fun SignUpScreen(
             Text(text = passwordValidationError, color = Color.Red, textAlign = TextAlign.Center)
         }
 
-        PasswordTextField(modifier = modifier, password = password) { password = it }
+        NeubrutalPasswordTextField(modifier = modifier, password = password) { password = it }
 
         if (showInterestSheet) {
             InterestModalBottomSheet(onDismiss = { showInterestSheet = false }, modifier = modifier)
