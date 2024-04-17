@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,11 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.PasswordProblem
 import com.example.data.user.UserProblem
 import com.example.julie.Lce
 import com.example.julie.components.PasswordTextField
+import com.example.julie.ui.theme.NeobrutalismTheme
+import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
 internal fun SignInScreen(
@@ -50,7 +56,12 @@ internal fun SignInScreen(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Sign In Screen")
+        Text(
+            text = "Demo App",
+            modifier = modifier.fillMaxWidth(),
+            style = NeobrutalismTheme.typography.mainTitle,
+            textAlign = TextAlign.Center
+        )
 
         if (!emailValidationErrorHidden) {
             Text(text = emailValidationError, color = Color.Red, textAlign = TextAlign.Center)
@@ -68,10 +79,6 @@ internal fun SignInScreen(
 
         PasswordTextField(modifier = modifier, password = password) { password = it }
 
-        Button(onClick = { signInViewModel.signIn(emailAddress, password) }) {
-            Text(text = "Sign In")
-        }
-
         Button(onClick = onGoToSignUpScreen) { Text(text = "Goto Sign Up") }
 
         Button(onClick = onGoToPasswordResetScreen) { Text(text = "Forgot password?") }
@@ -79,6 +86,33 @@ internal fun SignInScreen(
         if (!errorMessageHidden) {
             Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
         }
+
+        Button(
+            modifier = modifier.fillMaxWidth(.8f).height(48.dp).neubrutalismElevation(),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = NeobrutalismTheme.colors.buttonPrimary,
+                    contentColor = NeobrutalismTheme.colors.text,
+                    disabledContainerColor = NeobrutalismTheme.colors.buttonPrimary,
+                    disabledContentColor = NeobrutalismTheme.colors.buttonPrimary,
+                ),
+            shape = NeobrutalismTheme.shapes.surface,
+            onClick = { signInViewModel.signIn(emailAddress, password) }
+        ) {
+            Text(
+                text = "LOGIN",
+                modifier = modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = NeobrutalismTheme.typography.buttons
+            )
+        }
+
+        Text(
+            text = "Email or username",
+            modifier = modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = NeobrutalismTheme.typography.lables
+        )
 
         when (val currentState = state) {
             is Lce.Loading -> {

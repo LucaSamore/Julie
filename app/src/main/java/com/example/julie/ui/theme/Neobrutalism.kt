@@ -8,9 +8,15 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.julie.R
 
 @Immutable
 data class NeobrutalismColors(
@@ -31,11 +37,7 @@ data class NeobrutalismTypography(
     val buttons: TextStyle
 )
 
-@Immutable
-data class NeobrutalismShapes(
-    val component: Shape,
-    val surface: Shape
-)
+@Immutable data class NeobrutalismShapes(val component: Shape, val surface: Shape)
 
 val LocalNeobrutalismColors = staticCompositionLocalOf {
     NeobrutalismColors(
@@ -67,31 +69,58 @@ val LocalNeobrutalismShapes = staticCompositionLocalOf {
 
 @Composable
 fun NeobrutalismTheme(content: @Composable () -> Unit) {
-    val neobrutalismColors = NeobrutalismColors(
-        background = Color(0xFFFFFAF0),
-        contentPrimary = Color(0xFF7F72FF),
-        contentSecondary = Color(0xFFB4ADF9),
-        contentTertiary = Color(0xFF7BE6CD),
-        text = Color(0xFF1E1E1E),
-        buttonPrimary = Color(0xFF7BE6CD),
-        buttonSecondary = Color(0xFFFFD787)
-    )
+    val neobrutalismColors =
+        NeobrutalismColors(
+            background = backgroundColor,
+            contentPrimary = Color(0xFF7F72FF),
+            contentSecondary = Color(0xFFB4ADF9),
+            contentTertiary = Color(0xFF7BE6CD),
+            text = textColor,
+            buttonPrimary = Color(0xFF7BE6CD),
+            buttonSecondary = Color(0xFFFFD787)
+        )
 
-    val neobrutalismTypography = NeobrutalismTypography(
-        mainTitle = TextStyle(fontSize = 48.sp),
-        screenTitle = TextStyle(fontSize = 24.sp),
-        lables = TextStyle(fontSize = 16.sp),
-        buttons = TextStyle(fontSize = 16.sp)
-    )
+    val neobrutalismTypography =
+        NeobrutalismTypography(
+            mainTitle =
+                TextStyle(
+                    fontSize = 48.sp,
+                    fontFamily = FontFamily(Font(R.font.nunito_variable)),
+                    fontWeight = FontWeight.W900,
+                    color = textColor,
+                    drawStyle = Stroke(width = 6f, join = StrokeJoin.Round)
+                ),
+            screenTitle =
+                TextStyle(
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                    color = textColor,
+                    fontWeight = FontWeight.Bold
+                ),
+            lables =
+                TextStyle(
+                    fontSize = 48.sp,
+                    fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                    color = textColor,
+                    drawStyle = Stroke(width = 6f, join = StrokeJoin.Round)
+                ),
+            buttons =
+                TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.lexend_mega_variable)),
+                    fontWeight = FontWeight.W900
+                )
+        )
 
-    val neobrutalismShape = NeobrutalismShapes(
-        component = RoundedCornerShape(percent = 10),
-        surface = RoundedCornerShape(size = 4.dp)
-    )
+    val neobrutalismShape =
+        NeobrutalismShapes(
+            component = RoundedCornerShape(percent = 10),
+            surface = RoundedCornerShape(size = 4.dp)
+        )
 
     CompositionLocalProvider(
         LocalNeobrutalismColors provides neobrutalismColors,
-        LocalNeobrutalismTypography provides  neobrutalismTypography,
+        LocalNeobrutalismTypography provides neobrutalismTypography,
         LocalNeobrutalismShapes provides neobrutalismShape,
         content = content
     )
