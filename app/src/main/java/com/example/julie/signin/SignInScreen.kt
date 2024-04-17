@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,7 +25,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.PasswordProblem
@@ -38,6 +34,8 @@ import com.example.julie.R
 import com.example.julie.components.NeubrutalErrorMessage
 import com.example.julie.components.NeubrutalLabel
 import com.example.julie.components.NeubrutalPasswordTextField
+import com.example.julie.components.NeubrutalPrimaryButton
+import com.example.julie.components.NeubrutalSecondaryButton
 import com.example.julie.components.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
@@ -83,13 +81,13 @@ internal fun SignInScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (!errorMessageHidden) {
-                    NeubrutalErrorMessage(message = errorMessage)
+                    NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
                 }
 
                 NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Email Address")
 
                 if (!emailValidationErrorHidden) {
-                    NeubrutalErrorMessage(message = emailValidationError)
+                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
                 }
 
                 NeubrutalTextField(
@@ -103,7 +101,7 @@ internal fun SignInScreen(
                 NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Password")
 
                 if (!passwordValidationErrorHidden) {
-                    NeubrutalErrorMessage(message = passwordValidationError)
+                    NeubrutalErrorMessage(modifier = modifier, message = passwordValidationError)
                 }
 
                 NeubrutalPasswordTextField(modifier = modifier, password = password) {
@@ -125,25 +123,7 @@ internal fun SignInScreen(
                 ),
         )
 
-        Button(
-            modifier = modifier.fillMaxWidth(.5f).height(48.dp).neubrutalismElevation(),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = NeobrutalismTheme.colors.buttonSecondary,
-                    contentColor = NeobrutalismTheme.colors.text,
-                    disabledContainerColor = NeobrutalismTheme.colors.buttonSecondary,
-                    disabledContentColor = NeobrutalismTheme.colors.buttonSecondary,
-                ),
-            shape = NeobrutalismTheme.shapes.surface,
-            onClick = { onGoToSignUpScreen() }
-        ) {
-            Text(
-                text = "Register Now",
-                modifier = modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = NeobrutalismTheme.typography.buttons
-            )
-        }
+        NeubrutalSecondaryButton(modifier = modifier, text = "Register") { onGoToSignUpScreen() }
 
         Text(
             modifier = modifier.fillMaxWidth().clickable { onGoToPasswordResetScreen() },
@@ -159,24 +139,8 @@ internal fun SignInScreen(
                 ),
         )
 
-        Button(
-            modifier = modifier.fillMaxWidth(.9f).height(48.dp).neubrutalismElevation(),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = NeobrutalismTheme.colors.buttonPrimary,
-                    contentColor = NeobrutalismTheme.colors.text,
-                    disabledContainerColor = NeobrutalismTheme.colors.buttonPrimary,
-                    disabledContentColor = NeobrutalismTheme.colors.buttonPrimary,
-                ),
-            shape = NeobrutalismTheme.shapes.surface,
-            onClick = { signInViewModel.signIn(emailAddress, password) }
-        ) {
-            Text(
-                text = "LOGIN",
-                modifier = modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = NeobrutalismTheme.typography.buttons
-            )
+        NeubrutalPrimaryButton(modifier = modifier, text = "LOGIN") {
+            signInViewModel.signIn(emailAddress, password)
         }
     }
 
