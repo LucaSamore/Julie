@@ -6,6 +6,7 @@ import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
 import com.example.data.authentication.AuthenticationService
+import com.example.data.authentication.EmailNotVerified
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
@@ -38,6 +39,7 @@ constructor(
                         .signInWithEmailAndPassword(validatedCredentials)
                         .single()
                         .bind()
+                checkIfEmailIsVerified().single().bind()
                 val userId =
                     userProfileRepository
                         .getUserIdByEmailAddress(validatedCredentials.emailAddress)
@@ -57,6 +59,12 @@ constructor(
             { Password(password).bind() },
         ) { emailAddress, password ->
             ValidatedCredentials.SignInDto(emailAddress, password)
+        }
+    }
+
+    private fun checkIfEmailIsVerified(): Either<Problem, Unit> = either {
+        if (!authenticationService.isEmailVerified()) {
+            raise(EmailNotVerified("Email is not verified"))
         }
     }
 }

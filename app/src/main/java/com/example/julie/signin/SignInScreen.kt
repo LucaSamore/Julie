@@ -26,6 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import com.example.data.authentication.AuthenticationError
+import com.example.data.authentication.AuthenticationProblem
+import com.example.data.authentication.EmailNotVerified
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.PasswordProblem
 import com.example.data.user.UserProblem
@@ -170,10 +173,19 @@ internal fun SignInScreen(
                             else -> Unit
                         }
                     }
-                    else -> {
-                        errorMessage = problem.message
-                        errorMessageHidden = false
+                    is AuthenticationProblem -> {
+                        when (problem) {
+                            is AuthenticationError -> {
+                                errorMessage = problem.message
+                                errorMessageHidden = false
+                            }
+                            is EmailNotVerified -> {
+                                onEmailNotVerified()
+                            }
+                            else -> Unit
+                        }
                     }
+                    else -> Unit
                 }
             }
         }

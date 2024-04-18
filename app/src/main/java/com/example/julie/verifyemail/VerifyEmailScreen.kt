@@ -26,6 +26,7 @@ import com.example.julie.Lce
 import com.example.julie.components.NeubrutalErrorMessage
 import com.example.julie.components.NeubrutalLabel
 import com.example.julie.components.NeubrutalPrimaryButton
+import com.example.julie.components.NeubrutalSecondaryButton
 import com.example.julie.components.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
@@ -35,6 +36,7 @@ internal fun VerifyEmailScreen(
     modifier: Modifier,
     verifyEmailViewModel: VerifyEmailViewModel,
     paddingValues: PaddingValues,
+    onGoToSignInScreen: () -> Unit,
     onVerificationEmailSent: () -> Unit
 ) {
     val state by verifyEmailViewModel.verifyEmailScreenState.collectAsState()
@@ -99,6 +101,10 @@ internal fun VerifyEmailScreen(
                     verifyEmailViewModel.sendVerificationEmail(emailAddress)
                 }
             }
+        }
+
+        NeubrutalSecondaryButton(modifier = modifier, text = "Back to login") {
+            onGoToSignInScreen()
         }
     }
 

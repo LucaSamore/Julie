@@ -81,7 +81,12 @@ internal fun NavigationGraph(
             VerifyEmailScreen(
                 modifier = modifier,
                 verifyEmailViewModel = hiltViewModel(),
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                onGoToSignInScreen = {
+                    navController.navigate(Destination.SignIn.name) {
+                        popUpTo(Destination.VerifyEmail.name) { inclusive = true }
+                    }
+                }
             ) {
                 navController.popBackStack()
             }
