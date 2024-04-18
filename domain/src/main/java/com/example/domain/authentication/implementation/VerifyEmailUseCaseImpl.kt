@@ -7,6 +7,7 @@ import com.example.data.authentication.VerificationEmailSent
 import com.example.domain.authentication.VerifyEmailUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 internal class VerifyEmailUseCaseImpl
 @Inject
@@ -15,7 +16,6 @@ constructor(
     private val ioDispatcher: CoroutineDispatcher
 ) : VerifyEmailUseCase {
 
-    override suspend fun invoke(emailAddress: String): Either<Problem, VerificationEmailSent> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun invoke(emailAddress: String): Either<Problem, VerificationEmailSent> =
+        withContext(ioDispatcher) { authenticationService.sendVerificationEmail() }
 }

@@ -70,4 +70,6 @@ value class AuthenticationError(override val message: String) : AuthenticationPr
     }
 }
 
+@JvmInline value class EmailNotVerified(override val message: String) : AuthenticationProblem
+
 const val UnknownError = "Unknown error"
