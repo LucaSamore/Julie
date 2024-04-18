@@ -11,6 +11,7 @@ import com.example.julie.TestScreen
 import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
+import com.example.julie.verifyemail.VerifyEmailScreen
 
 @Composable
 internal fun NavigationGraph(
@@ -41,6 +42,7 @@ internal fun NavigationGraph(
                 modifier = modifier,
                 signInViewModel = hiltViewModel(),
                 paddingValues = paddingValues,
+                onEmailNotVerified = { navController.navigate(Destination.VerifyEmail.name) },
                 onGoToSignUpScreen = { navController.navigate(Destination.SignUp.name) },
                 onGoToPasswordResetScreen = {
                     navController.navigate(Destination.PasswordReset.name)
@@ -59,7 +61,7 @@ internal fun NavigationGraph(
                 paddingValues = paddingValues,
                 onBackToSignInScreen = { navController.popBackStack() }
             ) {
-                navController.navigate(Destination.Test.name) {
+                navController.navigate(Destination.SignIn.name) {
                     popUpTo(Destination.SignIn.name) { inclusive = true }
                 }
             }
@@ -69,6 +71,16 @@ internal fun NavigationGraph(
             PasswordResetScreen(
                 modifier = modifier,
                 passwordResetViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            ) {
+                navController.popBackStack()
+            }
+        }
+
+        composable(route = Destination.VerifyEmail.name) {
+            VerifyEmailScreen(
+                modifier = modifier,
+                verifyEmailViewModel = hiltViewModel(),
                 paddingValues = paddingValues
             ) {
                 navController.popBackStack()

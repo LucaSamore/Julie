@@ -45,6 +45,7 @@ internal fun SignInScreen(
     modifier: Modifier,
     signInViewModel: SignInViewModel,
     paddingValues: PaddingValues,
+    onEmailNotVerified: () -> Unit,
     onGoToSignUpScreen: () -> Unit,
     onGoToPasswordResetScreen: () -> Unit,
     onSignedIn: () -> Unit,

@@ -7,6 +7,8 @@ sealed class Destination(val name: String) {
 
     data object PasswordReset : Destination("Password Reset")
 
+    data object VerifyEmail : Destination("Verify Email")
+
     data object Home : Destination("Home")
 
     data object Test : Destination("Test")

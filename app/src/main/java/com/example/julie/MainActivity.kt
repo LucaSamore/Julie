@@ -23,16 +23,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            //            JulieTheme {
-            //                // A surface container using the 'background' color from the theme
-            //                Surface(
-            //                    modifier = Modifier.fillMaxSize(),
-            //                    color = MaterialTheme.colorScheme.background
-            //                ) {
-            //                    JulieApplication(startDestination = startDestination)
-            //                }
-            //            }
-
             NeobrutalismTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -47,7 +37,14 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         startDestination =
-            if (authenticationService.isUserLoggedIn()) Destination.Test.name
-            else Destination.SignIn.name
+            if (authenticationService.isUserLoggedIn()) {
+                if (authenticationService.isEmailVerified()) {
+                    Destination.Test.name
+                } else {
+                    Destination.VerifyEmail.name
+                }
+            } else {
+                Destination.SignIn.name
+            }
     }
 }
