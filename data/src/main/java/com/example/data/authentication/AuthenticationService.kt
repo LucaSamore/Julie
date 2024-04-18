@@ -25,6 +25,10 @@ interface AuthenticationService {
 
     suspend fun signOut(): Either<AuthenticationProblem, UserSignedOut>
 
+    suspend fun sendVerificationEmail(): Either<AuthenticationProblem, VerificationEmailSent>
+
+    fun isEmailVerified(): Boolean
+
     fun isUserLoggedIn(): Boolean
 }
 
@@ -53,6 +57,8 @@ data object UserSignedUp
 data object UserSignedOut
 
 data object PasswordReset
+
+data object VerificationEmailSent
 
 sealed interface AuthenticationProblem : Problem
 

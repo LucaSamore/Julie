@@ -41,6 +41,7 @@ constructor(
                 checkUsernameAlreadyInUse(newUser.userDetails.username).single().bind()
                 storeNewAccount(newUser).single().bind()
                 val signedUser = signUser(newUser).single().bind()
+                authenticationService.sendVerificationEmail().single().bind()
                 userDatastore.saveUserIdToDataStore(newUser.id.userId)
                 signedUser
             }

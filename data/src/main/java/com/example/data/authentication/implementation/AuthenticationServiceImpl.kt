@@ -9,6 +9,7 @@ import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.ValidatedCredentials
+import com.example.data.authentication.VerificationEmailSent
 import com.example.data.user.EmailAddress
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -57,6 +58,14 @@ internal class AuthenticationServiceImpl : AuthenticationService {
         Either.catch { auth.signOut() }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { UserSignedOut }
+
+    override suspend fun sendVerificationEmail():
+        Either<AuthenticationError, VerificationEmailSent> =
+        Either.catch { auth.currentUser!!.sendEmailVerification().await() }
+            .mapLeft { AuthenticationError.fromThrowable(it) }
+            .map { VerificationEmailSent }
+
+    override fun isEmailVerified(): Boolean = auth.currentUser!!.isEmailVerified
 
     override fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }
