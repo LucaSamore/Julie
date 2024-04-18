@@ -5,5 +5,5 @@ import com.example.data.Problem
 import com.example.data.authentication.VerificationEmailSent
 
 interface VerifyEmailUseCase {
-    suspend operator fun invoke(emailAddress: String): Either<Problem, VerificationEmailSent>
+    suspend operator fun invoke(): Either<Problem, VerificationEmailSent>
 }

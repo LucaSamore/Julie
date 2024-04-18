@@ -16,6 +16,6 @@ constructor(
     private val ioDispatcher: CoroutineDispatcher
 ) : VerifyEmailUseCase {
 
-    override suspend fun invoke(emailAddress: String): Either<Problem, VerificationEmailSent> =
+    override suspend fun invoke(): Either<Problem, VerificationEmailSent> =
         withContext(ioDispatcher) { authenticationService.sendVerificationEmail() }
 }

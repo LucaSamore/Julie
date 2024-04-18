@@ -36,7 +36,8 @@ data class NeobrutalismTypography(
     val mainTitle: TextStyle,
     val screenTitle: TextStyle,
     val lables: TextStyle,
-    val buttons: TextStyle
+    val buttons: TextStyle,
+    val text: TextStyle
 )
 
 @Immutable data class NeobrutalismShapes(val component: Shape, val surface: Shape)
@@ -59,6 +60,7 @@ val LocalNeobrutalismTypography = staticCompositionLocalOf {
         screenTitle = TextStyle.Default,
         lables = TextStyle.Default,
         buttons = TextStyle.Default,
+        text = TextStyle.Default
     )
 }
 
@@ -119,6 +121,12 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.lexend_mega_variable)),
                     fontWeight = FontWeight.W900
+                ),
+            text =
+                TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                    fontWeight = FontWeight.Bold
                 )
         )
 

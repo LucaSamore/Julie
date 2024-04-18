@@ -1,11 +1,8 @@
 package com.example.julie.verifyemail
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,32 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.data.user.UserProblem
+import com.example.data.authentication.AuthenticationProblem
 import com.example.julie.Lce
-import com.example.julie.components.NeubrutalErrorMessage
-import com.example.julie.components.NeubrutalLabel
 import com.example.julie.components.NeubrutalPrimaryButton
 import com.example.julie.components.NeubrutalSecondaryButton
-import com.example.julie.components.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
 internal fun VerifyEmailScreen(
     modifier: Modifier,
     verifyEmailViewModel: VerifyEmailViewModel,
     paddingValues: PaddingValues,
-    onGoToSignInScreen: () -> Unit,
-    onVerificationEmailSent: () -> Unit
+    onGoToSignInScreen: () -> Unit
 ) {
     val state by verifyEmailViewModel.verifyEmailScreenState.collectAsState()
 
-    var emailAddress by rememberSaveable { mutableStateOf("") }
-
-    var emailValidationError by rememberSaveable { mutableStateOf("") }
-    var emailValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
     var errorMessage by rememberSaveable { mutableStateOf("") }
     var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
+
+    var verificationEmailSentMessage by rememberSaveable { mutableStateOf("") }
+    var verificationEmailSentMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize().padding(paddingValues),
@@ -67,40 +58,17 @@ internal fun VerifyEmailScreen(
             textAlign = TextAlign.Center
         )
 
-        Box(modifier = modifier.fillMaxWidth(.9f).fillMaxHeight(.5f).neubrutalismElevation()) {
-            Column(
-                modifier =
-                    modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Email Address")
+        if (!errorMessageHidden) {
+            Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+        }
 
-                if (!emailValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
-                }
-
-                NeubrutalTextField(
-                    modifier = modifier,
-                    value = emailAddress,
-                    placeholder = "test@gmail.com"
-                ) {
-                    emailAddress = it
-                }
-
-                if (!errorMessageHidden) {
-                    Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
-                }
-
-                NeubrutalPrimaryButton(
-                    modifier = modifier,
-                    text = "SEND VERIFICATION EMAIL",
-                    width = .8f,
-                    height = 64.dp
-                ) {
-                    verifyEmailViewModel.sendVerificationEmail(emailAddress)
-                }
-            }
+        NeubrutalPrimaryButton(
+            modifier = modifier,
+            text = "SEND VERIFICATION EMAIL",
+            width = .8f,
+            height = 64.dp
+        ) {
+            verifyEmailViewModel.sendVerificationEmail()
         }
 
         NeubrutalSecondaryButton(modifier = modifier, text = "Back to login") {
@@ -111,21 +79,19 @@ internal fun VerifyEmailScreen(
     when (val currentState = state) {
         is Lce.Loading -> {
             errorMessageHidden = true
-            emailValidationErrorHidden = true
+            verificationEmailSentMessageHidden = true
         }
         is Lce.Content -> {
-            onVerificationEmailSent()
+            verificationEmailSentMessage = "Check your email for verification"
+            verificationEmailSentMessageHidden = false
         }
         is Lce.Failure -> {
             when (currentState.error) {
-                is UserProblem -> {
-                    emailValidationError = currentState.error.message
-                    emailValidationErrorHidden = false
-                }
-                else -> {
+                is AuthenticationProblem -> {
                     errorMessage = currentState.error.message
                     errorMessageHidden = false
                 }
+                else -> Unit
             }
         }
     }

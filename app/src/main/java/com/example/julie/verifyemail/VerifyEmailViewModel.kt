@@ -20,10 +20,10 @@ class VerifyEmailViewModel @Inject constructor(private val verifyEmailUseCase: V
 
     val verifyEmailScreenState = _verifyEmailScreenState.asStateFlow()
 
-    fun sendVerificationEmail(emailAddress: String) =
+    fun sendVerificationEmail() =
         viewModelScope.launch {
             _verifyEmailScreenState.update { Lce.Loading }
-            verifyEmailUseCase(emailAddress)
+            verifyEmailUseCase()
                 .fold(
                     { errors -> _verifyEmailScreenState.update { Lce.Failure(errors) } },
                     { success -> _verifyEmailScreenState.update { Lce.Content(success) } },
