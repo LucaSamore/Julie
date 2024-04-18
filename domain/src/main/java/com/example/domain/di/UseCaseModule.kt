@@ -10,10 +10,12 @@ import com.example.domain.authentication.PasswordResetUseCase
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.authentication.SignOutUseCase
 import com.example.domain.authentication.SignUpUseCase
+import com.example.domain.authentication.VerifyEmailUseCase
 import com.example.domain.authentication.implementation.PasswordResetUseCaseImpl
 import com.example.domain.authentication.implementation.SignInUseCaseImpl
 import com.example.domain.authentication.implementation.SignOutUseCaseImpl
 import com.example.domain.authentication.implementation.SignUpUseCaseImpl
+import com.example.domain.authentication.implementation.VerifyEmailUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +61,11 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): PasswordResetUseCase = PasswordResetUseCaseImpl(authenticationService, ioDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideVerifyEmailUseCase(
+        @FirebaseService authenticationService: AuthenticationService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): VerifyEmailUseCase = VerifyEmailUseCaseImpl(authenticationService, ioDispatcher)
 }
