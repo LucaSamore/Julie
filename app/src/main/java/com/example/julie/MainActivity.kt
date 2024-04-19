@@ -1,6 +1,12 @@
 package com.example.julie
 
+import android.app.AppOpsManager
+import android.app.AppOpsManager.MODE_ALLOWED
+import android.app.AppOpsManager.OPSTR_GET_USAGE_STATS
+import android.content.Intent
 import android.os.Bundle
+import android.os.Process
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +28,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!checkUsageStatsPermission()) {
+            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+        }
+
         setContent {
             NeobrutalismTheme {
                 Surface(
@@ -46,5 +57,12 @@ class MainActivity : ComponentActivity() {
             } else {
                 Destination.SignIn.name
             }
+    }
+
+    private fun checkUsageStatsPermission(): Boolean {
+        val appOpsManager = getSystemService(APP_OPS_SERVICE) as AppOpsManager
+        val mode =
+            appOpsManager.unsafeCheckOpNoThrow(OPSTR_GET_USAGE_STATS, Process.myUid(), packageName)
+        return mode == MODE_ALLOWED
     }
 }
