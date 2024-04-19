@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.commons.validator)
     implementation(libs.bcrypt)
     implementation(libs.datastore.preferences)
+    implementation(libs.work.manager)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
