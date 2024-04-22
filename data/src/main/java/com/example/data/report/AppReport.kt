@@ -24,9 +24,9 @@ value class AppName private constructor(val appName: String) {
 }
 
 @JvmInline
-value class ScreenTime private constructor(val screenTime: Int) {
+value class ScreenTime private constructor(val screenTime: Long) {
     companion object {
-        operator fun invoke(screenTime: Int): Either<ReportProblem, ScreenTime> = either {
+        operator fun invoke(screenTime: Long): Either<ReportProblem, ScreenTime> = either {
             ensure(screenTime >= 0) { ScreenTimeProblem("Screen time cannot be negative") }
 
             ScreenTime(screenTime)

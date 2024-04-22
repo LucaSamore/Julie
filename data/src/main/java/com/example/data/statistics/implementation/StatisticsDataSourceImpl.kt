@@ -8,6 +8,6 @@ internal class StatisticsDataSourceImpl
 @Inject
 constructor(private val screenTimeDataSource: ScreenTimeDataSource) : StatisticsDataSource {
 
-    override fun fetchPerAppScreenTime(beginTime: Long, endTime: Long): List<Pair<String, Long>> =
-        screenTimeDataSource.getPerAppScreenTime(beginTime, endTime)
+    override fun fetchPerAppScreenTime(): List<Pair<String, Long>> =
+        screenTimeDataSource.getPerAppScreenTime()
 }

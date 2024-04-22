@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
+import com.example.data.Problem
 import com.example.data.report.AppName
 import com.example.data.report.AppReport
 import com.example.data.report.CreateReportDto
@@ -41,28 +42,28 @@ internal class ReportImpl(
             .first()
 }
 
-fun createReport(createReportDto: CreateReportDto): Either<NonEmptyList<ReportProblem>, Report> =
-    either {
-        zipOrAccumulate(
-            { ReportId(UUID.randomUUID().toString()).bind() },
-            { DateOfRecording(createReportDto.dateOfRecording).bind() },
-            {
-                createReportDto.appReports.map {
-                    AppReport(
-                        AppName(it.appName).bind(),
-                        ScreenTime(it.screenTime).bind(),
-                        NotificationsReceived(it.notificationsReceived).bind(),
-                        TimesOpened(it.timesOpened).bind(),
-                        WasOpenedFirst(it.wasOpenedFirst)
-                    )
-                }
+fun createReport(createReportDto: CreateReportDto): Either<NonEmptyList<Problem>, Report> = either {
+    zipOrAccumulate(
+        { ReportId(UUID.randomUUID().toString()).bind() },
+        { UserId(createReportDto.userId).bind() },
+        { DateOfRecording(createReportDto.dateOfRecording).bind() },
+        {
+            createReportDto.appReports.map {
+                AppReport(
+                    AppName(it.appName).bind(),
+                    ScreenTime(it.screenTime).bind(),
+                    NotificationsReceived(it.notificationsReceived).bind(),
+                    TimesOpened(it.timesOpened).bind(),
+                    WasOpenedFirst(it.wasOpenedFirst)
+                )
             }
-        ) { reportId, dateOfRecording, appReports ->
-            ReportImpl(
-                id = reportId,
-                userId = createReportDto.userId,
-                dateOfRecording = dateOfRecording,
-                appReports = appReports
-            )
         }
+    ) { reportId, userId, dateOfRecording, appReports ->
+        ReportImpl(
+            id = reportId,
+            userId = userId,
+            dateOfRecording = dateOfRecording,
+            appReports = appReports
+        )
     }
+}

@@ -2,6 +2,11 @@ package com.example.data.di
 
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.implementation.AuthenticationServiceImpl
+import com.example.data.report.ReportRepository
+import com.example.data.report.UploadReportService
+import com.example.data.report.implementation.UploadReportServiceImpl
+import com.example.data.statistics.StatisticsDataSource
+import com.example.data.user.implementation.UserDatastore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +22,15 @@ object ServiceModule {
     @Singleton
     @Provides
     fun provideAuthenticationService(): AuthenticationService = AuthenticationServiceImpl()
+
+    @Singleton
+    @Provides
+    fun provideUploadReportService(
+        statisticsDataSource: StatisticsDataSource,
+        @FirebaseRepository reportRepository: ReportRepository,
+        userDatastore: UserDatastore
+    ): UploadReportService =
+        UploadReportServiceImpl(statisticsDataSource, reportRepository, userDatastore)
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseService
