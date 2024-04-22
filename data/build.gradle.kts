@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.bcrypt)
     implementation(libs.datastore.preferences)
     implementation(libs.work.manager)
+    implementation(libs.hilt.work)
+    kapt(libs.hilt.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
