@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.data.di.FirebaseRepository
 import com.example.data.report.ReportRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -15,7 +16,7 @@ import java.time.format.DateTimeFormatter
 internal class UploadReportWorker
 @AssistedInject
 constructor(
-    @Assisted private val reportRepository: ReportRepository,
+    @FirebaseRepository private val reportRepository: ReportRepository,
     @Assisted appContext: Context,
     @Assisted workerParameters: WorkerParameters
 ) : Worker(appContext, workerParameters) {
