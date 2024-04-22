@@ -12,7 +12,6 @@ import com.example.data.report.DateOfRecording
 import com.example.data.report.NotificationsReceived
 import com.example.data.report.Report
 import com.example.data.report.ReportId
-import com.example.data.report.ReportProblem
 import com.example.data.report.ScreenTime
 import com.example.data.report.TimesOpened
 import com.example.data.report.WasOpenedFirst
@@ -25,14 +24,15 @@ internal class ReportImpl(
     override val dateOfRecording: DateOfRecording,
     override val appReports: List<AppReport>
 ) : Report {
-    override fun totalScreenTime(): Either<ReportProblem, ScreenTime> =
-        ScreenTime(appReports.sumOf { it.screenTime.screenTime })
+    override fun totalScreenTime(): ScreenTime =
+        ScreenTime(appReports.sumOf { it.screenTime.screenTime }).getOrNull()!!
 
-    override fun totalNotificationsReceived(): Either<ReportProblem, NotificationsReceived> =
+    override fun totalNotificationsReceived(): NotificationsReceived =
         NotificationsReceived(appReports.sumOf { it.notificationsReceived.notificationsReceived })
+            .getOrNull()!!
 
-    override fun totalTimesOpened(): Either<ReportProblem, TimesOpened> =
-        TimesOpened(appReports.sumOf { it.timesOpened.timesOpened })
+    override fun totalTimesOpened(): TimesOpened =
+        TimesOpened(appReports.sumOf { it.timesOpened.timesOpened }).getOrNull()!!
 
     override fun mostUsedApp(): AppName =
         appReports
