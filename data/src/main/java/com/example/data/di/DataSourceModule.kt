@@ -2,7 +2,9 @@ package com.example.data.di
 
 import android.content.Context
 import com.example.data.statistics.ScreenTimeDataSource
+import com.example.data.statistics.StatisticsDataSource
 import com.example.data.statistics.implementation.ScreenTimeDataSourceImpl
+import com.example.data.statistics.implementation.StatisticsDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +15,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataSourceModule {
+
+    @Singleton
+    @Provides
+    fun provideStatisticsDataSource(
+        screenTimeDataSource: ScreenTimeDataSource
+    ): StatisticsDataSource = StatisticsDataSourceImpl(screenTimeDataSource)
 
     @Singleton
     @Provides
