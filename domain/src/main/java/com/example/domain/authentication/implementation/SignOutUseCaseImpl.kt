@@ -1,6 +1,7 @@
 package com.example.domain.authentication.implementation
 
 import arrow.core.Either
+import com.example.data.WorkerManager
 import com.example.data.authentication.AuthenticationProblem
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.UserSignedOut
@@ -13,9 +14,14 @@ internal class SignOutUseCaseImpl
 @Inject
 constructor(
     private val authenticationService: AuthenticationService,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val workerManager: WorkerManager
 ) : SignOutUseCase {
 
     override suspend fun invoke(): Either<AuthenticationProblem, UserSignedOut> =
-        withContext(ioDispatcher) { authenticationService.signOut() }
+        withContext(ioDispatcher) {
+            val userSignedOutEvent = authenticationService.signOut()
+            workerManager.cancelAllWorkers()
+            userSignedOutEvent
+        }
 }

@@ -13,6 +13,7 @@ import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
 import com.example.domain.authentication.SignInUseCase
+import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import com.example.domain.util.single
 import javax.inject.Inject
@@ -25,7 +26,8 @@ constructor(
     private val authenticationService: AuthenticationService,
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
-    private val cacheUserIdUseCase: CacheUserIdUseCase
+    private val cacheUserIdUseCase: CacheUserIdUseCase,
+    private val scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
 ) : SignInUseCase {
     override suspend fun invoke(
         emailAddress: String,
@@ -46,6 +48,7 @@ constructor(
                         .single()
                         .bind()
                 cacheUserIdUseCase(userId.userId)
+                scheduleUploadReportWorkerUseCase()
                 signedInEvent
             }
         }

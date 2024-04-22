@@ -38,13 +38,15 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        cacheUserIdUseCase: CacheUserIdUseCase
+        cacheUserIdUseCase: CacheUserIdUseCase,
+        scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
     ): SignInUseCase =
         SignInUseCaseImpl(
             authenticationService,
             userProfileRepository,
             ioDispatcher,
-            cacheUserIdUseCase
+            cacheUserIdUseCase,
+            scheduleUploadReportWorkerUseCase
         )
 
     @Singleton
@@ -53,21 +55,24 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        cacheUserIdUseCase: CacheUserIdUseCase
+        cacheUserIdUseCase: CacheUserIdUseCase,
+        scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
     ): SignUpUseCase =
         SignUpUseCaseImpl(
             authenticationService,
             userProfileRepository,
             ioDispatcher,
-            cacheUserIdUseCase
+            cacheUserIdUseCase,
+            scheduleUploadReportWorkerUseCase
         )
 
     @Singleton
     @Provides
     fun provideSignOutUseCase(
         @FirebaseService authenticationService: AuthenticationService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        workerManager: WorkerManager
+    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher, workerManager)
 
     @Singleton
     @Provides

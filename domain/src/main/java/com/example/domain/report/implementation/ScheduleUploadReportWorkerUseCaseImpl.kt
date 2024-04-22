@@ -8,6 +8,6 @@ internal class ScheduleUploadReportWorkerUseCaseImpl
 @Inject
 constructor(private val workerManager: WorkerManager) : ScheduleUploadReportWorkerUseCase {
     override suspend fun invoke() {
-        TODO("Not yet implemented")
+        workerManager.scheduleUploadReportWorker()
     }
 }

@@ -16,6 +16,7 @@ import com.example.data.user.Username
 import com.example.data.user.UsernameProblem
 import com.example.data.user.implementation.createNewAccount
 import com.example.domain.authentication.SignUpUseCase
+import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import com.example.domain.util.single
 import javax.inject.Inject
@@ -28,7 +29,8 @@ constructor(
     private val authenticationService: AuthenticationService,
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
-    private val cacheUserIdUseCase: CacheUserIdUseCase
+    private val cacheUserIdUseCase: CacheUserIdUseCase,
+    private val scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
 ) : SignUpUseCase {
 
     override suspend fun invoke(
@@ -43,6 +45,7 @@ constructor(
                 val signedUser = signUser(newUser).single().bind()
                 authenticationService.sendVerificationEmail().single().bind()
                 cacheUserIdUseCase(newUser.id.userId)
+                scheduleUploadReportWorkerUseCase()
                 signedUser
             }
         }
