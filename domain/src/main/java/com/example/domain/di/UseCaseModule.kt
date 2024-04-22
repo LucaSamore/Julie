@@ -1,5 +1,6 @@
 package com.example.domain.di
 
+import com.example.data.WorkerManager
 import com.example.data.authentication.AuthenticationService
 import com.example.data.di.FirebaseRepository
 import com.example.data.di.FirebaseService
@@ -16,6 +17,8 @@ import com.example.domain.authentication.implementation.SignInUseCaseImpl
 import com.example.domain.authentication.implementation.SignOutUseCaseImpl
 import com.example.domain.authentication.implementation.SignUpUseCaseImpl
 import com.example.domain.authentication.implementation.VerifyEmailUseCaseImpl
+import com.example.domain.report.ScheduleUploadReportWorkerUseCase
+import com.example.domain.report.implementation.ScheduleUploadReportWorkerUseCaseImpl
 import com.example.domain.user.CacheUserIdUseCase
 import com.example.domain.user.implementation.CacheUserIdUseCaseImpl
 import dagger.Module
@@ -84,4 +87,10 @@ object UseCaseModule {
     @Provides
     fun provideCacheUserIdUseCase(userDatastore: UserDatastore): CacheUserIdUseCase =
         CacheUserIdUseCaseImpl(userDatastore)
+
+    @Singleton
+    @Provides
+    fun provideScheduleUploadReportWorkerUseCase(
+        workerManager: WorkerManager
+    ): ScheduleUploadReportWorkerUseCase = ScheduleUploadReportWorkerUseCaseImpl(workerManager)
 }
