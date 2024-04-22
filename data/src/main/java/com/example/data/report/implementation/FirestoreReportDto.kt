@@ -1,12 +1,11 @@
 package com.example.data.report.implementation
 
 import com.example.data.report.Report
-import java.time.LocalDate
 
 data class FirestoreReportDto(
     val id: String? = null,
     val userId: String? = null,
-    val date: LocalDate? = null,
+    val date: String? = null,
     val totalScreenTime: Long? = null,
     val totalNotificationsReceived: Int? = null,
     val totalTimesOpened: Int? = null,
@@ -19,7 +18,7 @@ data class FirestoreReportDto(
             FirestoreReportDto(
                 id = report.id.reportId,
                 userId = report.userId.userId,
-                date = report.dateOfRecording.dateOfRecording,
+                date = report.dateOfRecording.dateOfRecording.toString(),
                 totalScreenTime = report.totalScreenTime().screenTime,
                 totalNotificationsReceived =
                     report.totalNotificationsReceived().notificationsReceived,

@@ -4,6 +4,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.example.data.statistics.ScreenTimeDataSource
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 internal class ScreenTimeDataSourceImpl @Inject constructor(context: Context) :
     ScreenTimeDataSource {
@@ -16,7 +17,7 @@ internal class ScreenTimeDataSourceImpl @Inject constructor(context: Context) :
         val beginTime = endTime - (24 * 60 * 60 * 1000)
         return usageStatsManager
             .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)
-            .map { Pair(it.packageName, it.totalTimeVisible) }
+            .map { Pair(it.packageName, it.totalTimeVisible.seconds.inWholeSeconds) }
             .filter { it.second > 0 }
             .sortedByDescending { it.second }
     }
@@ -26,6 +27,6 @@ internal class ScreenTimeDataSourceImpl @Inject constructor(context: Context) :
         val beginTime = endTime - (24 * 60 * 60 * 1000)
         return usageStatsManager
             .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)
-            .sumOf { it.totalTimeVisible }
+            .sumOf { it.totalTimeVisible.seconds.inWholeSeconds }
     }
 }
