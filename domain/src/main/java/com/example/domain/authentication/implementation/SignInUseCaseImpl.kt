@@ -12,8 +12,8 @@ import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
-import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.SignInUseCase
+import com.example.domain.user.CacheUserIdUseCase
 import com.example.domain.util.single
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,7 +25,7 @@ constructor(
     private val authenticationService: AuthenticationService,
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
-    private val userDatastore: UserDatastore
+    private val cacheUserIdUseCase: CacheUserIdUseCase
 ) : SignInUseCase {
     override suspend fun invoke(
         emailAddress: String,
@@ -45,7 +45,7 @@ constructor(
                         .getUserIdByEmailAddress(validatedCredentials.emailAddress)
                         .single()
                         .bind()
-                userDatastore.saveUserIdToDataStore(userId.userId)
+                cacheUserIdUseCase(userId.userId)
                 signedInEvent
             }
         }

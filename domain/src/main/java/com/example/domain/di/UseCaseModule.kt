@@ -16,6 +16,8 @@ import com.example.domain.authentication.implementation.SignInUseCaseImpl
 import com.example.domain.authentication.implementation.SignOutUseCaseImpl
 import com.example.domain.authentication.implementation.SignUpUseCaseImpl
 import com.example.domain.authentication.implementation.VerifyEmailUseCaseImpl
+import com.example.domain.user.CacheUserIdUseCase
+import com.example.domain.user.implementation.CacheUserIdUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,9 +35,14 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        userDatastore: UserDatastore
+        cacheUserIdUseCase: CacheUserIdUseCase
     ): SignInUseCase =
-        SignInUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
+        SignInUseCaseImpl(
+            authenticationService,
+            userProfileRepository,
+            ioDispatcher,
+            cacheUserIdUseCase
+        )
 
     @Singleton
     @Provides
@@ -43,17 +50,21 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        userDatastore: UserDatastore
+        cacheUserIdUseCase: CacheUserIdUseCase
     ): SignUpUseCase =
-        SignUpUseCaseImpl(authenticationService, userProfileRepository, ioDispatcher, userDatastore)
+        SignUpUseCaseImpl(
+            authenticationService,
+            userProfileRepository,
+            ioDispatcher,
+            cacheUserIdUseCase
+        )
 
     @Singleton
     @Provides
     fun provideSignOutUseCase(
         @FirebaseService authenticationService: AuthenticationService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        userDatastore: UserDatastore
-    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher, userDatastore)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): SignOutUseCase = SignOutUseCaseImpl(authenticationService, ioDispatcher)
 
     @Singleton
     @Provides
@@ -68,4 +79,9 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): VerifyEmailUseCase = VerifyEmailUseCaseImpl(authenticationService, ioDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideCacheUserIdUseCase(userDatastore: UserDatastore): CacheUserIdUseCase =
+        CacheUserIdUseCaseImpl(userDatastore)
 }
