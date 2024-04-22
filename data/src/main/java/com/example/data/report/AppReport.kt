@@ -32,6 +32,8 @@ value class ScreenTime private constructor(val screenTime: Int) {
             ScreenTime(screenTime)
         }
     }
+
+    operator fun plus(other: ScreenTime): ScreenTime = ScreenTime(screenTime + other.screenTime)
 }
 
 @JvmInline

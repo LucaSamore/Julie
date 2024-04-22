@@ -17,11 +17,11 @@ interface Report : Entity<ReportId> {
 
     val appReports: List<AppReport>
 
-    fun totalScreenTime(): ScreenTime
+    fun totalScreenTime(): Either<ReportProblem, ScreenTime>
 
-    fun totalNotificationsReceived(): NotificationsReceived
+    fun totalNotificationsReceived(): Either<ReportProblem, NotificationsReceived>
 
-    fun totalTimesOpened(): TimesOpened
+    fun totalTimesOpened(): Either<ReportProblem, TimesOpened>
 
     fun mostUsedApp(): AppName
 }
