@@ -9,9 +9,7 @@ object DefaultUploadReportWorkerRequest {
     // TimeUnit.HOURS).build()
 
     val testConfiguration =
-        PeriodicWorkRequestBuilder<UploadReportWorker>(15, TimeUnit.MINUTES)
-            .setInitialDelay(10, TimeUnit.SECONDS)
-            .build()
+        PeriodicWorkRequestBuilder<UploadReportWorker>(15, TimeUnit.MINUTES).build()
 
     const val NAME = "uploadStats"
 
