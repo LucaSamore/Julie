@@ -3,12 +3,12 @@ package com.example.data.statistics
 interface ScreenTimeDataSource {
 
     /**
-     * Fetch the screen time of every app over a period of time
+     * Fetch the screen time of every app over the last 24h
      *
-     * @return A list of pairs, where the first element is the app package name and the second
-     *   element is the app screen time in seconds
+     * @return A map, where the key is the app package name and the value is the app screen time in
+     *   seconds
      */
-    fun getPerAppScreenTime(): List<Pair<String, Long>>
+    fun getPerAppScreenTime(): Map<String, Long>
 
     /**
      * Calculate the total screen time over the last 24h

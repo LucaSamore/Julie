@@ -1,6 +1,7 @@
 package com.example.data.di
 
 import android.content.Context
+import com.example.data.statistics.NotificationsDataSource
 import com.example.data.statistics.ScreenTimeDataSource
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.statistics.implementation.ScreenTimeDataSourceImpl
@@ -19,8 +20,10 @@ object DataSourceModule {
     @Singleton
     @Provides
     fun provideStatisticsDataSource(
-        screenTimeDataSource: ScreenTimeDataSource
-    ): StatisticsDataSource = StatisticsDataSourceImpl(screenTimeDataSource)
+        screenTimeDataSource: ScreenTimeDataSource,
+        notificationsDataSource: NotificationsDataSource
+    ): StatisticsDataSource =
+        StatisticsDataSourceImpl(screenTimeDataSource, notificationsDataSource)
 
     @Singleton
     @Provides

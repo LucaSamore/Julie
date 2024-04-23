@@ -17,7 +17,7 @@ interface NotificationDao {
             "WHERE date = :date " +
             "GROUP BY package_name"
     )
-    fun getByDay(date: String): Flow<DailyNotifications>
+    suspend fun getByDay(date: String): Flow<DailyNotifications>
 
     @Query("DELETE FROM notifications_received") suspend fun deleteAll()
 }

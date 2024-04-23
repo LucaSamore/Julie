@@ -30,20 +30,15 @@ constructor(
             CreateReportDto(
                 userId = userId,
                 dateOfRecording = LocalDate.now(),
-                appReports = getAppReports()
+                appReports = createAppReports()
             )
         val newReport = createReport(reportDto).bind()
         reportRepository.create(newReport).mapLeft { nonEmptyListOf(it) }.bind()
     }
 
-    private fun getAppReports(): List<AppReportDto> =
-        statisticsDataSource.fetchPerAppScreenTime().map {
-            AppReportDto(
-                appName = it.first,
-                screenTime = it.second,
-                notificationsReceived = 0,
-                timesOpened = 0,
-                wasOpenedFirst = false
-            )
-        }
+    private suspend fun createAppReports(): List<AppReportDto> {
+        val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
+        val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
+        TODO()
+    }
 }
