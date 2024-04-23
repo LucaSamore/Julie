@@ -5,21 +5,29 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NotificationListener : NotificationListenerService() {
 
     @Inject lateinit var notificationDao: NotificationDao
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onCreate() {
         super.onCreate()
-        // keep this
         Log.d(TAG, "NotificationListenerService created")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        job.cancel()
         Log.d(TAG, "NotificationListenerService destroyed")
     }
 
@@ -34,6 +42,15 @@ class NotificationListener : NotificationListenerService() {
         if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) {
             return
         }
+
+        val notificationReceived =
+            Notification(
+                id = UUID.randomUUID().toString(),
+                packageName = sbn.packageName,
+                date = LocalDate.now().toString()
+            )
+
+        scope.launch { notificationDao.insert(notificationReceived) }
 
         Log.d(TAG, "Notification posted: ${sbn.packageName} - ${sbn.notification}")
     }
