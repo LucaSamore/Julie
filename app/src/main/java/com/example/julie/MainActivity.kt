@@ -3,6 +3,7 @@ package com.example.julie
 import android.app.AppOpsManager
 import android.app.AppOpsManager.MODE_ALLOWED
 import android.app.AppOpsManager.OPSTR_GET_USAGE_STATS
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.os.Process
@@ -14,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.data.authentication.AuthenticationService
 import com.example.data.di.FirebaseService
+import com.example.data.statistics.NotificationListener
 import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,12 @@ class MainActivity : ComponentActivity() {
         if (!checkUsageStatsPermission()) {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
+
+        if (!isNotificationListenerServiceEnabled()) {
+            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        }
+
+        startNotificationListenerService()
 
         setContent {
             NeobrutalismTheme {
@@ -65,4 +73,19 @@ class MainActivity : ComponentActivity() {
             appOpsManager.unsafeCheckOpNoThrow(OPSTR_GET_USAGE_STATS, Process.myUid(), packageName)
         return mode == MODE_ALLOWED
     }
+
+    private fun isNotificationListenerServiceEnabled(): Boolean {
+        val packageName = packageName
+        val flat = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        return flat
+            .split(":")
+            .mapNotNull { ComponentName.unflattenFromString(it) }
+            .any { it.packageName == packageName }
+    }
+
+    private fun startNotificationListenerService() {
+        val intent = Intent(this, NotificationListener::class.java)
+        startService(intent)
+    }
+
 }
