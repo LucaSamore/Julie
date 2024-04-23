@@ -4,11 +4,17 @@ import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationListener : NotificationListenerService() {
+
+    @Inject lateinit var notificationDao: NotificationDao
 
     override fun onCreate() {
         super.onCreate()
+        // keep this
         Log.d(TAG, "NotificationListenerService created")
     }
 
