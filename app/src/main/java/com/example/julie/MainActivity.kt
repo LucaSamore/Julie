@@ -87,5 +87,4 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, NotificationListener::class.java)
         startService(intent)
     }
-
 }

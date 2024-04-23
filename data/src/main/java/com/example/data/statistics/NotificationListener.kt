@@ -1,5 +1,6 @@
 package com.example.data.statistics
 
+import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
@@ -18,6 +19,16 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         super.onNotificationPosted(sbn)
+        // Some app send a group summary notification alongside other notifications.
+        // That’s why for some app you get this method called twice.
+        // The related flag is documented here:
+        // https://developer.android.com/reference/android/app/Notification.html#FLAG_GROUP_SUMMARY
+        // To fix this we can simply ignore any notification with that flag
+
+        if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) {
+            return
+        }
+
         Log.d(TAG, "Notification posted: ${sbn.packageName} - ${sbn.notification}")
     }
 
