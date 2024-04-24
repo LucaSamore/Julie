@@ -1,7 +1,9 @@
 package com.example.data.report.implementation
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.nonEmptyListOf
@@ -42,18 +44,29 @@ constructor(
     }
 
     private suspend fun createAppReports(): List<AppReportDto> {
-        val packages =
-            packageManager.getInstalledPackages(PackageManager.GET_META_DATA).map { it.packageName }
+        val mainIntent = Intent(Intent.ACTION_MAIN, null)
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        val resolvedInfo =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.queryIntentActivities(
+                    mainIntent,
+                    PackageManager.ResolveInfoFlags.of(0L)
+                )
+            } else {
+                packageManager.queryIntentActivities(mainIntent, 0)
+            }
         val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
         val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
-        return packages.map {
-            AppReportDto(
-                appName = it,
-                screenTime = screenTimes[it] ?: 0L,
-                notificationsReceived = notifications[it] ?: 0,
-                timesOpened = 0,
-                wasOpenedFirst = false
-            )
-        }
+        return resolvedInfo
+            .map { it.activityInfo.packageName }
+            .map {
+                AppReportDto(
+                    appName = it,
+                    screenTime = screenTimes[it] ?: 0L,
+                    notificationsReceived = notifications[it] ?: 0,
+                    timesOpened = 0,
+                    wasOpenedFirst = false
+                )
+            }
     }
 }

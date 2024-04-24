@@ -4,7 +4,6 @@ import com.example.data.statistics.NotificationsDataSource
 import com.example.data.statistics.ScreenTimeDataSource
 import com.example.data.statistics.StatisticsDataSource
 import javax.inject.Inject
-import kotlinx.coroutines.flow.toList
 
 internal class StatisticsDataSourceImpl
 @Inject

@@ -1,7 +1,5 @@
 package com.example.data.statistics
 
-import kotlinx.coroutines.flow.Flow
-
 interface NotificationsDataSource {
 
     /**
