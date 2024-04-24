@@ -1,5 +1,7 @@
 package com.example.data.report.implementation
 
+import android.content.Context
+import android.content.pm.PackageManager
 import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.nonEmptyListOf
@@ -22,7 +24,10 @@ constructor(
     private val statisticsDataSource: StatisticsDataSource,
     private val reportRepository: ReportRepository,
     private val userDatastore: UserDatastore,
+    context: Context
 ) : UploadReportService {
+
+    private val packageManager = context.packageManager
 
     override suspend fun invoke(): Either<NonEmptyList<Problem>, Report> = either {
         val userId = userDatastore.getUserId().mapLeft { nonEmptyListOf(UserIdProblem(it)) }.bind()
@@ -37,8 +42,18 @@ constructor(
     }
 
     private suspend fun createAppReports(): List<AppReportDto> {
+        val packages =
+            packageManager.getInstalledPackages(PackageManager.GET_META_DATA).map { it.packageName }
         val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
         val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
-        TODO()
+        return packages.map {
+            AppReportDto(
+                appName = it,
+                screenTime = screenTimes[it] ?: 0L,
+                notificationsReceived = notifications[it] ?: 0,
+                timesOpened = 0,
+                wasOpenedFirst = false
+            )
+        }
     }
 }

@@ -17,5 +17,5 @@ constructor(
         screenTimeDataSource.getPerAppScreenTime()
 
     override suspend fun fetchPerAppNotificationsReceived(): Map<String, Int> =
-        notificationsDataSource.getPerAppNotificationsReceived().toList().toMap()
+        notificationsDataSource.getPerAppNotificationsReceived().toMap()
 }
