@@ -17,9 +17,7 @@ internal fun HomeScreen(
     paddingValues: PaddingValues
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        modifier = modifier.fillMaxSize().padding(paddingValues),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

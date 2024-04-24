@@ -39,7 +39,11 @@ internal fun NavigationGraph(
         }
 
         composable(route = Destination.Home.name) {
-            HomeScreen(modifier = modifier, homeViewModel = hiltViewModel(), paddingValues = paddingValues)
+            HomeScreen(
+                modifier = modifier,
+                homeViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            )
         }
 
         composable(route = Destination.SignIn.name) {

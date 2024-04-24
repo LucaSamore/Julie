@@ -63,8 +63,8 @@ class MainActivity : ComponentActivity() {
                     Destination.VerifyEmail.name
                 }
             } else {
-                Destination.Home.name
-                // Destination.SignIn.name
+                // Destination.Home.name
+                Destination.SignIn.name
             }
     }
 
