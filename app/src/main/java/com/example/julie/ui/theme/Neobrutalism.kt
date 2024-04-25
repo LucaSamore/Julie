@@ -96,7 +96,7 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                                 R.font.nunito_variable,
                                 variationSettings =
                                     FontVariation.Settings(
-                                        FontVariation.weight(500),
+                                        FontVariation.weight(800),
                                     )
                             )
                         ),
@@ -105,7 +105,17 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
             screenTitle =
                 TextStyle(
                     fontSize = 24.sp,
-                    fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                    fontFamily =
+                        FontFamily(
+                            Font(
+                                R.font.inconsolata_variable,
+                                variationSettings =
+                                    FontVariation.Settings(
+                                        FontVariation.width(140f),
+                                        FontVariation.weight(500)
+                                    )
+                            )
+                        ),
                     color = textColor,
                     fontWeight = FontWeight.Bold
                 ),
