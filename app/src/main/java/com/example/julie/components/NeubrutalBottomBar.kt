@@ -33,7 +33,11 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
 
         NavigationBarItem(
             selected = currentScreen == Destination.Home.name,
-            onClick = { /*TODO*/},
+            onClick = {
+                navController.navigate(Destination.Home.name) {
+                    popUpTo(Destination.Home.name) { inclusive = true }
+                }
+            },
             icon = {
                 Box(
                     modifier =
@@ -128,8 +132,12 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
         )
 
         NavigationBarItem(
-            selected = currentScreen == Destination.Test.name,
-            onClick = { /*TODO*/},
+            selected = currentScreen == Destination.Settings.name,
+            onClick = {
+                navController.navigate(Destination.Settings.name) {
+                    popUpTo(Destination.Settings.name) { inclusive = true }
+                }
+            },
             icon = {
                 Box(
                     modifier =
@@ -137,7 +145,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                             .neubrutalismElevation()
                             .background(
                                 color =
-                                    if (currentScreen == Destination.Test.name)
+                                    if (currentScreen == Destination.Settings.name)
                                         NeobrutalismTheme.colors.buttonPrimary
                                     else NeobrutalismTheme.colors.contentPrimary
                             )
@@ -146,7 +154,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                         Icons.Filled.Settings,
                         contentDescription = "Settings",
                         tint =
-                            if (currentScreen == Destination.Test.name)
+                            if (currentScreen == Destination.Settings.name)
                                 NeobrutalismTheme.colors.text
                             else Color.White,
                         modifier = modifier.padding(6.dp).size(32.dp, 32.dp)

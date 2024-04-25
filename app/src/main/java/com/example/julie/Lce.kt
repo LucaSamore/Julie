@@ -26,3 +26,5 @@ typealias PasswordResetState = Lce<Problem, PasswordReset>
 typealias VerifyEmailState = Lce<Problem, VerificationEmailSent>
 
 typealias TestScreenState = Lce<AuthenticationProblem, UserSignedOut>
+
+typealias SettingsScreenState = Lce<AuthenticationProblem, UserSignedOut>

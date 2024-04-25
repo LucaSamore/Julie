@@ -58,13 +58,12 @@ class MainActivity : ComponentActivity() {
         startDestination =
             if (authenticationService.isUserLoggedIn()) {
                 if (authenticationService.isEmailVerified()) {
-                    Destination.Test.name
+                    Destination.Home.name
                 } else {
                     Destination.VerifyEmail.name
                 }
             } else {
-                Destination.Home.name
-                // Destination.SignIn.name
+                Destination.SignIn.name
             }
     }
 

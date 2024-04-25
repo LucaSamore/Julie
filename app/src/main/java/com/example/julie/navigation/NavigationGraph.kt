@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.example.julie.TestScreen
 import com.example.julie.home.HomeScreen
 import com.example.julie.passwordreset.PasswordResetScreen
+import com.example.julie.settings.SettingsScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
 import com.example.julie.verifyemail.VerifyEmailScreen
@@ -46,6 +47,18 @@ internal fun NavigationGraph(
             )
         }
 
+        composable(route = Destination.Settings.name) {
+            SettingsScreen(
+                modifier = modifier,
+                settingsViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            ) {
+                navController.navigate(Destination.SignIn.name) {
+                    popUpTo(Destination.Test.name) { inclusive = true }
+                }
+            }
+        }
+
         composable(route = Destination.SignIn.name) {
             SignInScreen(
                 modifier = modifier,
@@ -57,7 +70,7 @@ internal fun NavigationGraph(
                     navController.navigate(Destination.PasswordReset.name)
                 }
             ) {
-                navController.navigate(Destination.Test.name) {
+                navController.navigate(Destination.Home.name) {
                     popUpTo(Destination.SignIn.name) { inclusive = true }
                 }
             }
