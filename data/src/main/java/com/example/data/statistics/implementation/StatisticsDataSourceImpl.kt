@@ -22,6 +22,8 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
     override fun fetchPerAppScreenTimeForLast24h(): Map<String, Long> =
         getDailyStats().associate { it.packageName to it.totalTime }
 
+    override fun getCurrentScreenTime(): Long = getDailyStats(current = true).sumOf { it.totalTime }
+
     override fun fetchPerAppTimesOpenedForLast24h(): Map<String, Int> =
         getDailyStats().associate { it.packageName to it.startTimes.count() }
 
@@ -32,15 +34,21 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
      * Solution provided by @jguerinet
      * https://stackoverflow.com/questions/36238481/android-usagestatsmanager-not-returning-correct-daily-results
      */
-    private fun getDailyStats(date: LocalDate = LocalDate.now()): List<Stat> {
+    private fun getDailyStats(
+        date: LocalDate = LocalDate.now(),
+        current: Boolean = false
+    ): List<Stat> {
         // The timezones we'll need
         val utc = ZoneId.of("UTC")
         val defaultZone = ZoneId.systemDefault()
 
         // Set the starting and ending times to be midnight in UTC time
         val startDate = date.atStartOfDay(defaultZone).withZoneSameInstant(utc)
+
         val start = startDate.toInstant().toEpochMilli()
-        val end = startDate.plusDays(1).toInstant().toEpochMilli()
+        val end =
+            if (current) System.currentTimeMillis()
+            else startDate.plusDays(1).toInstant().toEpochMilli()
 
         // This will keep a map of all of the events per package name
         val sortedEvents = mutableMapOf<String, MutableList<UsageEvents.Event>>()

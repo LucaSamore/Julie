@@ -22,9 +22,13 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -41,11 +45,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.julie.Lce
 import com.example.julie.R
 import com.example.julie.components.NeubrutalContentPrimaryText
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
+import java.time.LocalDate
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -54,9 +61,15 @@ internal fun HomeScreen(
     homeViewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {
-    val screenTimeSliderPosition by remember { mutableFloatStateOf(.20f) }
+    val state by homeViewModel.homeScreenState.collectAsState()
 
-    val thresholdSliderPosition by remember { mutableFloatStateOf(.65f) }
+    homeViewModel.getCurrentScreenTime()
+
+    var currentScreenTime by rememberSaveable { mutableLongStateOf(0L) }
+
+    var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
+
+    var thresholdSliderPosition by remember { mutableFloatStateOf(.0f) }
 
     Column(
         modifier =
@@ -93,7 +106,7 @@ internal fun HomeScreen(
 
                     NeubrutalContentPrimaryText(
                         modifier = modifier.fillMaxWidth(.9f),
-                        content = "29 Mar 2024",
+                        content = LocalDate.now().toString(),
                         fontSize = 18.sp,
                         textAlign = TextAlign.Start
                     )
@@ -164,7 +177,10 @@ internal fun HomeScreen(
                     Row(modifier = modifier.fillMaxWidth(.9f)) {
                         NeubrutalContentPrimaryText(
                             modifier = modifier.fillMaxWidth(.5f),
-                            content = "1h 34min",
+                            content =
+                                currentScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
+                                    "${hh}h ${mm}min"
+                                },
                             fontSize = 16.sp,
                             textAlign = TextAlign.Start
                         )
@@ -414,5 +430,15 @@ internal fun HomeScreen(
                 }
             }
         }
+    }
+
+    when (val currentState = state) {
+        is Lce.Loading -> {}
+        is Lce.Content -> {
+            currentScreenTime = currentState.value.currentScreenTime
+            screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
+            thresholdSliderPosition = screenTimeSliderPosition
+        }
+        is Lce.Failure -> {}
     }
 }
