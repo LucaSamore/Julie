@@ -2,7 +2,9 @@ package com.example.data.statistics
 
 interface StatisticsDataSource {
 
-    fun fetchPerAppScreenTime(): Map<String, Long>
+    fun fetchPerAppScreenTimeForLast24h(): Map<String, Long>
+
+    fun fetchPerAppTimesOpenedForLast24h(): Map<String, Int>
 
     suspend fun fetchPerAppNotificationsReceived(): Map<String, Int>
 }

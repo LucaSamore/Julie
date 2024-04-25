@@ -3,10 +3,8 @@ package com.example.data.di
 import android.content.Context
 import com.example.data.statistics.NotificationDao
 import com.example.data.statistics.NotificationsDataSource
-import com.example.data.statistics.ScreenTimeDataSource
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.statistics.implementation.NotificationsDataSourceImpl
-import com.example.data.statistics.implementation.ScreenTimeDataSourceImpl
 import com.example.data.statistics.implementation.StatisticsDataSourceImpl
 import dagger.Module
 import dagger.Provides
@@ -22,15 +20,9 @@ object DataSourceModule {
     @Singleton
     @Provides
     fun provideStatisticsDataSource(
-        screenTimeDataSource: ScreenTimeDataSource,
-        notificationsDataSource: NotificationsDataSource
-    ): StatisticsDataSource =
-        StatisticsDataSourceImpl(screenTimeDataSource, notificationsDataSource)
-
-    @Singleton
-    @Provides
-    fun provideScreenTimeDataSource(@ApplicationContext context: Context): ScreenTimeDataSource =
-        ScreenTimeDataSourceImpl(context)
+        notificationsDataSource: NotificationsDataSource,
+        @ApplicationContext context: Context
+    ): StatisticsDataSource = StatisticsDataSourceImpl(notificationsDataSource, context)
 
     @Singleton
     @Provides
