@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -26,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -42,6 +46,7 @@ import com.example.julie.R
 import com.example.julie.components.NeubrutalContentPrimaryText
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
+import com.example.julie.ui.theme.textColor
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -50,12 +55,13 @@ internal fun HomeScreen(
     homeViewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {
-    var screenTimeSliderPosition by remember { mutableFloatStateOf(.20f) }
+    val screenTimeSliderPosition by remember { mutableFloatStateOf(.20f) }
 
-    var thresholdSliderPosition by remember { mutableFloatStateOf(.65f) }
+    val thresholdSliderPosition by remember { mutableFloatStateOf(.65f) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(paddingValues),
+        modifier =
+            modifier.fillMaxSize().padding(paddingValues).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -180,6 +186,7 @@ internal fun HomeScreen(
                 modifier =
                     modifier
                         .neubrutalismElevation()
+                        .height(48.dp)
                         .background(color = NeobrutalismTheme.colors.contentSecondary)
             ) {
                 Icon(
@@ -237,6 +244,173 @@ internal fun HomeScreen(
                                 color = NeobrutalismTheme.colors.text
                             ),
                         modifier = modifier
+                    )
+                }
+            }
+        }
+
+        Row(modifier = modifier.fillMaxWidth(.9f).padding(vertical = 32.dp)) {
+            Box(
+                modifier =
+                    modifier
+                        .fillMaxWidth(.5f)
+                        .height(78.dp)
+                        .neubrutalismElevation()
+                        .background(color = NeobrutalismTheme.colors.buttonPrimary)
+            ) {
+                Column(
+                    modifier = modifier.fillMaxSize().padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "3256",
+                        style =
+                            TextStyle(
+                                fontSize = 28.sp,
+                                fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                                color = textColor,
+                            )
+                    )
+
+                    Spacer(modifier = modifier.padding(vertical = 2.dp))
+
+                    Text(
+                        text = "Points",
+                        style =
+                            TextStyle(
+                                fontSize = 16.sp,
+                                fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                                color = textColor,
+                            )
+                    )
+                }
+            }
+
+            Spacer(modifier = modifier.padding(horizontal = 8.dp))
+
+            Box(
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .height(78.dp)
+                        .neubrutalismElevation()
+                        .background(color = NeobrutalismTheme.colors.buttonPrimary)
+            ) {
+                Column(
+                    modifier = modifier.fillMaxSize().padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "4",
+                        style =
+                            TextStyle(
+                                fontSize = 28.sp,
+                                fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                                color = textColor,
+                            )
+                    )
+
+                    Spacer(modifier = modifier.padding(vertical = 2.dp))
+
+                    Text(
+                        text = "Current Streak",
+                        style =
+                            TextStyle(
+                                fontSize = 16.sp,
+                                fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                                color = textColor,
+                            )
+                    )
+                }
+            }
+        }
+
+        Row(
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .background(color = NeobrutalismTheme.colors.buttonSecondary)
+                    .drawBehind {
+                        val strokeWidth = 6f
+                        val y = size.height - strokeWidth / 2
+                        drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
+                        drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+                    }
+        ) {
+            Text(
+                text = "Your favourite apps",
+                style =
+                    TextStyle(
+                        fontSize = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                        textAlign = TextAlign.Center,
+                        color = textColor,
+                    ),
+                modifier = modifier.fillMaxWidth().padding(vertical = 12.dp)
+            )
+        }
+
+        Box(
+            modifier =
+                modifier
+                    .fillMaxWidth(.9f)
+                    .fillMaxHeight(.5f)
+                    .padding(vertical = 16.dp)
+                    .neubrutalismElevation()
+                    .background(color = NeobrutalismTheme.colors.contentPrimary)
+        ) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(.9f).padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "#1",
+                        style =
+                            TextStyle(
+                                fontSize = 32.sp,
+                                textAlign = TextAlign.Start,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.background,
+                            )
+                    )
+
+                    Text(
+                        text = "Instagram",
+                        style =
+                            TextStyle(
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.background,
+                            )
                     )
                 }
             }
