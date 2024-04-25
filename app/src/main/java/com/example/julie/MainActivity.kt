@@ -15,7 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.data.authentication.AuthenticationService
 import com.example.data.di.FirebaseService
-import com.example.data.statistics.NotificationListener
+import com.example.data.statistics.implementation.NotificationListener
 import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import dagger.hilt.android.AndroidEntryPoint

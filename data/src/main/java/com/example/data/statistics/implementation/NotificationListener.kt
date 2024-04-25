@@ -1,9 +1,10 @@
-package com.example.data.statistics
+package com.example.data.statistics.implementation
 
 import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import com.example.data.statistics.NotificationDao
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.util.UUID

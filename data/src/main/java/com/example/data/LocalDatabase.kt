@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.data.statistics.Notification
 import com.example.data.statistics.NotificationDao
+import com.example.data.statistics.implementation.Notification
 
 @Database(entities = [Notification::class], version = 1)
 abstract class LocalDatabase : RoomDatabase() {

@@ -38,7 +38,7 @@
             tools:node="remove">
         </provider>
 
-        <service android:name="com.example.data.statistics.NotificationListener"
+        <service android:name="com.example.data.statistics.implementation.NotificationListener"
             android:label="@string/notification_listener"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">

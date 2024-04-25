@@ -1,4 +1,4 @@
-package com.example.data.statistics
+package com.example.data.statistics.implementation
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
