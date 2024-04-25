@@ -7,7 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.julie.TestScreen
 import com.example.julie.home.HomeScreen
 import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.settings.SettingsScreen
@@ -27,18 +26,6 @@ internal fun NavigationGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(route = Destination.Test.name) {
-            TestScreen(
-                modifier = modifier,
-                testScreenViewModel = hiltViewModel(),
-                paddingValues = paddingValues
-            ) {
-                navController.navigate(Destination.SignIn.name) {
-                    popUpTo(Destination.Test.name) { inclusive = true }
-                }
-            }
-        }
-
         composable(route = Destination.Home.name) {
             HomeScreen(
                 modifier = modifier,
@@ -54,7 +41,7 @@ internal fun NavigationGraph(
                 paddingValues = paddingValues
             ) {
                 navController.navigate(Destination.SignIn.name) {
-                    popUpTo(Destination.Test.name) { inclusive = true }
+                    popUpTo(Destination.Settings.name) { inclusive = true }
                 }
             }
         }

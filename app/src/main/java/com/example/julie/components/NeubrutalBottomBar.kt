@@ -68,7 +68,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
         )
 
         NavigationBarItem(
-            selected = currentScreen == Destination.Test.name,
+            selected = currentScreen == Destination.Home.name,
             onClick = { /*TODO*/},
             icon = {
                 Box(
@@ -77,7 +77,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                             .neubrutalismElevation()
                             .background(
                                 color =
-                                    if (currentScreen == Destination.Test.name)
+                                    if (currentScreen == Destination.Home.name)
                                         NeobrutalismTheme.colors.buttonPrimary
                                     else NeobrutalismTheme.colors.contentPrimary
                             )
@@ -86,7 +86,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                         ImageVector.vectorResource(R.drawable.baseline_data_usage_24),
                         contentDescription = "Data Visualization",
                         tint =
-                            if (currentScreen == Destination.Test.name)
+                            if (currentScreen == Destination.Home.name)
                                 NeobrutalismTheme.colors.text
                             else Color.White,
                         modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
@@ -100,7 +100,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
         )
 
         NavigationBarItem(
-            selected = currentScreen == Destination.Test.name,
+            selected = currentScreen == Destination.Home.name,
             onClick = { /*TODO*/},
             icon = {
                 Box(
@@ -109,7 +109,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                             .neubrutalismElevation()
                             .background(
                                 color =
-                                    if (currentScreen == Destination.Test.name)
+                                    if (currentScreen == Destination.Home.name)
                                         NeobrutalismTheme.colors.buttonPrimary
                                     else NeobrutalismTheme.colors.contentPrimary
                             )
@@ -118,7 +118,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                         ImageVector.vectorResource(R.drawable.baseline_leaderboard_24),
                         contentDescription = "Leaderboard",
                         tint =
-                            if (currentScreen == Destination.Test.name)
+                            if (currentScreen == Destination.Home.name)
                                 NeobrutalismTheme.colors.text
                             else Color.White,
                         modifier = modifier.padding(6.dp).size(32.dp, 32.dp)

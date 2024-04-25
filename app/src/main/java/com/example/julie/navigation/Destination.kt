@@ -11,7 +11,5 @@ sealed class Destination(val name: String) {
 
     data object Home : Destination("Home")
 
-    data object Test : Destination("Test")
-
     data object Settings : Destination("Settings")
 }
