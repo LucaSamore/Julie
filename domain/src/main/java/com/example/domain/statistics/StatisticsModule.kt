@@ -1,5 +1,6 @@
 package com.example.domain.statistics
 
+import com.example.data.PackageManagerUtils
 import com.example.data.di.FirebaseRepository
 import com.example.data.di.IoDispatcher
 import com.example.data.report.ReportRepository
@@ -29,7 +30,13 @@ object StatisticsModule {
     fun provideGetFavouriteAppsUseCase(
         @FirebaseRepository reportRepository: ReportRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        userDatastore: UserDatastore
+        userDatastore: UserDatastore,
+        packageManagerUtils: PackageManagerUtils
     ): GetFavouriteAppsUseCase =
-        GetFavouriteAppsUseCaseImpl(reportRepository, ioDispatcher, userDatastore)
+        GetFavouriteAppsUseCaseImpl(
+            reportRepository,
+            ioDispatcher,
+            userDatastore,
+            packageManagerUtils
+        )
 }

@@ -1,13 +1,10 @@
 package com.example.data.report.implementation
 
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.nonEmptyListOf
 import arrow.core.raise.either
+import com.example.data.PackageManagerUtils
 import com.example.data.Problem
 import com.example.data.report.AppReportDto
 import com.example.data.report.CreateReportDto
@@ -25,10 +22,8 @@ constructor(
     private val statisticsDataSource: StatisticsDataSource,
     private val reportRepository: ReportRepository,
     private val userDatastore: UserDatastore,
-    context: Context
+    private val packageManagerUtils: PackageManagerUtils
 ) : UploadReportService {
-
-    private val packageManager = context.packageManager
 
     override suspend fun invoke(): Either<NonEmptyList<Problem>, Report> = either {
         val userId = userDatastore.getUserId().mapLeft { nonEmptyListOf(it) }.bind()
@@ -43,13 +38,13 @@ constructor(
     }
 
     private suspend fun createAppReports(): List<AppReportDto> {
-        val installedAppPackageNames = getInstalledAppPackageNames()
+        val installedAppPackageNames = packageManagerUtils.getInstalledAppPackageNames()
         val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
         val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
         val timesOpened = statisticsDataSource.fetchPerAppTimesOpened()
         return installedAppPackageNames.map {
             AppReportDto(
-                appName = getAppNameFromPackageName(it),
+                appName = packageManagerUtils.getAppNameFromPackageName(it),
                 appPackageName = it,
                 screenTime = screenTimes[it] ?: 0L,
                 notificationsReceived = notifications[it] ?: 0,
@@ -58,26 +53,4 @@ constructor(
             )
         }
     }
-
-    private fun getInstalledAppPackageNames(): List<String> {
-        val mainIntent = Intent(Intent.ACTION_MAIN, null)
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
-        val resolvedInfo =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                packageManager.queryIntentActivities(
-                    mainIntent,
-                    PackageManager.ResolveInfoFlags.of(0L)
-                )
-            } else {
-                packageManager.queryIntentActivities(mainIntent, 0)
-            }
-        return resolvedInfo.map { it.activityInfo.packageName }.distinct()
-    }
-
-    private fun getAppNameFromPackageName(packageName: String): String =
-        Either.catch { packageManager.getApplicationInfo(packageName, 0) }
-            .fold(
-                { packageName },
-                { packageManager.getApplicationLabel(it).toString() },
-            )
 }

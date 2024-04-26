@@ -2,7 +2,7 @@ package com.example.data.report.implementation
 
 import arrow.core.Either
 import com.example.data.RepositoryProblem
-import com.example.data.report.AppName
+import com.example.data.report.AppPackageName
 import com.example.data.report.Report
 import com.example.data.report.ReportId
 import com.example.data.report.ReportRepository
@@ -48,7 +48,7 @@ internal class ReportRepositoryImpl : ReportRepository {
         userId: UserId,
         timeSpanInDays: Int,
         top: Int
-    ): Either<RepositoryProblem, List<AppName>> =
+    ): Either<RepositoryProblem, List<AppPackageName>> =
         Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
                     .where(
@@ -63,12 +63,12 @@ internal class ReportRepositoryImpl : ReportRepository {
                     .get()
                     .await()
                     .toObjects(FirestoreReportDto::class.java)
-                    .map { FirestoreReportDto.toEntity(it) }
+                    .map { FirestoreReportDto.toEntity(it)!! }
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map {
-                it.flatMap { report -> report?.appReports!! }
-                    .groupBy { appReport -> appReport.appName }
+                it.flatMap { report -> report.appReports }
+                    .groupBy { appReport -> appReport.appPackageName }
                     .mapValues { group ->
                         group.value
                             .sumOf { appReport -> appReport.screenTime.screenTime }
