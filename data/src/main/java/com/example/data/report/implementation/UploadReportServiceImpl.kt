@@ -50,7 +50,7 @@ constructor(
         val timesOpened = statisticsDataSource.fetchPerAppTimesOpenedForLast24h()
         return installedAppPackageNames.map {
             AppReportDto(
-                appName = it,
+                appName = getAppNameFromPackageName(it),
                 screenTime = screenTimes[it] ?: 0L,
                 notificationsReceived = notifications[it] ?: 0,
                 timesOpened = timesOpened[it] ?: 0,
@@ -73,4 +73,11 @@ constructor(
             }
         return resolvedInfo.map { it.activityInfo.packageName }
     }
+
+    private fun getAppNameFromPackageName(packageName: String): String =
+        Either.catch { packageManager.getApplicationInfo(packageName, 0) }
+            .fold(
+                { packageName },
+                { packageManager.getApplicationLabel(it).toString() },
+            )
 }
