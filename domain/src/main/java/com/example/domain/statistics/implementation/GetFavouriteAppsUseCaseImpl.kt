@@ -26,7 +26,7 @@ constructor(
             either {
                 val userId = userDatastore.getUserId().bind()
                 reportRepository
-                    .getFavouriteApps(userId = userId, timeSpanInDays = 7, top = 10)
+                    .getFavouriteApps(userId = userId, timeSpanInDays = 7, top = 5)
                     .bind()
                     .map {
                         AppDto(
