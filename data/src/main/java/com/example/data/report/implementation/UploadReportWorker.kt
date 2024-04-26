@@ -22,7 +22,7 @@ constructor(
 ) : CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
-        Log.i("output", "Hello @ time: $currentTime")
+        Log.i(TAG, "Hello @ time: $currentTime")
 
         return when (uploadReportService()) {
             is Either.Left -> {
@@ -30,5 +30,9 @@ constructor(
             }
             else -> Result.success()
         }
+    }
+
+    companion object {
+        private const val TAG = "UploadReportWorker"
     }
 }

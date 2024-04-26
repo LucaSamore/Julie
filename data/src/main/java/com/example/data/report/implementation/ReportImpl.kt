@@ -6,6 +6,7 @@ import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
 import com.example.data.report.AppName
+import com.example.data.report.AppPackageName
 import com.example.data.report.AppReport
 import com.example.data.report.CreateReportDto
 import com.example.data.report.DateOfRecording
@@ -51,6 +52,7 @@ fun createReport(createReportDto: CreateReportDto): Either<NonEmptyList<Problem>
             createReportDto.appReports.map {
                 AppReport(
                     AppName(it.appName).bind(),
+                    AppPackageName(it.appPackageName).bind(),
                     ScreenTime(it.screenTime).bind(),
                     NotificationsReceived(it.notificationsReceived).bind(),
                     TimesOpened(it.timesOpened).bind(),

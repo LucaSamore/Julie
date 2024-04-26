@@ -6,6 +6,7 @@ import arrow.core.raise.ensure
 
 data class AppReport(
     val appName: AppName,
+    val appPackageName: AppPackageName,
     val screenTime: ScreenTime,
     val notificationsReceived: NotificationsReceived,
     val timesOpened: TimesOpened,
@@ -20,6 +21,20 @@ value class AppName private constructor(val appName: String) {
 
             AppName(appName)
         }
+    }
+}
+
+@JvmInline
+value class AppPackageName private constructor(val appPackageName: String) {
+    companion object {
+        operator fun invoke(appPackageName: String): Either<ReportProblem, AppPackageName> =
+            either {
+                ensure(appPackageName.isNotBlank()) {
+                    AppPackageNameProblem("App package name cannot be empty")
+                }
+
+                AppPackageName(appPackageName)
+            }
     }
 }
 

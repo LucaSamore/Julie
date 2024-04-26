@@ -59,6 +59,8 @@ sealed interface ReportProblem : Problem
 
 @JvmInline value class AppNameProblem(override val message: String) : ReportProblem
 
+@JvmInline value class AppPackageNameProblem(override val message: String) : ReportProblem
+
 @JvmInline value class ScreenTimeProblem(override val message: String) : ReportProblem
 
 @JvmInline value class NotificationsReceivedProblem(override val message: String) : ReportProblem

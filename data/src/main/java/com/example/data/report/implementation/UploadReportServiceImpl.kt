@@ -45,12 +45,13 @@ constructor(
 
     private suspend fun createAppReports(): List<AppReportDto> {
         val installedAppPackageNames = getInstalledAppPackageNames()
-        val screenTimes = statisticsDataSource.fetchPerAppScreenTimeForLast24h()
+        val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
         val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
-        val timesOpened = statisticsDataSource.fetchPerAppTimesOpenedForLast24h()
+        val timesOpened = statisticsDataSource.fetchPerAppTimesOpened()
         return installedAppPackageNames.map {
             AppReportDto(
                 appName = getAppNameFromPackageName(it),
+                appPackageName = it,
                 screenTime = screenTimes[it] ?: 0L,
                 notificationsReceived = notifications[it] ?: 0,
                 timesOpened = timesOpened[it] ?: 0,
@@ -71,7 +72,7 @@ constructor(
             } else {
                 packageManager.queryIntentActivities(mainIntent, 0)
             }
-        return resolvedInfo.map { it.activityInfo.packageName }
+        return resolvedInfo.map { it.activityInfo.packageName }.distinct()
     }
 
     private fun getAppNameFromPackageName(packageName: String): String =

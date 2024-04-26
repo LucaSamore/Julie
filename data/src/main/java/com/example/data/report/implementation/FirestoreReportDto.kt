@@ -27,6 +27,7 @@ data class FirestoreReportDto(
                     report.appReports.map {
                         FirestoreAppUsageDto(
                             appName = it.appName.appName,
+                            appPackageName = it.appPackageName.appPackageName,
                             screenTime = it.screenTime.screenTime,
                             notifications = it.notificationsReceived.notificationsReceived,
                             timesOpened = it.timesOpened.timesOpened,
@@ -39,6 +40,7 @@ data class FirestoreReportDto(
 
 data class FirestoreAppUsageDto(
     val appName: String? = null,
+    val appPackageName: String? = null,
     val screenTime: Long? = null,
     val notifications: Int? = null,
     val timesOpened: Int? = null,

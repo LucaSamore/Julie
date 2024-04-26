@@ -10,6 +10,7 @@ data class CreateReportDto(
 
 data class AppReportDto(
     val appName: String,
+    val appPackageName: String,
     val screenTime: Long,
     val notificationsReceived: Int,
     val timesOpened: Int,
