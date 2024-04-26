@@ -10,7 +10,6 @@ import com.example.data.report.UploadReportService
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @HiltWorker
 internal class UploadReportWorker
@@ -20,17 +19,16 @@ constructor(
     @Assisted appContext: Context,
     @Assisted workerParameters: WorkerParameters
 ) : CoroutineWorker(appContext, workerParameters) {
-    override suspend fun doWork(): Result {
-        val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
-        Log.i(TAG, "Hello @ time: $currentTime")
-
-        return when (uploadReportService()) {
+    override suspend fun doWork(): Result =
+        when (val result = uploadReportService()) {
             is Either.Left -> {
+                result.leftOrNull()?.all?.forEach {
+                    Log.e(TAG, "${it.message} @ ${LocalDateTime.now()}")
+                }
                 Result.retry()
             }
             else -> Result.success()
         }
-    }
 
     companion object {
         private const val TAG = "UploadReportWorker"

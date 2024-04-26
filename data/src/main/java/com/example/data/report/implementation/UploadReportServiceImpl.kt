@@ -15,7 +15,6 @@ import com.example.data.report.Report
 import com.example.data.report.ReportRepository
 import com.example.data.report.UploadReportService
 import com.example.data.statistics.StatisticsDataSource
-import com.example.data.user.UserIdProblem
 import com.example.data.user.implementation.UserDatastore
 import java.time.LocalDate
 import javax.inject.Inject
@@ -32,10 +31,10 @@ constructor(
     private val packageManager = context.packageManager
 
     override suspend fun invoke(): Either<NonEmptyList<Problem>, Report> = either {
-        val userId = userDatastore.getUserId().mapLeft { nonEmptyListOf(UserIdProblem(it)) }.bind()
+        val userId = userDatastore.getUserId().mapLeft { nonEmptyListOf(it) }.bind()
         val reportDto =
             CreateReportDto(
-                userId = userId,
+                userId = userId.userId,
                 dateOfRecording = LocalDate.now(),
                 appReports = createAppReports()
             )

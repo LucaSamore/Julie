@@ -1,5 +1,6 @@
 package com.example.julie.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -63,9 +65,11 @@ internal fun HomeScreen(
 ) {
     val state by homeViewModel.homeScreenState.collectAsState()
 
-    homeViewModel.getCurrentScreenTime()
+    homeViewModel.getContent()
 
     var currentScreenTime by rememberSaveable { mutableLongStateOf(0L) }
+
+    val favouriteApps = remember { mutableStateListOf<String>() }
 
     var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
 
@@ -381,52 +385,56 @@ internal fun HomeScreen(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = modifier.fillMaxWidth(.9f).padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "#1",
-                        style =
-                            TextStyle(
-                                fontSize = 32.sp,
-                                textAlign = TextAlign.Start,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                fontWeight = FontWeight.Bold,
-                                color = NeobrutalismTheme.colors.background,
-                            )
-                    )
+                favouriteApps.forEachIndexed { index, appName ->
+                    Row(
+                        modifier = modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "#${index+1}",
+                            style =
+                                TextStyle(
+                                    fontSize = 32.sp,
+                                    textAlign = TextAlign.Start,
+                                    fontFamily =
+                                        FontFamily(
+                                            Font(
+                                                R.font.nunito_variable,
+                                                variationSettings =
+                                                    FontVariation.Settings(
+                                                        FontVariation.weight(600),
+                                                    )
+                                            )
+                                        ),
+                                    fontWeight = FontWeight.Bold,
+                                    color = NeobrutalismTheme.colors.background,
+                                ),
+                            modifier = modifier.fillMaxWidth(.3f)
+                        )
 
-                    Text(
-                        text = "Instagram",
-                        style =
-                            TextStyle(
-                                fontSize = 24.sp,
-                                textAlign = TextAlign.Center,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                fontWeight = FontWeight.Bold,
-                                color = NeobrutalismTheme.colors.background,
-                            )
-                    )
+                        Text(
+                            text = appName,
+                            style =
+                                TextStyle(
+                                    fontSize = 28.sp,
+                                    textAlign = TextAlign.Start,
+                                    fontFamily =
+                                        FontFamily(
+                                            Font(
+                                                R.font.nunito_variable,
+                                                variationSettings =
+                                                    FontVariation.Settings(
+                                                        FontVariation.weight(600),
+                                                    )
+                                            )
+                                        ),
+                                    fontWeight = FontWeight.Bold,
+                                    color = NeobrutalismTheme.colors.background,
+                                ),
+                            modifier = modifier.fillMaxWidth(.7f)
+                        )
+                    }
                 }
             }
         }
@@ -438,7 +446,13 @@ internal fun HomeScreen(
             currentScreenTime = currentState.value.currentScreenTime
             screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
             thresholdSliderPosition = screenTimeSliderPosition
+            favouriteApps.apply {
+                clear()
+                addAll(currentState.value.favouriteApps.map { it.appName })
+            }
         }
-        is Lce.Failure -> {}
+        is Lce.Failure -> {
+            Log.i("home", currentState.error.message)
+        }
     }
 }

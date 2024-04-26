@@ -1,6 +1,9 @@
 package com.example.data.report.implementation
 
+import com.example.data.report.AppReportDto
+import com.example.data.report.CreateReportDto
 import com.example.data.report.Report
+import java.time.LocalDate
 
 data class FirestoreReportDto(
     val id: String? = null,
@@ -35,6 +38,28 @@ data class FirestoreReportDto(
                         )
                     }
             )
+
+        fun toEntity(dto: FirestoreReportDto): Report? =
+            createReport(
+                    createReportDto =
+                        CreateReportDto(
+                            userId = dto.userId ?: "",
+                            dateOfRecording =
+                                LocalDate.parse(dto.date) ?: LocalDate.now().plusDays(1),
+                            appReports =
+                                dto.appUsage?.map {
+                                    AppReportDto(
+                                        appName = it.appName ?: "",
+                                        appPackageName = it.appPackageName ?: "",
+                                        screenTime = it.screenTime ?: 0L,
+                                        notificationsReceived = it.notifications ?: 0,
+                                        timesOpened = it.timesOpened ?: 0,
+                                        wasOpenedFirst = it.wasOpenedFirst ?: false
+                                    )
+                                } ?: emptyList()
+                        )
+                )
+                .fold({ null }, { it })
     }
 }
 
