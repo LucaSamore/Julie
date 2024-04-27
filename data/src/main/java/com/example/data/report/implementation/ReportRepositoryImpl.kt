@@ -64,7 +64,7 @@ internal class ReportRepositoryImpl : ReportRepository {
                     .get()
                     .await()
                     .toObjects(FirestoreReportDto::class.java)
-                    .map { FirestoreReportDto.toEntity(it)!! }
+                    .mapNotNull { FirestoreReportDto.toEntity(it) }
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { getTopUsedApps(it, top) }
@@ -72,15 +72,15 @@ internal class ReportRepositoryImpl : ReportRepository {
 
     private fun getTopUsedApps(apps: List<Report>, top: Int): List<AppPackageName> {
         return apps
-            .flatMap { report -> report.appReports }
-            .groupBy { appReport -> appReport.appPackageName }
-            .mapValues { group ->
-                group.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
-                    group.value.size
+            .flatMap { it.appReports }
+            .groupBy { it.appPackageName }
+            .mapValues {
+                it.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
+                    it.value.size
             }
             .toList()
-            .sortedByDescending { pair -> pair.second }
-            .map { pair -> pair.first }
+            .sortedByDescending { it.second }
+            .map { it.first }
             .take(top)
     }
 }

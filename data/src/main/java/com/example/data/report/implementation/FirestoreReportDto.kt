@@ -1,5 +1,6 @@
 package com.example.data.report.implementation
 
+import android.util.Log
 import com.example.data.report.AppReportDto
 import com.example.data.report.CreateReportDto
 import com.example.data.report.Report
@@ -16,6 +17,8 @@ data class FirestoreReportDto(
 ) {
     companion object {
         const val COLLECTION = "reports"
+
+        private const val TAG = "FirestoreReportDto"
 
         fun fromEntity(report: Report): FirestoreReportDto =
             FirestoreReportDto(
@@ -59,7 +62,13 @@ data class FirestoreReportDto(
                                 } ?: emptyList()
                         )
                 )
-                .fold({ null }, { it })
+                .fold(
+                    { errors ->
+                        errors.forEach { Log.e(TAG, it.message) }
+                        null
+                    },
+                    { it }
+                )
     }
 }
 
