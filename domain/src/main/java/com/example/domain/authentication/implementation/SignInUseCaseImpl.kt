@@ -12,10 +12,10 @@ import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
+import com.example.data.util.accumulateIfLeft
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
-import com.example.domain.util.single
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -39,13 +39,13 @@ constructor(
                 val signedInEvent =
                     authenticationService
                         .signInWithEmailAndPassword(validatedCredentials)
-                        .single()
+                        .accumulateIfLeft()
                         .bind()
-                checkIfEmailIsVerified().single().bind()
+                checkIfEmailIsVerified().accumulateIfLeft().bind()
                 val userId =
                     userProfileRepository
                         .getUserIdByEmailAddress(validatedCredentials.emailAddress)
-                        .single()
+                        .accumulateIfLeft()
                         .bind()
                 cacheUserIdUseCase(userId.userId)
                 scheduleUploadReportWorkerUseCase()

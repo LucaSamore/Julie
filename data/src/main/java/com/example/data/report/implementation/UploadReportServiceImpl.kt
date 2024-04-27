@@ -2,7 +2,6 @@ package com.example.data.report.implementation
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
-import arrow.core.nonEmptyListOf
 import arrow.core.raise.either
 import com.example.data.PackageManagerUtils
 import com.example.data.Problem
@@ -13,6 +12,7 @@ import com.example.data.report.ReportRepository
 import com.example.data.report.UploadReportService
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.user.implementation.UserDatastore
+import com.example.data.util.accumulateIfLeft
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ constructor(
 ) : UploadReportService {
 
     override suspend fun invoke(): Either<NonEmptyList<Problem>, Report> = either {
-        val userId = userDatastore.getUserId().mapLeft { nonEmptyListOf(it) }.bind()
+        val userId = userDatastore.getUserId().accumulateIfLeft().bind()
         val reportDto =
             CreateReportDto(
                 userId = userId.userId,
@@ -34,7 +34,7 @@ constructor(
                 appReports = createAppReports()
             )
         val newReport = createReport(reportDto).bind()
-        reportRepository.create(newReport).mapLeft { nonEmptyListOf(it) }.bind()
+        reportRepository.create(newReport).accumulateIfLeft().bind()
     }
 
     private suspend fun createAppReports(): List<AppReportDto> {

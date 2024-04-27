@@ -15,10 +15,10 @@ import com.example.data.user.UserProfileRepository
 import com.example.data.user.Username
 import com.example.data.user.UsernameProblem
 import com.example.data.user.implementation.createNewAccount
+import com.example.data.util.accumulateIfLeft
 import com.example.domain.authentication.SignUpUseCase
 import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
-import com.example.domain.util.single
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -39,11 +39,13 @@ constructor(
         withContext(ioDispatcher) {
             either {
                 val newUser = createNewAccount(userData).bind()
-                checkEmailAddressAlreadyInUse(newUser.userDetails.emailAddress).single().bind()
-                checkUsernameAlreadyInUse(newUser.userDetails.username).single().bind()
-                storeNewAccount(newUser).single().bind()
-                val signedUser = signUser(newUser).single().bind()
-                authenticationService.sendVerificationEmail().single().bind()
+                checkEmailAddressAlreadyInUse(newUser.userDetails.emailAddress)
+                    .accumulateIfLeft()
+                    .bind()
+                checkUsernameAlreadyInUse(newUser.userDetails.username).accumulateIfLeft().bind()
+                storeNewAccount(newUser).accumulateIfLeft().bind()
+                val signedUser = signUser(newUser).accumulateIfLeft().bind()
+                authenticationService.sendVerificationEmail().accumulateIfLeft().bind()
                 cacheUserIdUseCase(newUser.id.userId)
                 scheduleUploadReportWorkerUseCase()
                 signedUser
