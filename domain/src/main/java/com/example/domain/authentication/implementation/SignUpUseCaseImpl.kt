@@ -17,7 +17,6 @@ import com.example.data.user.UsernameProblem
 import com.example.data.user.implementation.createNewAccount
 import com.example.data.util.accumulateIfLeft
 import com.example.domain.authentication.SignUpUseCase
-import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,7 +29,6 @@ constructor(
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
     private val cacheUserIdUseCase: CacheUserIdUseCase,
-    private val scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
 ) : SignUpUseCase {
 
     override suspend fun invoke(
@@ -47,7 +45,6 @@ constructor(
                 val signedUser = signUser(newUser).accumulateIfLeft().bind()
                 authenticationService.sendVerificationEmail().accumulateIfLeft().bind()
                 cacheUserIdUseCase(newUser.id.userId)
-                scheduleUploadReportWorkerUseCase()
                 signedUser
             }
         }

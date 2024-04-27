@@ -1,10 +1,11 @@
 package com.example.data.user.implementation
 
 import com.example.data.gamification.Streak
+import com.example.data.gamification.Threshold
 import com.example.data.user.Interest
 import com.example.data.user.UserProfile
+import com.example.data.util.prettyFormat
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 internal data class FirestoreUserDto(
     val id: String? = null,
@@ -16,8 +17,9 @@ internal data class FirestoreUserDto(
     val password: String? = null,
     val interest: List<FirestoreInterestDto>? = null,
     val points: Int? = null,
+    val threshold: FirestoreThresholdDto? = null,
     val currentStreak: FirestoreCurrentStreakDto? = null,
-    val createdAt: String? = LocalDateTime.now().betterFormat()
+    val createdAt: String? = LocalDateTime.now().prettyFormat()
 ) {
     companion object {
         const val COLLECTION = "users"
@@ -33,7 +35,21 @@ internal data class FirestoreUserDto(
                 password = user.userDetails.password.password,
                 interest = user.userDetails.interest.map { FirestoreInterestDto.fromEntity(it) },
                 points = user.points.points,
+                threshold = FirestoreThresholdDto.fromEntity(user.threshold),
                 currentStreak = FirestoreCurrentStreakDto.fromEntity(user.currentStreak)
+            )
+    }
+}
+
+internal data class FirestoreThresholdDto(
+    val valueInMillis: Long? = null,
+    val nextReset: String? = null
+) {
+    companion object {
+        fun fromEntity(threshold: Threshold): FirestoreThresholdDto =
+            FirestoreThresholdDto(
+                valueInMillis = threshold.valueInMillis.valueInMillis,
+                nextReset = threshold.nextReset.nextReset.toString()
             )
     }
 }
@@ -59,6 +75,3 @@ internal data class FirestoreInterestDto(val name: String? = null, val category:
             FirestoreInterestDto(name = interest.name.name, category = interest.category.category)
     }
 }
-
-private fun LocalDateTime.betterFormat(pattern: String = "yyyy-MM-dd HH:mm:ss"): String =
-    format(DateTimeFormatter.ofPattern(pattern))

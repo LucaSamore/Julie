@@ -55,15 +55,13 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        cacheUserIdUseCase: CacheUserIdUseCase,
-        scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
+        cacheUserIdUseCase: CacheUserIdUseCase
     ): SignUpUseCase =
         SignUpUseCaseImpl(
             authenticationService,
             userProfileRepository,
             ioDispatcher,
-            cacheUserIdUseCase,
-            scheduleUploadReportWorkerUseCase
+            cacheUserIdUseCase
         )
 
     @Singleton
