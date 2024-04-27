@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -73,12 +74,22 @@ internal fun HomeScreen(
 
     var thresholdSliderPosition by remember { mutableFloatStateOf(.0f) }
 
+    var favouriteAppsErrorMessage by rememberSaveable { mutableStateOf("") }
+
+    var favouriteAppsErrorMessageHidden by rememberSaveable { mutableStateOf(true) }
+
     LaunchedEffect(key1 = Unit) {
         scope.launch {
-            favouriteApps.apply {
-                clear()
-                addAll(homeViewModel.getFavouriteApps())
-            }
+            favouriteApps.clear()
+            homeViewModel
+                .getFavouriteApps()
+                .fold(
+                    { error ->
+                        favouriteAppsErrorMessage = error.message
+                        favouriteAppsErrorMessageHidden = true
+                    },
+                    { apps -> favouriteApps.addAll(apps) }
+                )
         }
     }
 
@@ -137,6 +148,22 @@ internal fun HomeScreen(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (!favouriteAppsErrorMessageHidden) {
+                    Text(
+                        text = "Errore brody",
+                        style =
+                            TextStyle(
+                                fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                color = NeobrutalismTheme.colors.background,
+                            ),
+                        modifier =
+                            modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 16.dp)
+                    )
+                }
+
                 favouriteApps.forEachIndexed { index, app ->
                     Row(
                         modifier = modifier.fillMaxWidth().padding(16.dp),

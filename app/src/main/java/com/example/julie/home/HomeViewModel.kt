@@ -1,6 +1,8 @@
 package com.example.julie.home
 
 import androidx.lifecycle.ViewModel
+import arrow.core.Either
+import com.example.data.Problem
 import com.example.data.di.IoDispatcher
 import com.example.domain.statistics.AppDto
 import com.example.domain.statistics.GetCurrentScreenTimeUseCase
@@ -42,6 +44,6 @@ constructor(
         }
     }
 
-    suspend fun getFavouriteApps(): List<AppDto> =
-        withContext(ioDispatcher) { getFavouriteAppsUseCase().fold({ emptyList() }, { it }) }
+    suspend fun getFavouriteApps(): Either<Problem, List<AppDto>> =
+        withContext(ioDispatcher) { getFavouriteAppsUseCase() }
 }
