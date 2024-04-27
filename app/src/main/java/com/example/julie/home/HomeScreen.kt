@@ -1,6 +1,5 @@
 package com.example.julie.home
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,6 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +49,6 @@ import com.example.julie.components.NeubrutalVolumeBox
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -60,9 +57,9 @@ internal fun HomeScreen(
     homeViewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {
-    val scope = rememberCoroutineScope()
+    val homeScreenState by homeViewModel.homeScreenState.collectAsState()
 
-    val state by homeViewModel.homeScreenState.collectAsState()
+    val screenTimeState by homeViewModel.screenTimeState.collectAsState()
 
     homeViewModel.getCurrentScreenTime()
 
@@ -78,20 +75,7 @@ internal fun HomeScreen(
 
     var favouriteAppsErrorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
-    LaunchedEffect(key1 = Unit) {
-        scope.launch {
-            favouriteApps.clear()
-            homeViewModel
-                .getFavouriteApps()
-                .fold(
-                    { error ->
-                        favouriteAppsErrorMessage = error.message
-                        favouriteAppsErrorMessageHidden = true
-                    },
-                    { apps -> favouriteApps.addAll(apps) }
-                )
-        }
-    }
+    LaunchedEffect(key1 = Unit) { homeViewModel.getFavouriteApps() }
 
     Column(
         modifier =
@@ -99,6 +83,11 @@ internal fun HomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val currentScreenTimeState = screenTimeState
+        currentScreenTime = currentScreenTimeState
+        screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
+        thresholdSliderPosition = screenTimeSliderPosition
+
         NeubrutalMusicBox(
             modifier = modifier,
             currentScreenTime = currentScreenTime,
@@ -225,17 +214,19 @@ internal fun HomeScreen(
         }
     }
 
-    when (val currentState = state) {
-        is Lce.Loading -> {}
+    when (val currentState = homeScreenState) {
+        is Lce.Loading -> {
+            favouriteAppsErrorMessageHidden = true
+        }
         is Lce.Content -> {
-            currentScreenTime = currentState.value.currentScreenTime
-            screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
-            thresholdSliderPosition = screenTimeSliderPosition
+            favouriteApps.apply {
+                clear()
+                addAll(currentState.value.favouriteApps)
+            }
         }
         is Lce.Failure -> {
-            Log.i(TAG, currentState.error.message)
+            favouriteAppsErrorMessage = currentState.error.message
+            favouriteAppsErrorMessageHidden = false
         }
     }
 }
-
-private const val TAG = "home"

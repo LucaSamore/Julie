@@ -136,8 +136,8 @@ internal fun NeubrutalMusicBox(
                     NeubrutalContentPrimaryText(
                         modifier = modifier.fillMaxWidth(.5f),
                         content =
-                            currentScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
-                                "${hh}h ${mm}min"
+                            currentScreenTime.milliseconds.toComponents { hh, mm, ss, _ ->
+                                "${hh}h ${mm}min ${ss}sec"
                             },
                         fontSize = 16.sp,
                         textAlign = TextAlign.Start
