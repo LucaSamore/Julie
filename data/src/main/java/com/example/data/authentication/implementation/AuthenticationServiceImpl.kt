@@ -21,8 +21,8 @@ internal class AuthenticationServiceImpl : AuthenticationService {
 
     override suspend fun signInWithEmailAndPassword(
         signInCredentials: ValidatedCredentials.SignInDto
-    ): Either<AuthenticationError, UserSignedIn> =
-        Either.catch {
+    ): Either<AuthenticationError, UserSignedIn> {
+        return Either.catch {
                 auth
                     .signInWithEmailAndPassword(
                         signInCredentials.emailAddress.emailAddress,
@@ -32,11 +32,12 @@ internal class AuthenticationServiceImpl : AuthenticationService {
             }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { UserSignedIn }
+    }
 
     override suspend fun signUpWithEmailAndPassword(
         signUpCredentials: ValidatedCredentials.SignUpDto
-    ): Either<AuthenticationError, UserSignedUp> =
-        Either.catch {
+    ): Either<AuthenticationError, UserSignedUp> {
+        return Either.catch {
                 auth
                     .createUserWithEmailAndPassword(
                         signUpCredentials.emailAddress.emailAddress,
@@ -46,24 +47,28 @@ internal class AuthenticationServiceImpl : AuthenticationService {
             }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { UserSignedUp }
+    }
 
     override suspend fun passwordReset(
         emailAddress: EmailAddress
-    ): Either<AuthenticationProblem, PasswordReset> =
-        Either.catch { auth.sendPasswordResetEmail(emailAddress.emailAddress).await() }
+    ): Either<AuthenticationProblem, PasswordReset> {
+        return Either.catch { auth.sendPasswordResetEmail(emailAddress.emailAddress).await() }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { PasswordReset }
+    }
 
-    override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> =
-        Either.catch { auth.signOut() }
+    override suspend fun signOut(): Either<AuthenticationError, UserSignedOut> {
+        return Either.catch { auth.signOut() }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { UserSignedOut }
+    }
 
     override suspend fun sendVerificationEmail():
-        Either<AuthenticationError, VerificationEmailSent> =
-        Either.catch { auth.currentUser!!.sendEmailVerification().await() }
+        Either<AuthenticationError, VerificationEmailSent> {
+        return Either.catch { auth.currentUser!!.sendEmailVerification().await() }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { VerificationEmailSent }
+    }
 
     override fun isEmailVerified(): Boolean = auth.currentUser!!.isEmailVerified
 

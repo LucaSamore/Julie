@@ -26,13 +26,16 @@ class PackageManagerUtils @Inject constructor(context: Context) {
         return resolvedInfo.map { it.activityInfo.packageName }.distinct()
     }
 
-    fun getAppNameFromPackageName(packageName: String): String =
-        Either.catch { packageManager.getApplicationInfo(packageName, 0) }
+    fun getAppNameFromPackageName(packageName: String): String {
+        return Either.catch { packageManager.getApplicationInfo(packageName, 0) }
             .fold(
                 { packageName },
                 { packageManager.getApplicationLabel(it).toString() },
             )
+    }
 
-    fun getAppIcon(packageName: String): Either<String, Drawable> =
-        Either.catch { packageManager.getApplicationIcon(packageName) }.mapLeft { "Not Found" }
+    fun getAppIcon(packageName: String): Either<String, Drawable> {
+        return Either.catch { packageManager.getApplicationIcon(packageName) }
+            .mapLeft { "Not Found" }
+    }
 }

@@ -18,8 +18,8 @@ internal class ReportRepositoryImpl : ReportRepository {
 
     private val db: FirebaseFirestore = Firebase.firestore
 
-    override suspend fun create(entity: Report): Either<RepositoryProblem, Report> =
-        Either.catch {
+    override suspend fun create(entity: Report): Either<RepositoryProblem, Report> {
+        return Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
                     .document(entity.id.reportId)
                     .set(FirestoreReportDto.fromEntity(entity))
@@ -27,6 +27,7 @@ internal class ReportRepositoryImpl : ReportRepository {
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { entity }
+    }
 
     override suspend fun findMany(): Either<RepositoryProblem, Iterable<Report>> {
         TODO("Not yet implemented")
@@ -48,8 +49,8 @@ internal class ReportRepositoryImpl : ReportRepository {
         userId: UserId,
         timeSpanInDays: Int,
         top: Int
-    ): Either<RepositoryProblem, List<AppPackageName>> =
-        Either.catch {
+    ): Either<RepositoryProblem, List<AppPackageName>> {
+        return Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
                     .where(
                         Filter.and(
@@ -66,17 +67,20 @@ internal class ReportRepositoryImpl : ReportRepository {
                     .map { FirestoreReportDto.toEntity(it)!! }
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
-            .map {
-                it.flatMap { report -> report.appReports }
-                    .groupBy { appReport -> appReport.appPackageName }
-                    .mapValues { group ->
-                        group.value
-                            .sumOf { appReport -> appReport.screenTime.screenTime }
-                            .toDouble() / group.value.size
-                    }
-                    .toList()
-                    .sortedByDescending { pair -> pair.second }
-                    .map { pair -> pair.first }
-                    .take(top)
+            .map { getTopUsedApps(it, top) }
+    }
+
+    private fun getTopUsedApps(apps: List<Report>, top: Int): List<AppPackageName> {
+        return apps
+            .flatMap { report -> report.appReports }
+            .groupBy { appReport -> appReport.appPackageName }
+            .mapValues { group ->
+                group.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
+                    group.value.size
             }
+            .toList()
+            .sortedByDescending { pair -> pair.second }
+            .map { pair -> pair.first }
+            .take(top)
+    }
 }

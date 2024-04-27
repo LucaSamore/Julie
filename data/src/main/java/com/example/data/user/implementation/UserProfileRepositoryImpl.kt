@@ -20,8 +20,8 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
 
     private val db: FirebaseFirestore = Firebase.firestore
 
-    override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> =
-        Either.catch {
+    override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
+        return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .document(entity.id.userId)
                     .set(
@@ -32,6 +32,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { entity }
+    }
 
     override suspend fun findMany(): Either<RepositoryProblem, Iterable<UserProfile>> {
         TODO("Not yet implemented")
@@ -51,8 +52,8 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
 
     override suspend fun getUserIdByEmailAddress(
         emailAddress: EmailAddress
-    ): Either<Problem, UserId> =
-        Either.catch {
+    ): Either<Problem, UserId> {
+        return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .whereEqualTo("emailAddress", emailAddress.emailAddress)
                     .get()
@@ -61,11 +62,12 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .flatMap { documents -> UserId(documents.first().id ?: "") }
+    }
 
     override suspend fun isEmailAddressAlreadyInUse(
         emailAddress: EmailAddress
-    ): Either<RepositoryProblem, Boolean> =
-        Either.catch {
+    ): Either<RepositoryProblem, Boolean> {
+        return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .whereEqualTo("emailAddress", emailAddress.emailAddress)
                     .get()
@@ -73,11 +75,12 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { documents -> !documents.isEmpty }
+    }
 
     override suspend fun isUsernameAlreadyInUse(
         username: Username
-    ): Either<RepositoryProblem, Boolean> =
-        Either.catch {
+    ): Either<RepositoryProblem, Boolean> {
+        return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .whereEqualTo("username", username.username)
                     .get()
@@ -85,6 +88,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { documents -> !documents.isEmpty }
+    }
 
     override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
         TODO("Not yet implemented")

@@ -25,10 +25,11 @@ class UserDatastore(private val context: Context) {
         context.datastore.edit { preferences -> preferences[USER_ID] = userId }
     }
 
-    suspend fun getUserId(): Either<UserProblem, UserId> =
-        Either.catch { userId.first() }
+    suspend fun getUserId(): Either<UserProblem, UserId> {
+        return Either.catch { userId.first() }
             .mapLeft { UserIdProblem(it.message ?: UnknownError) }
             .flatMap { UserId(it) }
+    }
 
     companion object {
         private val Context.datastore: DataStore<Preferences> by
