@@ -5,6 +5,7 @@ import arrow.core.NonEmptyList
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
+import com.example.data.WorkerManager
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.EmailNotVerified
 import com.example.data.authentication.UserSignedIn
@@ -27,7 +28,7 @@ constructor(
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
     private val cacheUserIdUseCase: CacheUserIdUseCase,
-    private val scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
+    private val workerManager: WorkerManager
 ) : SignInUseCase {
     override suspend fun invoke(
         emailAddress: String,
@@ -48,7 +49,8 @@ constructor(
                         .accumulateIfLeft()
                         .bind()
                 cacheUserIdUseCase(userId.userId)
-                scheduleUploadReportWorkerUseCase()
+                workerManager.scheduleUploadReportWorker()
+                workerManager.scheduleDailyChallengeWorker()
                 signedInEvent
             }
         }

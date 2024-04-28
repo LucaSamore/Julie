@@ -37,14 +37,14 @@ object UseCaseModule {
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         cacheUserIdUseCase: CacheUserIdUseCase,
-        scheduleUploadReportWorkerUseCase: ScheduleUploadReportWorkerUseCase
+        workerManager: WorkerManager
     ): SignInUseCase =
         SignInUseCaseImpl(
             authenticationService,
             userProfileRepository,
             ioDispatcher,
             cacheUserIdUseCase,
-            scheduleUploadReportWorkerUseCase
+            workerManager
         )
 
     @Singleton
