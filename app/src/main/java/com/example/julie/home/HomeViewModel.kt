@@ -43,28 +43,23 @@ constructor(
 
     fun getContent() =
         viewModelScope.launch {
-            _homeScreenState.update { Lce.Loading }
             getUserProfileGamificationDataUseCase()
-                .fold(
-                    { error -> _homeScreenState.update { Lce.Failure(error) } },
-                    { dto ->
-                        getFavouriteAppsUseCase()
-                            .fold(
-                                { error -> _homeScreenState.update { Lce.Failure(error) } },
-                                { apps ->
-                                    _homeScreenState.update {
-                                        Lce.Content(
-                                            HomeScreenContent(
-                                                threshold = dto.threshold,
-                                                points = dto.points,
-                                                streakValue = dto.currentStreakValue,
-                                                favouriteApps = apps
-                                            )
-                                        )
-                                    }
-                                }
-                            )
-                    }
-                )
+                .onLeft { error -> _homeScreenState.update { Lce.Failure(error) } }
+                .onRight { dto ->
+                    getFavouriteAppsUseCase()
+                        .onLeft { error -> _homeScreenState.update { Lce.Failure(error) } }
+                        .onRight { apps ->
+                            _homeScreenState.update {
+                                Lce.Content(
+                                    HomeScreenContent(
+                                        threshold = dto.threshold,
+                                        points = dto.points,
+                                        streakValue = dto.currentStreakValue,
+                                        favouriteApps = apps
+                                    )
+                                )
+                            }
+                        }
+                }
         }
 }

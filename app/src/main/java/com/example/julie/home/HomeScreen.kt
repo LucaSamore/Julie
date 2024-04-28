@@ -59,28 +59,21 @@ internal fun HomeScreen(
     paddingValues: PaddingValues
 ) {
     val homeScreenState by homeViewModel.homeScreenState.collectAsState()
-
     val screenTimeState by homeViewModel.screenTimeState.collectAsState()
 
     homeViewModel.getCurrentScreenTime()
 
     var currentScreenTime by rememberSaveable { mutableLongStateOf(0L) }
-
     var threshold by rememberSaveable { mutableLongStateOf(0L) }
-
     var points by rememberSaveable { mutableIntStateOf(0) }
-
     var streak by rememberSaveable { mutableIntStateOf(0) }
-
     val favouriteApps = remember { mutableStateListOf<AppDto>() }
 
     var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
-
     var thresholdSliderPosition by remember { mutableFloatStateOf(.0f) }
 
-    var favouriteAppsErrorMessage by rememberSaveable { mutableStateOf("") }
-
-    var favouriteAppsErrorMessageHidden by rememberSaveable { mutableStateOf(true) }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
+    var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(key1 = Unit) { homeViewModel.getContent() }
 
@@ -100,13 +93,35 @@ internal fun HomeScreen(
             screenTimeSliderPosition = screenTimeSliderPosition
         )
 
-        NeubrutalVolumeBox(
-            modifier = modifier,
-            thresholdValue = threshold,
-            thresholdSliderPosition = thresholdSliderPosition
-        )
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (!errorMessageHidden) {
+                Text(
+                    text = errorMessage,
+                    style =
+                        TextStyle(
+                            fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = NeobrutalismTheme.colors.text,
+                        ),
+                    modifier = modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 16.dp)
+                )
+                return
+            }
 
-        NeubrutalPointsStreakBox(modifier = modifier, points = points, streak = streak)
+            NeubrutalVolumeBox(
+                modifier = modifier,
+                thresholdValue = threshold,
+                thresholdSliderPosition = thresholdSliderPosition
+            )
+
+            NeubrutalPointsStreakBox(modifier = modifier, points = points, streak = streak)
+        }
 
         Row(
             modifier =
@@ -147,22 +162,6 @@ internal fun HomeScreen(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (!favouriteAppsErrorMessageHidden) {
-                    Text(
-                        text = favouriteAppsErrorMessage,
-                        style =
-                            TextStyle(
-                                fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                color = NeobrutalismTheme.colors.background,
-                            ),
-                        modifier =
-                            modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 16.dp)
-                    )
-                }
-
                 favouriteApps.forEachIndexed { index, app ->
                     Row(
                         modifier = modifier.fillMaxWidth().padding(16.dp),
@@ -225,9 +224,7 @@ internal fun HomeScreen(
     }
 
     when (val currentState = homeScreenState) {
-        is Lce.Loading -> {
-            favouriteAppsErrorMessageHidden = true
-        }
+        is Lce.Loading -> errorMessageHidden = true
         is Lce.Content -> {
             threshold = currentState.value.threshold
             thresholdSliderPosition = screenTimeState.toFloat() / threshold
@@ -239,8 +236,8 @@ internal fun HomeScreen(
             }
         }
         is Lce.Failure -> {
-            favouriteAppsErrorMessage = currentState.error.message
-            favouriteAppsErrorMessageHidden = false
+            errorMessage = currentState.error.message
+            errorMessageHidden = false
         }
     }
 }
