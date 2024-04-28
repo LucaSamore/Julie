@@ -46,9 +46,18 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
                         .get()
                         .await()
                         .toObject(FirestoreUserDto::class.java)!!
-                FirestoreUserDto.toEntity(dto)!!
+                FirestoreUserDto.toEntity(dto)
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .flatMap {
+                it.mapLeft { problems ->
+                    val message =
+                        problems
+                            .map { problem -> problem.message }
+                            .joinToString(prefix = "Problems:\n", separator = "\n")
+                    RepositoryProblem(message)
+                }
+            }
     }
 
     override suspend fun update(entity: UserProfile): Either<RepositoryProblem, UserProfile> {

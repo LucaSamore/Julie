@@ -1,6 +1,8 @@
 package com.example.data.user.implementation
 
-import android.util.Log
+import arrow.core.Either
+import arrow.core.NonEmptyList
+import com.example.data.Problem
 import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakDto
 import com.example.data.gamification.Threshold
@@ -32,8 +34,6 @@ internal data class FirestoreUserDto(
     companion object {
         const val COLLECTION = "users"
 
-        private const val TAG = "FirestoreUserDto"
-
         fun fromEntity(user: UserProfile): FirestoreUserDto {
             return FirestoreUserDto(
                 id = user.id.userId,
@@ -50,55 +50,49 @@ internal data class FirestoreUserDto(
             )
         }
 
-        fun toEntity(firestoreUserDto: FirestoreUserDto): UserProfile? {
+        fun toEntity(
+            firestoreUserDto: FirestoreUserDto
+        ): Either<NonEmptyList<Problem>, UserProfile> {
             return createUserProfile(
-                    UserProfileDto(
-                        id = firestoreUserDto.id ?: "",
-                        firstName = firestoreUserDto.firstName ?: "",
-                        lastName = firestoreUserDto.lastName ?: "",
-                        birthDate =
-                            LocalDate.parse(firestoreUserDto.birthDate ?: today().toString()),
-                        username = firestoreUserDto.username ?: "",
-                        emailAddress = firestoreUserDto.emailAddress ?: "",
-                        password = firestoreUserDto.password ?: "",
-                        interest =
-                            firestoreUserDto.interest?.map {
-                                Interest(
-                                    name = Name(it.name ?: ""),
-                                    category = Category(it.category ?: "")
-                                )
-                            } ?: emptyList(),
-                        points = firestoreUserDto.points ?: -1,
-                        threshold =
-                            ThresholdDto(
-                                valueInMillis = firestoreUserDto.threshold?.valueInMillis ?: -1,
-                                nextReset =
-                                    LocalDate.parse(
-                                        firestoreUserDto.threshold?.nextReset ?: today().toString()
-                                    )
-                            ),
-                        currentStreak =
-                            StreakDto(
-                                value = firestoreUserDto.currentStreak?.value ?: -1,
-                                begin =
-                                    LocalDate.parse(
-                                        firestoreUserDto.currentStreak?.started
-                                            ?: today().plusDays(1).toString()
-                                    ),
-                                end =
-                                    if (firestoreUserDto.currentStreak?.ended != null)
-                                        LocalDate.parse(firestoreUserDto.currentStreak.ended)
-                                    else null
+                UserProfileDto(
+                    id = firestoreUserDto.id ?: "",
+                    firstName = firestoreUserDto.firstName ?: "",
+                    lastName = firestoreUserDto.lastName ?: "",
+                    birthDate = LocalDate.parse(firestoreUserDto.birthDate ?: today().toString()),
+                    username = firestoreUserDto.username ?: "",
+                    emailAddress = firestoreUserDto.emailAddress ?: "",
+                    password = firestoreUserDto.password ?: "",
+                    interest =
+                        firestoreUserDto.interest?.map {
+                            Interest(
+                                name = Name(it.name ?: ""),
+                                category = Category(it.category ?: "")
                             )
-                    )
+                        } ?: emptyList(),
+                    points = firestoreUserDto.points ?: -1,
+                    threshold =
+                        ThresholdDto(
+                            valueInMillis = firestoreUserDto.threshold?.valueInMillis ?: -1,
+                            nextReset =
+                                LocalDate.parse(
+                                    firestoreUserDto.threshold?.nextReset ?: today().toString()
+                                )
+                        ),
+                    currentStreak =
+                        StreakDto(
+                            value = firestoreUserDto.currentStreak?.value ?: -1,
+                            begin =
+                                LocalDate.parse(
+                                    firestoreUserDto.currentStreak?.started
+                                        ?: today().plusDays(1).toString()
+                                ),
+                            end =
+                                if (firestoreUserDto.currentStreak?.ended != null)
+                                    LocalDate.parse(firestoreUserDto.currentStreak.ended)
+                                else null
+                        )
                 )
-                .fold(
-                    {
-                        it.forEach { error -> Log.e(TAG, error.message) }
-                        null
-                    },
-                    { it }
-                )
+            )
         }
     }
 }
