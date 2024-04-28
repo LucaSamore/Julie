@@ -18,6 +18,20 @@ interface UserProfile : Entity<UserId> {
     val threshold: Threshold
 
     val currentStreak: Streak
+
+    fun addPoints(pointsToAdd: Points): UserProfile
+
+    fun resetPoints(): UserProfile
+
+    fun resetThreshold(): UserProfile
+
+    fun increaseThreshold(): UserProfile
+
+    fun decreaseThreshold(): UserProfile
+
+    fun incrementCurrentStreak(): UserProfile
+
+    fun endCurrentStreak(): UserProfile
 }
 
 @JvmInline

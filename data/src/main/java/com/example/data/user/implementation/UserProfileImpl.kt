@@ -34,7 +34,72 @@ internal data class UserProfileImpl(
     override val points: Points,
     override val threshold: Threshold,
     override val currentStreak: Streak
-) : UserProfile
+) : UserProfile {
+    override fun addPoints(pointsToAdd: Points): UserProfile = copy(points = points + pointsToAdd)
+
+    override fun resetPoints(): UserProfile = copy(points = Points(0).getOrNull()!!)
+
+    override fun resetThreshold(): UserProfile =
+        copy(
+            threshold =
+                Threshold(
+                    valueInMillis = ThresholdValue(8.hours.inWholeMilliseconds).getOrNull()!!,
+                    nextReset = NextReset(today().plusDays(7)).getOrNull()!!
+                )
+        )
+
+    override fun increaseThreshold(): UserProfile =
+        copy(
+            threshold =
+                Threshold(
+                    valueInMillis =
+                        ThresholdValue(
+                                threshold.valueInMillis.valueInMillis.hours
+                                    .plus(1.hours)
+                                    .inWholeMilliseconds
+                            )
+                            .getOrNull()!!,
+                    nextReset = threshold.nextReset
+                )
+        )
+
+    override fun decreaseThreshold(): UserProfile =
+        copy(
+            threshold =
+                Threshold(
+                    valueInMillis =
+                        ThresholdValue(
+                                threshold.valueInMillis.valueInMillis.hours
+                                    .minus(1.hours)
+                                    .inWholeMilliseconds
+                            )
+                            .getOrNull()!!,
+                    nextReset = threshold.nextReset
+                )
+        )
+
+    override fun incrementCurrentStreak(): UserProfile =
+        copy(
+            currentStreak =
+                Streak(
+                    userId = id,
+                    value = currentStreak.value + 1,
+                    begin = currentStreak.begin,
+                    end = currentStreak.end
+                )
+        )
+
+    override fun endCurrentStreak(): UserProfile =
+        copy(
+            currentStreak =
+                Streak(
+                    userId = id,
+                    value = currentStreak.value,
+                    begin = currentStreak.begin,
+                    end = EndDate(today()).getOrNull()!!
+                )
+        )
+}
 
 fun createNewAccount(
     createAccountDto: CreateAccountDto

@@ -3,10 +3,13 @@ package com.example.data.di
 import com.example.data.PackageManagerUtils
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.implementation.AuthenticationServiceImpl
+import com.example.data.gamification.DailyChallengeService
+import com.example.data.gamification.implementation.DailyChallengeServiceImpl
 import com.example.data.report.ReportRepository
 import com.example.data.report.UploadReportService
 import com.example.data.report.implementation.UploadReportServiceImpl
 import com.example.data.statistics.StatisticsDataSource
+import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import dagger.Module
 import dagger.Provides
@@ -38,6 +41,15 @@ object ServiceModule {
             userDatastore,
             packageManagerUtils
         )
+
+    @Singleton
+    @Provides
+    fun provideDailyChallengeService(
+        @FirebaseRepository userProfileRepository: UserProfileRepository,
+        userDatastore: UserDatastore,
+        statisticsDataSource: StatisticsDataSource,
+    ): DailyChallengeService =
+        DailyChallengeServiceImpl(userProfileRepository, userDatastore, statisticsDataSource)
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseService
