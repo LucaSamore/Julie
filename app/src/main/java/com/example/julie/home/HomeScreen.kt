@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +66,12 @@ internal fun HomeScreen(
 
     var currentScreenTime by rememberSaveable { mutableLongStateOf(0L) }
 
+    var threshold by rememberSaveable { mutableLongStateOf(0L) }
+
+    var points by rememberSaveable { mutableIntStateOf(0) }
+
+    var streak by rememberSaveable { mutableIntStateOf(0) }
+
     val favouriteApps = remember { mutableStateListOf<AppDto>() }
 
     var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
@@ -75,7 +82,7 @@ internal fun HomeScreen(
 
     var favouriteAppsErrorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
-    LaunchedEffect(key1 = Unit) { homeViewModel.getFavouriteApps() }
+    LaunchedEffect(key1 = Unit) { homeViewModel.getContent() }
 
     Column(
         modifier =
@@ -86,7 +93,6 @@ internal fun HomeScreen(
         val currentScreenTimeState = screenTimeState
         currentScreenTime = currentScreenTimeState
         screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
-        thresholdSliderPosition = screenTimeSliderPosition
 
         NeubrutalMusicBox(
             modifier = modifier,
@@ -94,9 +100,13 @@ internal fun HomeScreen(
             screenTimeSliderPosition = screenTimeSliderPosition
         )
 
-        NeubrutalVolumeBox(modifier = modifier, thresholdSliderPosition = thresholdSliderPosition)
+        NeubrutalVolumeBox(
+            modifier = modifier,
+            thresholdValue = threshold,
+            thresholdSliderPosition = thresholdSliderPosition
+        )
 
-        NeubrutalPointsStreakBox(modifier = modifier)
+        NeubrutalPointsStreakBox(modifier = modifier, points = points, streak = streak)
 
         Row(
             modifier =
@@ -139,7 +149,7 @@ internal fun HomeScreen(
             ) {
                 if (!favouriteAppsErrorMessageHidden) {
                     Text(
-                        text = "Errore brody",
+                        text = favouriteAppsErrorMessage,
                         style =
                             TextStyle(
                                 fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
@@ -219,6 +229,10 @@ internal fun HomeScreen(
             favouriteAppsErrorMessageHidden = true
         }
         is Lce.Content -> {
+            threshold = currentState.value.threshold
+            thresholdSliderPosition = screenTimeState.toFloat() / threshold
+            points = currentState.value.points
+            streak = currentState.value.streakValue
             favouriteApps.apply {
                 clear()
                 addAll(currentState.value.favouriteApps)

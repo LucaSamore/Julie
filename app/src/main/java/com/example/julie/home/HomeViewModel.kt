@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.statistics.AppDto
 import com.example.domain.statistics.GetCurrentScreenTimeUseCase
 import com.example.domain.statistics.GetFavouriteAppsUseCase
+import com.example.domain.user.GetUserProfileGamificationDataUseCase
 import com.example.julie.HomeScreenState
 import com.example.julie.Lce
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ class HomeViewModel
 @Inject
 constructor(
     private val getCurrentScreenTimeUseCase: GetCurrentScreenTimeUseCase,
+    private val getUserProfileGamificationDataUseCase: GetUserProfileGamificationDataUseCase,
     private val getFavouriteAppsUseCase: GetFavouriteAppsUseCase,
 ) : ViewModel() {
 
@@ -39,16 +41,29 @@ constructor(
         _screenTimeState.update { getCurrentScreenTimeUseCase() }
     }
 
-    fun getFavouriteApps() =
+    fun getContent() =
         viewModelScope.launch {
             _homeScreenState.update { Lce.Loading }
-            getFavouriteAppsUseCase()
+            getUserProfileGamificationDataUseCase()
                 .fold(
                     { error -> _homeScreenState.update { Lce.Failure(error) } },
-                    { apps ->
-                        _homeScreenState.update {
-                            Lce.Content(HomeScreenContent(favouriteApps = apps))
-                        }
+                    { dto ->
+                        getFavouriteAppsUseCase()
+                            .fold(
+                                { error -> _homeScreenState.update { Lce.Failure(error) } },
+                                { apps ->
+                                    _homeScreenState.update {
+                                        Lce.Content(
+                                            HomeScreenContent(
+                                                threshold = dto.threshold,
+                                                points = dto.points,
+                                                streakValue = dto.currentStreakValue,
+                                                favouriteApps = apps
+                                            )
+                                        )
+                                    }
+                                }
+                            )
                     }
                 )
         }

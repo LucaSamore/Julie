@@ -25,7 +25,7 @@ import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
 
 @Composable
-internal fun NeubrutalPointsStreakBox(modifier: Modifier) {
+internal fun NeubrutalPointsStreakBox(modifier: Modifier, points: Int, streak: Int) {
     Row(modifier = modifier.fillMaxWidth(.9f).padding(vertical = 32.dp)) {
         Box(
             modifier =
@@ -41,7 +41,7 @@ internal fun NeubrutalPointsStreakBox(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "3256",
+                    text = points.toString(),
                     style =
                         TextStyle(
                             fontSize = 28.sp,
@@ -80,7 +80,7 @@ internal fun NeubrutalPointsStreakBox(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "4",
+                    text = streak.toString(),
                     style =
                         TextStyle(
                             fontSize = 28.sp,

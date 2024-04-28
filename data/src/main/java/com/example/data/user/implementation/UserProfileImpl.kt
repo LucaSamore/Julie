@@ -74,39 +74,40 @@ fun createNewAccount(
     }
 }
 
-fun fromDto(userProfileDto: UserProfileDto): Either<NonEmptyList<Problem>, UserProfile> = either {
-    zipOrAccumulate(
-        { UserId(userProfileDto.id).bind() },
-        { FirstName(userProfileDto.firstName).bind() },
-        { LastName(userProfileDto.lastName).bind() },
-        { BirthDate(userProfileDto.birthDate).bind() },
-        { Username(userProfileDto.username).bind() },
-        { EmailAddress(userProfileDto.emailAddress).bind() },
-        { Password(userProfileDto.password).bind() },
-    ) { userId, firstName, lastName, birthDate, username, emailAddress, password ->
+fun createUserProfile(userProfileDto: UserProfileDto): Either<NonEmptyList<Problem>, UserProfile> =
+    either {
         zipOrAccumulate(
-            { Points(userProfileDto.points).bind() },
-            { ThresholdValue(userProfileDto.threshold.valueInMillis).bind() },
-            { NextReset(userProfileDto.threshold.nextReset).bind() },
-            { StreakValue(userProfileDto.currentStreak.value).bind() },
-            { BeginDate(userProfileDto.currentStreak.begin).bind() },
-            { EndDate(userProfileDto.currentStreak.end ?: today().plusDays(1)).bind() }
-        ) { points, thresholdValue, nextReset, streakValue, beginDate, endDate ->
-            UserProfileImpl(
-                id = userId,
-                UserDetails(
-                    firstName = firstName,
-                    lastName = lastName,
-                    birthDate = birthDate,
-                    username = username,
-                    emailAddress = emailAddress,
-                    password = password,
-                    interest = userProfileDto.interest
-                ),
-                points = points,
-                threshold = Threshold(thresholdValue, nextReset),
-                currentStreak = Streak(userId, streakValue, beginDate, endDate)
-            )
+            { UserId(userProfileDto.id).bind() },
+            { FirstName(userProfileDto.firstName).bind() },
+            { LastName(userProfileDto.lastName).bind() },
+            { BirthDate(userProfileDto.birthDate).bind() },
+            { Username(userProfileDto.username).bind() },
+            { EmailAddress(userProfileDto.emailAddress).bind() },
+            { Password(userProfileDto.password).bind() },
+        ) { userId, firstName, lastName, birthDate, username, emailAddress, password ->
+            zipOrAccumulate(
+                { Points(userProfileDto.points).bind() },
+                { ThresholdValue(userProfileDto.threshold.valueInMillis).bind() },
+                { NextReset(userProfileDto.threshold.nextReset).bind() },
+                { StreakValue(userProfileDto.currentStreak.value).bind() },
+                { BeginDate(userProfileDto.currentStreak.begin).bind() },
+                { EndDate(userProfileDto.currentStreak.end).bind() }
+            ) { points, thresholdValue, nextReset, streakValue, beginDate, endDate ->
+                UserProfileImpl(
+                    id = userId,
+                    UserDetails(
+                        firstName = firstName,
+                        lastName = lastName,
+                        birthDate = birthDate,
+                        username = username,
+                        emailAddress = emailAddress,
+                        password = password,
+                        interest = userProfileDto.interest
+                    ),
+                    points = points,
+                    threshold = Threshold(thresholdValue, nextReset),
+                    currentStreak = Streak(userId, streakValue, beginDate, endDate)
+                )
+            }
         }
     }
-}

@@ -51,7 +51,7 @@ internal data class FirestoreUserDto(
         }
 
         fun toEntity(firestoreUserDto: FirestoreUserDto): UserProfile? {
-            return fromDto(
+            return createUserProfile(
                     UserProfileDto(
                         id = firestoreUserDto.id ?: "",
                         firstName = firestoreUserDto.firstName ?: "",

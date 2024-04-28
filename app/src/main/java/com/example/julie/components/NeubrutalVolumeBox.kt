@@ -32,10 +32,15 @@ import androidx.compose.ui.unit.sp
 import com.example.julie.R
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-internal fun NeubrutalVolumeBox(modifier: Modifier, thresholdSliderPosition: Float) {
+internal fun NeubrutalVolumeBox(
+    modifier: Modifier,
+    thresholdValue: Long,
+    thresholdSliderPosition: Float
+) {
     Row(modifier = modifier.fillMaxWidth(.9f)) {
         Box(
             modifier =
@@ -80,7 +85,10 @@ internal fun NeubrutalVolumeBox(modifier: Modifier, thresholdSliderPosition: Flo
                 )
 
                 Text(
-                    text = "16h 42min",
+                    text =
+                        thresholdValue.milliseconds.toComponents { hh, mm, _, _ ->
+                            "${hh}h ${mm}min"
+                        },
                     style =
                         TextStyle(
                             fontFamily =
