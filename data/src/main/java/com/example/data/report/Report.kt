@@ -6,8 +6,8 @@ import arrow.core.raise.ensure
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.Problem
-import com.example.data.gamification.today
 import com.example.data.user.UserId
+import com.example.data.util.today
 import java.time.LocalDate
 
 interface Report : Entity<ReportId> {

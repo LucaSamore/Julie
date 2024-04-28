@@ -1,26 +1,57 @@
 package com.example.data.gamification
 
+import arrow.core.Either
+import arrow.core.raise.either
+import arrow.core.raise.ensure
 import com.example.data.user.UserId
+import com.example.data.util.today
 import java.time.LocalDate
 
 @JvmInline
-value class StreakValue(val value: Int) {
+value class StreakValue private constructor(val value: Int) {
     operator fun plus(other: Int): StreakValue = StreakValue(value + other)
+
+    companion object {
+        operator fun invoke(value: Int): Either<GamificationProblem, StreakValue> = either {
+            ensure(value >= 0) { StreakValueProblem("Streak value must be positive") }
+            StreakValue(value)
+        }
+    }
 }
 
-@JvmInline value class BeginDate(val value: LocalDate)
+@JvmInline
+value class BeginDate private constructor(val value: LocalDate) {
+    companion object {
+        operator fun invoke(value: LocalDate): Either<GamificationProblem, BeginDate> = either {
+            ensure(value.isBefore(today().plusDays(1))) {
+                BeginDateProblem("Begin date cannot be in the future")
+            }
+            BeginDate(value)
+        }
+    }
+}
 
-@JvmInline value class EndDate(val value: LocalDate?)
+@JvmInline
+value class EndDate private constructor(val value: LocalDate) {
+    companion object {
+        operator fun invoke(value: LocalDate): Either<GamificationProblem, EndDate> = either {
+            ensure(value.isBefore(today().plusDays(1))) {
+                EndDateProblem("End date cannot be in the future")
+            }
+            EndDate(value)
+        }
+    }
+}
 
 data class Streak(
     val userId: UserId,
     val value: StreakValue,
     val begin: BeginDate,
-    val end: EndDate
-) {
-    infix fun incrementedBy(amount: Int): Streak = copy(value = value + amount)
+    val end: EndDate?
+)
 
-    infix fun ends(endDate: LocalDate): Streak = copy(end = EndDate(endDate))
-}
+@JvmInline value class StreakValueProblem(override val message: String) : GamificationProblem
 
-fun today(): LocalDate = LocalDate.now()
+@JvmInline value class BeginDateProblem(override val message: String) : GamificationProblem
+
+@JvmInline value class EndDateProblem(override val message: String) : GamificationProblem

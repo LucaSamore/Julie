@@ -3,7 +3,6 @@ package com.example.data.user
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
-import com.example.data.gamification.today
 import com.example.data.user.implementation.MAX_AGE
 import com.example.data.user.implementation.MIN_AGE
 import com.example.data.user.implementation.NAME_MAX_LENGTH
@@ -20,6 +19,7 @@ import com.example.data.user.implementation.containsAtLeastOneUpperCaseLetter
 import com.example.data.user.implementation.isEmailValid
 import com.example.data.user.implementation.isNumeric
 import com.example.data.user.implementation.lengthIsBetween
+import com.example.data.util.today
 import java.time.LocalDate
 
 data class UserDetails(
