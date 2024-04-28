@@ -39,7 +39,16 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     }
 
     override suspend fun findOne(id: UserId): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
+        return Either.catch {
+                val dto =
+                    db.collection(FirestoreUserDto.COLLECTION)
+                        .document(id.userId)
+                        .get()
+                        .await()
+                        .toObject(FirestoreUserDto::class.java)!!
+                FirestoreUserDto.toEntity(dto)!!
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
     }
 
     override suspend fun update(entity: UserProfile): Either<RepositoryProblem, UserProfile> {

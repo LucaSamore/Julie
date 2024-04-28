@@ -1,10 +1,18 @@
 package com.example.data.user.implementation
 
+import android.util.Log
 import com.example.data.gamification.Streak
+import com.example.data.gamification.StreakDto
 import com.example.data.gamification.Threshold
+import com.example.data.gamification.ThresholdDto
+import com.example.data.user.Category
 import com.example.data.user.Interest
+import com.example.data.user.Name
 import com.example.data.user.UserProfile
+import com.example.data.user.UserProfileDto
 import com.example.data.util.prettyFormat
+import com.example.data.util.today
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 internal data class FirestoreUserDto(
@@ -24,8 +32,10 @@ internal data class FirestoreUserDto(
     companion object {
         const val COLLECTION = "users"
 
-        fun fromEntity(user: UserProfile): FirestoreUserDto =
-            FirestoreUserDto(
+        private const val TAG = "FirestoreUserDto"
+
+        fun fromEntity(user: UserProfile): FirestoreUserDto {
+            return FirestoreUserDto(
                 id = user.id.userId,
                 firstName = user.userDetails.firstName.firstName,
                 lastName = user.userDetails.lastName.lastName,
@@ -38,6 +48,58 @@ internal data class FirestoreUserDto(
                 threshold = FirestoreThresholdDto.fromEntity(user.threshold),
                 currentStreak = FirestoreCurrentStreakDto.fromEntity(user.currentStreak)
             )
+        }
+
+        fun toEntity(firestoreUserDto: FirestoreUserDto): UserProfile? {
+            return fromDto(
+                    UserProfileDto(
+                        id = firestoreUserDto.id ?: "",
+                        firstName = firestoreUserDto.firstName ?: "",
+                        lastName = firestoreUserDto.lastName ?: "",
+                        birthDate =
+                            LocalDate.parse(firestoreUserDto.birthDate ?: today().toString()),
+                        username = firestoreUserDto.username ?: "",
+                        emailAddress = firestoreUserDto.emailAddress ?: "",
+                        password = firestoreUserDto.password ?: "",
+                        interest =
+                            firestoreUserDto.interest?.map {
+                                Interest(
+                                    name = Name(it.name ?: ""),
+                                    category = Category(it.category ?: "")
+                                )
+                            } ?: emptyList(),
+                        points = firestoreUserDto.points ?: -1,
+                        threshold =
+                            ThresholdDto(
+                                valueInMillis = firestoreUserDto.threshold?.valueInMillis ?: -1,
+                                nextReset =
+                                    LocalDate.parse(
+                                        firestoreUserDto.threshold?.nextReset ?: today().toString()
+                                    )
+                            ),
+                        currentStreak =
+                            StreakDto(
+                                value = firestoreUserDto.currentStreak?.value ?: -1,
+                                begin =
+                                    LocalDate.parse(
+                                        firestoreUserDto.currentStreak?.started
+                                            ?: today().plusDays(1).toString()
+                                    ),
+                                end =
+                                    if (firestoreUserDto.currentStreak?.ended != null)
+                                        LocalDate.parse(firestoreUserDto.currentStreak.ended)
+                                    else null
+                            )
+                    )
+                )
+                .fold(
+                    {
+                        it.forEach { error -> Log.e(TAG, error.message) }
+                        null
+                    },
+                    { it }
+                )
+        }
     }
 }
 

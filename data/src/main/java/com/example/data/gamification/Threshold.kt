@@ -8,6 +8,8 @@ import java.time.LocalDate
 
 data class Threshold(val valueInMillis: ThresholdValue, val nextReset: NextReset)
 
+data class ThresholdDto(val valueInMillis: Long, val nextReset: LocalDate)
+
 @JvmInline
 value class ThresholdValue private constructor(val valueInMillis: Long) {
     companion object {

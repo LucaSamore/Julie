@@ -6,7 +6,6 @@ import com.example.data.di.FirebaseRepository
 import com.example.data.di.FirebaseService
 import com.example.data.di.IoDispatcher
 import com.example.data.user.UserProfileRepository
-import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.PasswordResetUseCase
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.authentication.SignOutUseCase
@@ -20,7 +19,6 @@ import com.example.domain.authentication.implementation.VerifyEmailUseCaseImpl
 import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.report.implementation.ScheduleUploadReportWorkerUseCaseImpl
 import com.example.domain.user.CacheUserIdUseCase
-import com.example.domain.user.implementation.CacheUserIdUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -85,11 +83,6 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): VerifyEmailUseCase = VerifyEmailUseCaseImpl(authenticationService, ioDispatcher)
-
-    @Singleton
-    @Provides
-    fun provideCacheUserIdUseCase(userDatastore: UserDatastore): CacheUserIdUseCase =
-        CacheUserIdUseCaseImpl(userDatastore)
 
     @Singleton
     @Provides

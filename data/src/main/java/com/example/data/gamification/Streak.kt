@@ -7,6 +7,15 @@ import com.example.data.user.UserId
 import com.example.data.util.today
 import java.time.LocalDate
 
+data class Streak(
+    val userId: UserId,
+    val value: StreakValue,
+    val begin: BeginDate,
+    val end: EndDate?
+)
+
+data class StreakDto(val value: Int, val begin: LocalDate, val end: LocalDate?)
+
 @JvmInline
 value class StreakValue private constructor(val value: Int) {
     operator fun plus(other: Int): StreakValue = StreakValue(value + other)
@@ -42,13 +51,6 @@ value class EndDate private constructor(val value: LocalDate) {
         }
     }
 }
-
-data class Streak(
-    val userId: UserId,
-    val value: StreakValue,
-    val begin: BeginDate,
-    val end: EndDate?
-)
 
 @JvmInline value class StreakValueProblem(override val message: String) : GamificationProblem
 
