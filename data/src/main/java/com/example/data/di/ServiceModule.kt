@@ -5,6 +5,7 @@ import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.implementation.AuthenticationServiceImpl
 import com.example.data.gamification.DailyChallengeService
 import com.example.data.gamification.implementation.DailyChallengeServiceImpl
+import com.example.data.gamification.implementation.DefaultCalculatePointsStrategy
 import com.example.data.report.ReportRepository
 import com.example.data.report.UploadReportService
 import com.example.data.report.implementation.UploadReportServiceImpl
@@ -49,7 +50,12 @@ object ServiceModule {
         userDatastore: UserDatastore,
         statisticsDataSource: StatisticsDataSource,
     ): DailyChallengeService =
-        DailyChallengeServiceImpl(userProfileRepository, userDatastore, statisticsDataSource)
+        DailyChallengeServiceImpl(
+            userProfileRepository,
+            userDatastore,
+            statisticsDataSource,
+            DefaultCalculatePointsStrategy()
+        )
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseService

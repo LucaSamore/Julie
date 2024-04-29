@@ -26,7 +26,10 @@ constructor(
                 Log.e(TAG, result.leftOrNull()?.message ?: UnknownError)
                 Result.retry()
             }
-            else -> Result.success()
+            else -> {
+                // Update datastore with next date
+                Result.success()
+            }
         }
 
     companion object {
