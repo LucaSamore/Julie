@@ -5,7 +5,9 @@ import arrow.core.raise.either
 import com.example.data.Problem
 import com.example.data.gamification.CalculatePointsStrategy
 import com.example.data.gamification.DailyChallengeService
+import com.example.data.gamification.Threshold
 import com.example.data.statistics.StatisticsDataSource
+import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import com.example.data.util.today
@@ -24,41 +26,59 @@ constructor(
         val userId = userDatastore.getUserId().bind()
         val user = userProfileRepository.findOne(userId).bind()
         val threshold = user.threshold
-        val screenTime = statisticsDataSource.getCurrentScreenTime()
+        val screenTimeInMillis = statisticsDataSource.getCurrentScreenTime()
         val updatedUser =
-            if (screenTime <= threshold.valueInMillis.valueInMillis) {
-                val pointsGaines =
-                    pointsStrategy
-                        .calculatePoints(
-                            screenTime,
-                            threshold.valueInMillis.valueInMillis,
-                            user.currentStreak.value.value
-                        )
+            when {
+                (screenTimeInMillis <= threshold.valueInMillis.valueInMillis) -> {
+                    addPointsAndIncreaseStreak(user, screenTimeInMillis, threshold)
                         .bind()
-                user.incrementCurrentStreak().addPoints(pointsGaines).let {
-                    if (threshold.nextReset.nextReset == today()) {
-                        it.resetThreshold()
-                    } else {
-                        it.decreaseThreshold()
-                    }
+                        .decreaseOrResetThreshold()
                 }
-            } else {
-                user
-                    .also {
-                        userProfileRepository
-                            .addEndedStreak(user.endCurrentStreak().currentStreak)
-                            .bind()
-                    }
-                    .resetStreak()
-                    .resetPoints()
-                    .let {
-                        if (threshold.nextReset.nextReset == today()) {
-                            it.resetThreshold()
-                        } else {
-                            it.increaseThreshold()
-                        }
-                    }
+                else -> {
+                    resetPointsAndEndStreak(user).bind().increaseOrResetThreshold()
+                }
             }
         userProfileRepository.update(updatedUser)
     }
+
+    private fun addPointsAndIncreaseStreak(
+        user: UserProfile,
+        screenTime: Long,
+        threshold: Threshold
+    ): Either<Problem, UserProfile> = either {
+        val pointsGaines =
+            pointsStrategy
+                .calculatePoints(
+                    screenTime,
+                    threshold.valueInMillis.valueInMillis,
+                    user.currentStreak.value.value
+                )
+                .bind()
+        user.incrementCurrentStreak().addPoints(pointsGaines)
+    }
+
+    private fun <T : UserProfile> T.decreaseOrResetThreshold(): UserProfile =
+        if (threshold.nextReset.nextReset == today()) {
+            resetThreshold()
+        } else {
+            decreaseThreshold()
+        }
+
+    private suspend fun resetPointsAndEndStreak(
+        user: UserProfile,
+    ): Either<Problem, UserProfile> = either {
+        user
+            .also {
+                userProfileRepository.addEndedStreak(user.endCurrentStreak().currentStreak).bind()
+            }
+            .resetStreak()
+            .resetPoints()
+    }
+
+    private fun <T : UserProfile> T.increaseOrResetThreshold(): UserProfile =
+        if (threshold.nextReset.nextReset == today()) {
+            resetThreshold()
+        } else {
+            increaseThreshold()
+        }
 }
