@@ -6,6 +6,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.data.Problem
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
+import com.example.data.gamification.implementation.FirestoreStreakDto
 import com.example.data.user.EmailAddress
 import com.example.data.user.UserId
 import com.example.data.user.UserProfile
@@ -128,8 +129,14 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             .map { documents -> !documents.isEmpty }
     }
 
-    override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
+    override suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, Streak> {
+        return Either.catch {
+                db.collection(FirestoreStreakDto.COLLECTION)
+                    .add(FirestoreStreakDto.fromEntity(streak))
+                    .await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { streak }
     }
 
     override suspend fun getPastStreaks(

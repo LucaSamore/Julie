@@ -16,7 +16,7 @@ interface UserProfileRepository : Repository<UserProfile, UserId> {
 
     suspend fun isUsernameAlreadyInUse(username: Username): Either<RepositoryProblem, Boolean>
 
-    suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, UserProfile>
+    suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, Streak>
 
     suspend fun getPastStreaks(userId: UserId): Either<RepositoryProblem, Iterable<Streak>>
 }

@@ -25,6 +25,7 @@ import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileDto
 import com.example.data.user.Username
 import com.example.data.util.today
+import java.time.LocalDate
 import java.util.UUID
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -89,6 +90,17 @@ internal data class UserProfileImpl(
                     value = currentStreak.value + 1,
                     begin = currentStreak.begin,
                     end = currentStreak.end
+                )
+        )
+
+    override fun resetStreak(): UserProfile =
+        copy(
+            currentStreak =
+                Streak(
+                    userId = id,
+                    value = StreakValue(0).getOrNull()!!,
+                    begin = BeginDate(LocalDate.now()).getOrNull()!!,
+                    end = EndDate(null).getOrNull()!!
                 )
         )
 

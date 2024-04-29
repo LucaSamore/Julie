@@ -25,7 +25,6 @@ constructor(
         val user = userProfileRepository.findOne(userId).bind()
         val threshold = user.threshold
         val screenTime = statisticsDataSource.getCurrentScreenTime()
-
         val updatedUser =
             if (screenTime <= threshold.valueInMillis.valueInMillis) {
                 val pointsGaines =
@@ -44,13 +43,21 @@ constructor(
                     }
                 }
             } else {
-                user.endCurrentStreak().resetPoints().let {
-                    if (threshold.nextReset.nextReset == today()) {
-                        it.resetThreshold()
-                    } else {
-                        it.increaseThreshold()
+                user
+                    .also {
+                        userProfileRepository
+                            .addEndedStreak(user.endCurrentStreak().currentStreak)
+                            .bind()
                     }
-                }
+                    .resetStreak()
+                    .resetPoints()
+                    .let {
+                        if (threshold.nextReset.nextReset == today()) {
+                            it.resetThreshold()
+                        } else {
+                            it.increaseThreshold()
+                        }
+                    }
             }
         userProfileRepository.update(updatedUser)
     }

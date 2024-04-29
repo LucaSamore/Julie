@@ -31,6 +31,8 @@ interface UserProfile : Entity<UserId> {
 
     fun incrementCurrentStreak(): UserProfile
 
+    fun resetStreak(): UserProfile
+
     fun endCurrentStreak(): UserProfile
 }
 
