@@ -20,12 +20,17 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
         context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
 
     override fun fetchPerAppScreenTime(): Map<String, Long> =
-        getDailyStats().associate { it.packageName to it.totalTime }
+        getDailyStats(endTime = System.currentTimeMillis()).associate {
+            it.packageName to it.totalTime
+        }
 
-    override fun getCurrentScreenTime(): Long = getDailyStats().sumOf { it.totalTime }
+    override fun getCurrentScreenTime(endTime: Long): Long =
+        getDailyStats(endTime = endTime).sumOf { it.totalTime }
 
     override fun fetchPerAppTimesOpened(): Map<String, Int> =
-        getDailyStats().associate { it.packageName to it.startTimes.count() }
+        getDailyStats(endTime = System.currentTimeMillis()).associate {
+            it.packageName to it.startTimes.count()
+        }
 
     override suspend fun fetchPerAppNotificationsReceived(): Map<String, Int> =
         notificationsDataSource.getPerAppNotificationsReceived().toMap()
@@ -34,7 +39,7 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
      * Solution provided by @jguerinet
      * https://stackoverflow.com/questions/36238481/android-usagestatsmanager-not-returning-correct-daily-results
      */
-    private fun getDailyStats(date: LocalDate = LocalDate.now()): List<Stat> {
+    private fun getDailyStats(date: LocalDate = LocalDate.now(), endTime: Long): List<Stat> {
         // The timezones we'll need
         val utc = ZoneId.of("UTC")
         val defaultZone = ZoneId.systemDefault()
@@ -43,7 +48,7 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
         val startDate = date.atStartOfDay(defaultZone).withZoneSameInstant(utc)
 
         val start = startDate.toInstant().toEpochMilli()
-        val end = System.currentTimeMillis()
+        val end = endTime
 
         // This will keep a map of all of the events per package name
         val sortedEvents = mutableMapOf<String, MutableList<UsageEvents.Event>>()

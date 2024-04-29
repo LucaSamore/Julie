@@ -10,12 +10,13 @@ import arrow.core.Either
 import arrow.core.flatMap
 import com.example.data.Problem
 import com.example.data.authentication.UnknownError
-import com.example.data.report.DateOfRecording
 import com.example.data.report.DateOfRecordingProblem
 import com.example.data.user.UserId
 import com.example.data.user.UserIdProblem
 import com.example.data.user.UserProblem
-import java.time.LocalDate
+import com.example.data.util.prettyFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -26,15 +27,15 @@ class UserDatastore(private val context: Context) {
         context.datastore.data.map { preferences -> preferences[USER_ID] ?: "" }
 
     private val dateOfRecording: Flow<String> =
-        context.datastore.data.map { preferences -> preferences[DATE_OF_RECORDING] ?: "" }
+        context.datastore.data.map { preferences -> preferences[DATETIME_OF_RECORDING] ?: "" }
 
     suspend fun saveUserIdToDataStore(userId: String) {
         context.datastore.edit { preferences -> preferences[USER_ID] = userId }
     }
 
-    suspend fun saveDateOfRecordingToDataStore(dateOfRecording: LocalDate = LocalDate.now()) {
+    suspend fun saveDateTimeOfRecordingToDataStore(dateTimeOfRecording: LocalDateTime) {
         context.datastore.edit { preferences ->
-            preferences[DATE_OF_RECORDING] = dateOfRecording.toString()
+            preferences[DATETIME_OF_RECORDING] = dateTimeOfRecording.prettyFormat()
         }
     }
 
@@ -44,10 +45,10 @@ class UserDatastore(private val context: Context) {
             .flatMap { UserId(it) }
     }
 
-    suspend fun getDateOfRecording(): Either<Problem, DateOfRecording> {
+    suspend fun getDateTimeOfRecording(): Either<Problem, LocalDateTime> {
         return Either.catch { dateOfRecording.first() }
             .mapLeft { DateOfRecordingProblem(it.message ?: UnknownError) }
-            .flatMap { DateOfRecording(LocalDate.parse(it)) }
+            .map { LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) }
     }
 
     companion object {
@@ -56,6 +57,6 @@ class UserDatastore(private val context: Context) {
 
         private val USER_ID = stringPreferencesKey(name = "user_id")
 
-        private val DATE_OF_RECORDING = stringPreferencesKey(name = "date_of_recording")
+        private val DATETIME_OF_RECORDING = stringPreferencesKey(name = "datetime_of_recording")
     }
 }

@@ -8,5 +8,6 @@ internal class GetCurrentScreenTimeUseCaseImpl
 @Inject
 constructor(private val statisticsDataSource: StatisticsDataSource) : GetCurrentScreenTimeUseCase {
 
-    override fun invoke(): Long = statisticsDataSource.getCurrentScreenTime()
+    override fun invoke(): Long =
+        statisticsDataSource.getCurrentScreenTime(endTime = System.currentTimeMillis())
 }

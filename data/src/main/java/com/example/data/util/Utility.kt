@@ -18,3 +18,6 @@ fun LocalDateTime.prettyFormat(pattern: String = "yyyy-MM-dd HH:mm:ss"): String 
 fun today(): LocalDate = LocalDate.now()
 
 fun Long.inMinutes(): Double = toDouble() / 60_000
+
+val dateTimeOfRecording: LocalDateTime =
+    LocalDateTime.now().withHour(23).withMinute(59).withSecond(0)

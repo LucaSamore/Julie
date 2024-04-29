@@ -5,9 +5,8 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import arrow.core.Either
-import com.example.data.authentication.UnknownError
 import com.example.data.gamification.DailyChallengeService
+import com.example.data.user.implementation.UserDatastore
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -16,20 +15,18 @@ internal class DailyChallengeWorker
 @AssistedInject
 constructor(
     private val dailyChallengeService: DailyChallengeService,
+    private val userDatastore: UserDatastore,
     @Assisted appContext: Context,
     @Assisted workerParameters: WorkerParameters
 ) : CoroutineWorker(appContext, workerParameters) {
 
     override suspend fun doWork(): Result =
-        when (val result = dailyChallengeService()) {
-            is Either.Left -> {
-                Log.e(TAG, result.leftOrNull()?.message ?: UnknownError)
-                Result.retry()
-            }
-            else -> {
-                // Update datastore with next date
-                Result.success()
-            }
+        dailyChallengeService().fold({
+            Log.e(TAG, it.message)
+            Result.retry()
+        }) {
+            userDatastore.saveDateTimeOfRecordingToDataStore(it.plusDays(1))
+            Result.success()
         }
 
     companion object {

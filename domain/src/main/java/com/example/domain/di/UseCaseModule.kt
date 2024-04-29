@@ -6,6 +6,7 @@ import com.example.data.di.FirebaseRepository
 import com.example.data.di.FirebaseService
 import com.example.data.di.IoDispatcher
 import com.example.data.user.UserProfileRepository
+import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.PasswordResetUseCase
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.authentication.SignOutUseCase
@@ -37,6 +38,7 @@ object UseCaseModule {
         @FirebaseRepository userProfileRepository: UserProfileRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         cacheUserIdUseCase: CacheUserIdUseCase,
+        userDatastore: UserDatastore,
         workerManager: WorkerManager
     ): SignInUseCase =
         SignInUseCaseImpl(
@@ -44,6 +46,7 @@ object UseCaseModule {
             userProfileRepository,
             ioDispatcher,
             cacheUserIdUseCase,
+            userDatastore,
             workerManager
         )
 

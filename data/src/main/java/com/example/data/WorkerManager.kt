@@ -4,7 +4,7 @@ interface WorkerManager {
 
     fun scheduleUploadReportWorker()
 
-    fun scheduleDailyChallengeWorker()
+    suspend fun scheduleDailyChallengeWorker()
 
     fun cancelAllWorkers()
 }

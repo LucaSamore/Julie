@@ -106,7 +106,7 @@ internal fun NeubrutalVolumeBox(
                             textAlign = TextAlign.End,
                             color = NeobrutalismTheme.colors.text
                         ),
-                    modifier = modifier
+                    modifier = modifier.padding(horizontal = 6.dp)
                 )
             }
         }

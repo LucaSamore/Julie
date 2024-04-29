@@ -168,12 +168,6 @@ internal fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = app.icon),
-                            "${favouriteApps.first().appName} Icon",
-                            modifier = modifier.size(48.dp, 48.dp)
-                        )
-
                         Text(
                             text = "#${index + 1}",
                             style =
@@ -196,6 +190,12 @@ internal fun HomeScreen(
                             modifier = modifier.fillMaxWidth(.2f)
                         )
 
+                        Image(
+                            painter = rememberAsyncImagePainter(model = app.icon),
+                            "${favouriteApps.first().appName} Icon",
+                            modifier = modifier.size(48.dp, 48.dp)
+                        )
+
                         Text(
                             text = app.appName,
                             style =
@@ -215,7 +215,7 @@ internal fun HomeScreen(
                                     fontWeight = FontWeight.Bold,
                                     color = NeobrutalismTheme.colors.background,
                                 ),
-                            modifier = modifier.fillMaxWidth(.6f)
+                            modifier = modifier.fillMaxWidth(.7f)
                         )
                     }
                 }

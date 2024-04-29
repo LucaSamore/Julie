@@ -4,7 +4,7 @@ interface StatisticsDataSource {
 
     fun fetchPerAppScreenTime(): Map<String, Long>
 
-    fun getCurrentScreenTime(): Long
+    fun getCurrentScreenTime(endTime: Long): Long
 
     fun fetchPerAppTimesOpened(): Map<String, Int>
 

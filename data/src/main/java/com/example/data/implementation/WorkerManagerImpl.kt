@@ -19,7 +19,7 @@ internal class WorkerManagerImpl @Inject constructor(context: Context) : WorkerM
         )
     }
 
-    override fun scheduleDailyChallengeWorker() {
+    override suspend fun scheduleDailyChallengeWorker() {
         workManager.enqueueUniquePeriodicWork(
             DefaultDailyChallengeWorkerRequest.NAME,
             DefaultDailyChallengeWorkerRequest.existingPolicy,

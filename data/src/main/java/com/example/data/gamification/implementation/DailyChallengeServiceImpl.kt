@@ -11,6 +11,8 @@ import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import com.example.data.util.today
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 internal class DailyChallengeServiceImpl
@@ -22,11 +24,15 @@ constructor(
     private val pointsStrategy: CalculatePointsStrategy
 ) : DailyChallengeService {
 
-    override suspend fun invoke(): Either<Problem, Unit> = either {
+    override suspend fun invoke(): Either<Problem, LocalDateTime> = either {
         val userId = userDatastore.getUserId().bind()
         val user = userProfileRepository.findOne(userId).bind()
         val threshold = user.threshold
-        val screenTimeInMillis = statisticsDataSource.getCurrentScreenTime()
+        val endTime = userDatastore.getDateTimeOfRecording().bind()
+        val screenTimeInMillis =
+            statisticsDataSource.getCurrentScreenTime(
+                endTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+            )
         val updatedUser =
             when {
                 (screenTimeInMillis <= threshold.valueInMillis.valueInMillis) -> {
@@ -39,6 +45,7 @@ constructor(
                 }
             }
         userProfileRepository.update(updatedUser)
+        endTime.plusDays(1)
     }
 
     private fun addPointsAndIncreaseStreak(

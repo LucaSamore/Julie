@@ -13,7 +13,9 @@ import com.example.data.authentication.ValidatedCredentials
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
+import com.example.data.user.implementation.UserDatastore
 import com.example.data.util.accumulateIfLeft
+import com.example.data.util.dateTimeOfRecording
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import javax.inject.Inject
@@ -27,6 +29,7 @@ constructor(
     private val userProfileRepository: UserProfileRepository,
     private val ioDispatcher: CoroutineDispatcher,
     private val cacheUserIdUseCase: CacheUserIdUseCase,
+    private val userDatastore: UserDatastore,
     private val workerManager: WorkerManager
 ) : SignInUseCase {
     override suspend fun invoke(
@@ -48,6 +51,7 @@ constructor(
                         .accumulateIfLeft()
                         .bind()
                 cacheUserIdUseCase(userId.userId)
+                userDatastore.saveDateTimeOfRecordingToDataStore(dateTimeOfRecording)
                 workerManager.scheduleUploadReportWorker()
                 workerManager.scheduleDailyChallengeWorker()
                 signedInEvent
