@@ -2,8 +2,6 @@ package com.example.data.gamification
 
 import arrow.core.Either
 import arrow.core.raise.either
-import arrow.core.raise.ensure
-import com.example.data.util.today
 import java.time.LocalDate
 
 data class Threshold(val valueInMillis: ThresholdValue, val nextReset: NextReset)
@@ -15,9 +13,9 @@ value class ThresholdValue private constructor(val valueInMillis: Long) {
     companion object {
         operator fun invoke(valueInMillis: Long): Either<GamificationProblem, ThresholdValue> =
             either {
-                ensure(valueInMillis >= 0) {
-                    ThresholdValueProblem("Threshold value must be positive")
-                }
+                //                ensure(valueInMillis >= 0) {
+                //                    ThresholdValueProblem("Threshold value must be positive")
+                //                }
                 ThresholdValue(valueInMillis)
             }
     }
@@ -27,9 +25,9 @@ value class ThresholdValue private constructor(val valueInMillis: Long) {
 value class NextReset private constructor(val nextReset: LocalDate) {
     companion object {
         operator fun invoke(nextReset: LocalDate): Either<GamificationProblem, NextReset> = either {
-            ensure(nextReset.isAfter(today())) {
-                NextResetProblem("Next reset must be in the future")
-            }
+            //            ensure(nextReset.isAfter(today())) {
+            //                NextResetProblem("Next reset must be in the future")
+            //            }
             NextReset(nextReset)
         }
     }

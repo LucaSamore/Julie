@@ -8,6 +8,7 @@ import com.example.data.gamification.Points
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
+import com.example.data.util.inMinutes
 import com.example.data.util.today
 import javax.inject.Inject
 import kotlin.math.abs
@@ -50,5 +51,5 @@ constructor(
     }
 
     private fun calculatePoints(screenTime: Long, threshold: Long) =
-        Points(abs(screenTime - threshold).toInt())
+        Points(abs(screenTime.inMinutes() - threshold.inMinutes()).toInt())
 }

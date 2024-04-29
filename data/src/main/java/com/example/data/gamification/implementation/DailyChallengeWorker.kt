@@ -12,19 +12,22 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-internal class DailyChallengeWorker @AssistedInject constructor(
+internal class DailyChallengeWorker
+@AssistedInject
+constructor(
     private val dailyChallengeService: DailyChallengeService,
     @Assisted appContext: Context,
     @Assisted workerParameters: WorkerParameters
-): CoroutineWorker(appContext, workerParameters) {
+) : CoroutineWorker(appContext, workerParameters) {
 
-    override suspend fun doWork(): Result = when (val result = dailyChallengeService()) {
-        is Either.Left -> {
-            Log.e(TAG, result.leftOrNull()?.message ?: UnknownError)
-            Result.retry()
+    override suspend fun doWork(): Result =
+        when (val result = dailyChallengeService()) {
+            is Either.Left -> {
+                Log.e(TAG, result.leftOrNull()?.message ?: UnknownError)
+                Result.retry()
+            }
+            else -> Result.success()
         }
-        else -> Result.success()
-    }
 
     companion object {
         private const val TAG = "DailyChallengeWorker"

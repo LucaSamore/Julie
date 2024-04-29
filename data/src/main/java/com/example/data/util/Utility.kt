@@ -16,3 +16,5 @@ fun LocalDateTime.prettyFormat(pattern: String = "yyyy-MM-dd HH:mm:ss"): String 
     format(DateTimeFormatter.ofPattern(pattern))
 
 fun today(): LocalDate = LocalDate.now()
+
+fun Long.inMinutes(): Double = toDouble() / 60_000

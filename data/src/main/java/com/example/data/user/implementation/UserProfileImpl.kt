@@ -27,6 +27,7 @@ import com.example.data.user.Username
 import com.example.data.util.today
 import java.util.UUID
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 
 internal data class UserProfileImpl(
     override val id: UserId,
@@ -54,7 +55,8 @@ internal data class UserProfileImpl(
                 Threshold(
                     valueInMillis =
                         ThresholdValue(
-                                threshold.valueInMillis.valueInMillis.hours
+                                threshold.valueInMillis.valueInMillis.milliseconds.inWholeHours
+                                    .hours
                                     .plus(1.hours)
                                     .inWholeMilliseconds
                             )
@@ -69,7 +71,8 @@ internal data class UserProfileImpl(
                 Threshold(
                     valueInMillis =
                         ThresholdValue(
-                                threshold.valueInMillis.valueInMillis.hours
+                                threshold.valueInMillis.valueInMillis.milliseconds.inWholeHours
+                                    .hours
                                     .minus(1.hours)
                                     .inWholeMilliseconds
                             )
@@ -119,7 +122,8 @@ fun createNewAccount(
             { NextReset(today().plusDays(7)).bind() },
             { StreakValue(0).bind() },
             { BeginDate(today()).bind() },
-        ) { points, thresholdValue, nextReset, streakValue, beginDate ->
+            { EndDate(null).bind() },
+        ) { points, thresholdValue, nextReset, streakValue, beginDate, endDate ->
             UserProfileImpl(
                 id = userId,
                 UserDetails(
@@ -133,7 +137,7 @@ fun createNewAccount(
                 ),
                 points = points,
                 threshold = Threshold(thresholdValue, nextReset),
-                currentStreak = Streak(userId, streakValue, beginDate, null)
+                currentStreak = Streak(userId, streakValue, beginDate, endDate)
             )
         }
     }

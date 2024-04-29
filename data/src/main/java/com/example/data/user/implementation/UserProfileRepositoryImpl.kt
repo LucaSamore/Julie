@@ -61,7 +61,27 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     }
 
     override suspend fun update(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
+        return Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .document(entity.id.userId)
+                    .update(
+                        mapOf(
+                            "points" to entity.points.points,
+                            "threshold.valueInMillis" to
+                                entity.threshold.valueInMillis.valueInMillis,
+                            "threshold.nextReset" to
+                                entity.threshold.nextReset.nextReset.toString(),
+                            "currentStreak.value" to entity.currentStreak.value.value,
+                            "currentStreak.started" to entity.currentStreak.begin.value.toString(),
+                            "currentStreak.ended" to
+                                if (entity.currentStreak.end.value == null) null
+                                else entity.currentStreak.end.value.toString()
+                        )
+                    )
+                    .await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { entity }
     }
 
     override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {

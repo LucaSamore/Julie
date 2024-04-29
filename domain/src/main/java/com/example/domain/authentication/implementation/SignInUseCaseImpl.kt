@@ -15,7 +15,6 @@ import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
 import com.example.data.util.accumulateIfLeft
 import com.example.domain.authentication.SignInUseCase
-import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
