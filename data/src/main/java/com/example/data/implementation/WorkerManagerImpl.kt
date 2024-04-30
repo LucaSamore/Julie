@@ -10,6 +10,8 @@ import com.example.data.WorkerManager
 import com.example.data.gamification.implementation.DefaultDailyChallengeWorkerRequest
 import com.example.data.report.implementation.DefaultUploadReportWorkerRequest
 import com.example.data.user.implementation.UserDatastore
+import com.example.data.util.millisecondsUntil11PM
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class WorkerManagerImpl
@@ -23,6 +25,7 @@ constructor(private val userDatastore: UserDatastore, context: Context) : Worker
         val workerRequest =
             DefaultUploadReportWorkerRequest.testConfiguration
                 .setInputData(workDataOf("dateTime" to dateTime))
+                .setInitialDelay(millisecondsUntil11PM(), TimeUnit.MILLISECONDS)
                 .build()
         workManager.enqueueUniquePeriodicWork(
             DefaultUploadReportWorkerRequest.NAME,
@@ -36,6 +39,7 @@ constructor(private val userDatastore: UserDatastore, context: Context) : Worker
         val workerRequest =
             DefaultDailyChallengeWorkerRequest.testConfiguration
                 .setInputData(workDataOf("dateTime" to dateTime))
+                .setInitialDelay(millisecondsUntil11PM(), TimeUnit.MILLISECONDS)
                 .build()
         workManager.enqueueUniquePeriodicWork(
             DefaultDailyChallengeWorkerRequest.NAME,

@@ -51,7 +51,7 @@ constructor(
                         .accumulateIfLeft()
                         .bind()
                 cacheUserIdUseCase(userId.userId)
-                userDatastore.saveDateTimeOfRecordingToDataStore(dateTimeOfRecording)
+                userDatastore.saveDateTimeOfRecordingToDataStore(dateTimeOfRecording())
                 workerManager.scheduleUploadReportWorker().accumulateIfLeft().bind()
                 workerManager.scheduleDailyChallengeWorker().accumulateIfLeft().bind()
                 signedInEvent

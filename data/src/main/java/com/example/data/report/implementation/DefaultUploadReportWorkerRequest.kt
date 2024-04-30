@@ -8,7 +8,7 @@ object DefaultUploadReportWorkerRequest {
     // val configuration = PeriodicWorkRequestBuilder<UploadReportWorker>(24,
     // TimeUnit.HOURS).build()
 
-    val testConfiguration = PeriodicWorkRequestBuilder<UploadReportWorker>(15, TimeUnit.MINUTES)
+    val testConfiguration = PeriodicWorkRequestBuilder<UploadReportWorker>(24, TimeUnit.HOURS)
 
     const val NAME = "uploadStats"
 
