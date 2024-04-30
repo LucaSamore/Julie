@@ -16,7 +16,6 @@ import com.example.data.user.UserIdProblem
 import com.example.data.user.UserProblem
 import com.example.data.util.prettyFormat
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -26,7 +25,7 @@ class UserDatastore(private val context: Context) {
     private val userId: Flow<String> =
         context.datastore.data.map { preferences -> preferences[USER_ID] ?: "" }
 
-    private val dateOfRecording: Flow<String> =
+    private val dateTimeOfRecording: Flow<String> =
         context.datastore.data.map { preferences -> preferences[DATETIME_OF_RECORDING] ?: "" }
 
     suspend fun saveUserIdToDataStore(userId: String) {
@@ -45,10 +44,9 @@ class UserDatastore(private val context: Context) {
             .flatMap { UserId(it) }
     }
 
-    suspend fun getDateTimeOfRecording(): Either<Problem, LocalDateTime> {
-        return Either.catch { dateOfRecording.first() }
+    suspend fun getDateTimeOfRecording(): Either<Problem, String> {
+        return Either.catch { dateTimeOfRecording.first() }
             .mapLeft { DateOfRecordingProblem(it.message ?: UnknownError) }
-            .map { LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) }
     }
 
     companion object {

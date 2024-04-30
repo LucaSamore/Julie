@@ -3,6 +3,7 @@ package com.example.data.di
 import android.content.Context
 import com.example.data.WorkerManager
 import com.example.data.implementation.WorkerManagerImpl
+import com.example.data.user.implementation.UserDatastore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,8 @@ object WorkModule {
 
     @Singleton
     @Provides
-    fun provideWorkerManager(@ApplicationContext context: Context): WorkerManager =
-        WorkerManagerImpl(context)
+    fun provideWorkerManager(
+        userDatastore: UserDatastore,
+        @ApplicationContext context: Context
+    ): WorkerManager = WorkerManagerImpl(userDatastore, context)
 }

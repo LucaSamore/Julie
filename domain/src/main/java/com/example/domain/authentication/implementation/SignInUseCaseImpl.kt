@@ -52,8 +52,8 @@ constructor(
                         .bind()
                 cacheUserIdUseCase(userId.userId)
                 userDatastore.saveDateTimeOfRecordingToDataStore(dateTimeOfRecording)
-                workerManager.scheduleUploadReportWorker()
-                workerManager.scheduleDailyChallengeWorker()
+                workerManager.scheduleUploadReportWorker().accumulateIfLeft().bind()
+                workerManager.scheduleDailyChallengeWorker().accumulateIfLeft().bind()
                 signedInEvent
             }
         }

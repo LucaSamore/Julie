@@ -9,6 +9,8 @@ import com.example.data.gamification.DailyChallengeService
 import com.example.data.user.implementation.UserDatastore
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @HiltWorker
 internal class DailyChallengeWorker
@@ -20,14 +22,22 @@ constructor(
     @Assisted workerParameters: WorkerParameters
 ) : CoroutineWorker(appContext, workerParameters) {
 
-    override suspend fun doWork(): Result =
-        dailyChallengeService().fold({
+    override suspend fun doWork(): Result {
+        val dateTimeOfRecordingAsString = inputData.getString("dateTime") ?: return Result.failure()
+        val dateTime =
+            LocalDateTime.parse(
+                dateTimeOfRecordingAsString,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            )
+
+        return dailyChallengeService(dateTime).fold({
             Log.e(TAG, it.message)
             Result.retry()
         }) {
-            userDatastore.saveDateTimeOfRecordingToDataStore(it.plusDays(1))
+            userDatastore.saveDateTimeOfRecordingToDataStore(dateTime.plusDays(1))
             Result.success()
         }
+    }
 
     companion object {
         private const val TAG = "DailyChallengeWorker"

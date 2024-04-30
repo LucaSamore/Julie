@@ -7,7 +7,9 @@ import com.example.data.statistics.NotificationsDataSource
 import com.example.data.statistics.StatisticsDataSource
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
@@ -19,18 +21,14 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
     private val usageStatsManager =
         context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
 
-    override fun fetchPerAppScreenTime(): Map<String, Long> =
-        getDailyStats(endTime = System.currentTimeMillis()).associate {
-            it.packageName to it.totalTime
-        }
+    override fun fetchPerAppScreenTime(date: LocalDate, endTime: LocalDateTime): Map<String, Long> =
+        getDailyStats(date, endTime).associate { it.packageName to it.totalTime }
 
-    override fun getCurrentScreenTime(endTime: Long): Long =
-        getDailyStats(endTime = endTime).sumOf { it.totalTime }
+    override fun getScreenTime(date: LocalDate, endTime: LocalDateTime): Long =
+        getDailyStats(date, endTime).sumOf { it.totalTime }
 
-    override fun fetchPerAppTimesOpened(): Map<String, Int> =
-        getDailyStats(endTime = System.currentTimeMillis()).associate {
-            it.packageName to it.startTimes.count()
-        }
+    override fun fetchPerAppTimesOpened(date: LocalDate, endTime: LocalDateTime): Map<String, Int> =
+        getDailyStats(date, endTime).associate { it.packageName to it.startTimes.count() }
 
     override suspend fun fetchPerAppNotificationsReceived(): Map<String, Int> =
         notificationsDataSource.getPerAppNotificationsReceived().toMap()
@@ -39,7 +37,10 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
      * Solution provided by @jguerinet
      * https://stackoverflow.com/questions/36238481/android-usagestatsmanager-not-returning-correct-daily-results
      */
-    private fun getDailyStats(date: LocalDate = LocalDate.now(), endTime: Long): List<Stat> {
+    private fun getDailyStats(
+        date: LocalDate = LocalDate.now(),
+        endDateTime: LocalDateTime
+    ): List<Stat> {
         // The timezones we'll need
         val utc = ZoneId.of("UTC")
         val defaultZone = ZoneId.systemDefault()
@@ -48,7 +49,7 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
         val startDate = date.atStartOfDay(defaultZone).withZoneSameInstant(utc)
 
         val start = startDate.toInstant().toEpochMilli()
-        val end = endTime
+        val end = endDateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
 
         // This will keep a map of all of the events per package name
         val sortedEvents = mutableMapOf<String, MutableList<UsageEvents.Event>>()

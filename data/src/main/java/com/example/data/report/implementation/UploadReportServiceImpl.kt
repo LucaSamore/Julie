@@ -14,6 +14,7 @@ import com.example.data.statistics.StatisticsDataSource
 import com.example.data.user.implementation.UserDatastore
 import com.example.data.util.accumulateIfLeft
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 internal class UploadReportServiceImpl
@@ -25,23 +26,27 @@ constructor(
     private val packageManagerUtils: PackageManagerUtils
 ) : UploadReportService {
 
-    override suspend fun invoke(): Either<NonEmptyList<Problem>, Report> = either {
-        val userId = userDatastore.getUserId().accumulateIfLeft().bind()
-        val reportDto =
-            CreateReportDto(
-                userId = userId.userId,
-                dateOfRecording = LocalDate.now(),
-                appReports = createAppReports()
-            )
-        val newReport = createReport(reportDto).bind()
-        reportRepository.create(newReport).accumulateIfLeft().bind()
-    }
+    override suspend fun invoke(dateTime: LocalDateTime): Either<NonEmptyList<Problem>, Report> =
+        either {
+            val userId = userDatastore.getUserId().accumulateIfLeft().bind()
+            val reportDto =
+                CreateReportDto(
+                    userId = userId.userId,
+                    dateOfRecording = LocalDate.now(),
+                    appReports = createAppReports(date = dateTime.toLocalDate(), endTime = dateTime)
+                )
+            val newReport = createReport(reportDto).bind()
+            reportRepository.create(newReport).accumulateIfLeft().bind()
+        }
 
-    private suspend fun createAppReports(): List<AppReportDto> {
+    private suspend fun createAppReports(
+        date: LocalDate,
+        endTime: LocalDateTime
+    ): List<AppReportDto> {
         val installedAppPackageNames = packageManagerUtils.getInstalledAppPackageNames()
-        val screenTimes = statisticsDataSource.fetchPerAppScreenTime()
+        val screenTimes = statisticsDataSource.fetchPerAppScreenTime(date, endTime)
         val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
-        val timesOpened = statisticsDataSource.fetchPerAppTimesOpened()
+        val timesOpened = statisticsDataSource.fetchPerAppTimesOpened(date, endTime)
         return installedAppPackageNames.map {
             AppReportDto(
                 appName = packageManagerUtils.getAppNameFromPackageName(it),

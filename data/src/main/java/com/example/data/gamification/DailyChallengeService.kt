@@ -5,5 +5,5 @@ import com.example.data.Problem
 import java.time.LocalDateTime
 
 interface DailyChallengeService {
-    suspend operator fun invoke(): Either<Problem, LocalDateTime>
+    suspend operator fun invoke(dateTime: LocalDateTime): Either<Problem, Unit>
 }
