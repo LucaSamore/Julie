@@ -3,15 +3,15 @@ package com.example.julie.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -48,8 +49,8 @@ import com.example.julie.components.NeubrutalMusicBox
 import com.example.julie.components.NeubrutalPointsStreakBox
 import com.example.julie.components.NeubrutalVolumeBox
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -148,76 +149,100 @@ internal fun HomeScreen(
             )
         }
 
-        Box(
-            modifier =
-                modifier
-                    .fillMaxWidth(.9f)
-                    .fillMaxHeight(.5f)
-                    .padding(vertical = 16.dp)
-                    .neubrutalismElevation()
-                    .background(color = NeobrutalismTheme.colors.contentPrimary)
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                favouriteApps.forEachIndexed { index, app ->
-                    Row(
-                        modifier = modifier.fillMaxWidth().padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "#${index + 1}",
-                            style =
-                                TextStyle(
-                                    fontSize = 28.sp,
-                                    textAlign = TextAlign.Start,
-                                    fontFamily =
-                                        FontFamily(
-                                            Font(
-                                                R.font.nunito_variable,
-                                                variationSettings =
-                                                    FontVariation.Settings(
-                                                        FontVariation.weight(600),
-                                                    )
-                                            )
-                                        ),
-                                    fontWeight = FontWeight.Bold,
-                                    color = NeobrutalismTheme.colors.background,
-                                ),
-                            modifier = modifier.fillMaxWidth(.2f)
-                        )
+            favouriteApps.forEachIndexed { index, app ->
+                Row(
+                    modifier =
+                        modifier.fillMaxWidth().height(96.dp).drawBehind {
+                            val strokeWidth = 6f
+                            val y = size.height - strokeWidth / 2
+                            if (index == favouriteApps.size - 1) {
+                                return@drawBehind
+                            }
+                            drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+                        },
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${index + 1}",
+                        style =
+                            TextStyle(
+                                fontSize = 32.sp,
+                                textAlign = TextAlign.Start,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            ),
+                        modifier = modifier
+                    )
 
-                        Image(
-                            painter = rememberAsyncImagePainter(model = app.icon),
-                            "${favouriteApps.first().appName} Icon",
-                            modifier = modifier.size(48.dp, 48.dp)
-                        )
+                    Image(
+                        painter = rememberAsyncImagePainter(model = app.icon),
+                        "${app.appName} Icon",
+                        contentScale = ContentScale.Crop,
+                        modifier = modifier.size(48.dp, 48.dp)
+                    )
 
-                        Text(
-                            text = app.appName,
-                            style =
-                                TextStyle(
-                                    fontSize = 28.sp,
-                                    textAlign = TextAlign.Start,
-                                    fontFamily =
-                                        FontFamily(
-                                            Font(
-                                                R.font.nunito_variable,
-                                                variationSettings =
-                                                    FontVariation.Settings(
-                                                        FontVariation.weight(600),
-                                                    )
-                                            )
-                                        ),
-                                    fontWeight = FontWeight.Bold,
-                                    color = NeobrutalismTheme.colors.background,
-                                ),
-                            modifier = modifier.fillMaxWidth(.7f)
-                        )
-                    }
+                    Text(
+                        text = app.appName,
+                        style =
+                            TextStyle(
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Start,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            ),
+                        modifier = modifier.width(96.dp)
+                    )
+
+                    Text(
+                        text =
+                            app.appScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
+                                "${hh}h ${mm}min"
+                            },
+                        style =
+                            TextStyle(
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.End,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            ),
+                        modifier = modifier.width(96.dp)
+                    )
                 }
             }
         }

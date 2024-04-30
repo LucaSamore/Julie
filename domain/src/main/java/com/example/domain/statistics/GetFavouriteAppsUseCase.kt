@@ -8,4 +8,4 @@ interface GetFavouriteAppsUseCase {
     suspend operator fun invoke(): Either<Problem, List<AppDto>>
 }
 
-data class AppDto(val appName: String, val icon: Drawable?)
+data class AppDto(val appName: String, val appScreenTime: Long, val icon: Drawable?)

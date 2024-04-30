@@ -10,5 +10,5 @@ interface ReportRepository : Repository<Report, ReportId> {
         userId: UserId,
         timeSpanInDays: Int,
         top: Int
-    ): Either<RepositoryProblem, List<AppPackageName>>
+    ): Either<RepositoryProblem, Map<AppPackageName, Long>>
 }

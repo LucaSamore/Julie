@@ -49,7 +49,7 @@ internal class ReportRepositoryImpl : ReportRepository {
         userId: UserId,
         timeSpanInDays: Int,
         top: Int
-    ): Either<RepositoryProblem, List<AppPackageName>> {
+    ): Either<RepositoryProblem, Map<AppPackageName, Long>> {
         return Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
                     .where(
@@ -70,17 +70,18 @@ internal class ReportRepositoryImpl : ReportRepository {
             .map { getTopUsedApps(it, top) }
     }
 
-    private fun getTopUsedApps(apps: List<Report>, top: Int): List<AppPackageName> {
+    private fun getTopUsedApps(apps: List<Report>, top: Int): Map<AppPackageName, Long> {
         return apps
             .flatMap { it.appReports }
             .groupBy { it.appPackageName }
             .mapValues {
-                it.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
-                    it.value.size
+                (it.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
+                        it.value.size)
+                    .toLong()
             }
             .toList()
             .sortedByDescending { it.second }
-            .map { it.first }
             .take(top)
+            .toMap()
     }
 }

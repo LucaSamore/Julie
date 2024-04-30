@@ -31,10 +31,13 @@ constructor(
                     .map {
                         AppDto(
                             appName =
-                                packageManagerUtils.getAppNameFromPackageName(it.appPackageName),
+                                packageManagerUtils.getAppNameFromPackageName(
+                                    it.key.appPackageName
+                                ),
+                            appScreenTime = it.value,
                             icon =
                                 packageManagerUtils
-                                    .getAppIcon(it.appPackageName)
+                                    .getAppIcon(it.key.appPackageName)
                                     .fold({ null }, { drawable -> drawable })
                         )
                     }
