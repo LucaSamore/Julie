@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -137,7 +138,7 @@ internal fun HomeScreen(
                     }
         ) {
             Text(
-                text = "Your favourite apps",
+                text = "Recently played",
                 style =
                     TextStyle(
                         fontSize = 32.sp,
@@ -149,6 +150,105 @@ internal fun HomeScreen(
             )
         }
 
+        Row(
+            modifier =
+                modifier.fillMaxWidth().height(64.dp).background(color = Color.White).drawBehind {
+                    val strokeWidth = 6f
+                    val y = size.height - strokeWidth / 2
+                    drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+                },
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "#",
+                style =
+                    TextStyle(
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start,
+                        fontFamily =
+                            FontFamily(
+                                Font(
+                                    R.font.nunito_variable,
+                                    variationSettings =
+                                        FontVariation.Settings(
+                                            FontVariation.weight(600),
+                                        )
+                                )
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        color = NeobrutalismTheme.colors.text,
+                    ),
+                modifier = modifier
+            )
+
+            Text(
+                text = "Icon",
+                style =
+                    TextStyle(
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily =
+                            FontFamily(
+                                Font(
+                                    R.font.nunito_variable,
+                                    variationSettings =
+                                        FontVariation.Settings(
+                                            FontVariation.weight(600),
+                                        )
+                                )
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        color = NeobrutalismTheme.colors.text,
+                    ),
+                modifier = modifier.width(48.dp)
+            )
+
+            Text(
+                text = "Title",
+                style =
+                    TextStyle(
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start,
+                        fontFamily =
+                            FontFamily(
+                                Font(
+                                    R.font.nunito_variable,
+                                    variationSettings =
+                                        FontVariation.Settings(
+                                            FontVariation.weight(600),
+                                        )
+                                )
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        color = NeobrutalismTheme.colors.text,
+                    ),
+                modifier = modifier.width(96.dp)
+            )
+
+            Text(
+                text = "Played for",
+                style =
+                    TextStyle(
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.End,
+                        fontFamily =
+                            FontFamily(
+                                Font(
+                                    R.font.nunito_variable,
+                                    variationSettings =
+                                        FontVariation.Settings(
+                                            FontVariation.weight(600),
+                                        )
+                                )
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        color = NeobrutalismTheme.colors.text,
+                    ),
+                modifier = modifier.width(96.dp)
+            )
+        }
+
         Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceAround,
@@ -156,15 +256,7 @@ internal fun HomeScreen(
         ) {
             favouriteApps.forEachIndexed { index, app ->
                 Row(
-                    modifier =
-                        modifier.fillMaxWidth().height(96.dp).drawBehind {
-                            val strokeWidth = 6f
-                            val y = size.height - strokeWidth / 2
-                            if (index == favouriteApps.size - 1) {
-                                return@drawBehind
-                            }
-                            drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
-                        },
+                    modifier = modifier.fillMaxWidth().height(96.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -184,7 +276,7 @@ internal fun HomeScreen(
                                                 )
                                         )
                                     ),
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                                 color = NeobrutalismTheme.colors.text,
                             ),
                         modifier = modifier
@@ -213,7 +305,7 @@ internal fun HomeScreen(
                                                 )
                                         )
                                     ),
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                                 color = NeobrutalismTheme.colors.text,
                             ),
                         modifier = modifier.width(96.dp)
@@ -222,7 +314,7 @@ internal fun HomeScreen(
                     Text(
                         text =
                             app.appScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
-                                "${hh}h ${mm}min"
+                                "~${hh}h ${mm}min"
                             },
                         style =
                             TextStyle(
@@ -238,7 +330,7 @@ internal fun HomeScreen(
                                                 )
                                         )
                                     ),
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                                 color = NeobrutalismTheme.colors.text,
                             ),
                         modifier = modifier.width(96.dp)
