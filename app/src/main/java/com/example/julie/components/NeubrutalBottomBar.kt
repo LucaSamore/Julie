@@ -68,8 +68,12 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
         )
 
         NavigationBarItem(
-            selected = currentScreen == Destination.Home.name,
-            onClick = { /*TODO*/},
+            selected = currentScreen == Destination.SmartphoneUsage.name,
+            onClick = {
+                navController.navigate(Destination.SmartphoneUsage.name) {
+                    popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
+                }
+            },
             icon = {
                 Box(
                     modifier =
@@ -77,7 +81,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                             .neubrutalismElevation()
                             .background(
                                 color =
-                                    if (currentScreen == Destination.Home.name)
+                                    if (currentScreen == Destination.SmartphoneUsage.name)
                                         NeobrutalismTheme.colors.buttonPrimary
                                     else NeobrutalismTheme.colors.contentPrimary
                             )
@@ -86,7 +90,7 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
                         ImageVector.vectorResource(R.drawable.baseline_data_usage_24),
                         contentDescription = "Data Visualization",
                         tint =
-                            if (currentScreen == Destination.Home.name)
+                            if (currentScreen == Destination.SmartphoneUsage.name)
                                 NeobrutalismTheme.colors.text
                             else Color.White,
                         modifier = modifier.padding(6.dp).size(32.dp, 32.dp)

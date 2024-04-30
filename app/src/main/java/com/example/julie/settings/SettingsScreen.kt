@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.example.julie.Lce
+import com.example.julie.components.NeubrutalPrimaryButton
 
 @Composable
 internal fun SettingsScreen(
@@ -32,17 +32,20 @@ internal fun SettingsScreen(
     var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(paddingValues),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(paddingValues),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Test Screen")
 
         if (!errorMessageHidden) {
             Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
         }
 
-        Button(onClick = { settingsViewModel.signOut() }) { Text(text = "Sign Out") }
+        NeubrutalPrimaryButton(modifier = modifier, text = "SIGN OUT") {
+            settingsViewModel.signOut()
+        }
 
         when (val currentState = state) {
             is Lce.Loading -> {

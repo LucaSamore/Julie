@@ -12,6 +12,7 @@ import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.settings.SettingsScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
+import com.example.julie.smartphoneusage.SmartphoneUsageScreen
 import com.example.julie.verifyemail.VerifyEmailScreen
 
 @Composable
@@ -32,6 +33,10 @@ internal fun NavigationGraph(
                 homeViewModel = hiltViewModel(),
                 paddingValues = paddingValues
             )
+        }
+
+        composable(route = Destination.SmartphoneUsage.name) {
+            SmartphoneUsageScreen(modifier = modifier, smartphoneUsageViewModel = hiltViewModel(), paddingValues = paddingValues)
         }
 
         composable(route = Destination.Settings.name) {
