@@ -55,6 +55,7 @@ internal class ReportRepositoryImpl : ReportRepository {
                     .await()
                     .toObjects(FirestoreReportDto::class.java)
                     .mapNotNull { FirestoreReportDto.toEntity(it) }
+                    .sortedBy { it.dateOfRecording.dateOfRecording }
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
     }

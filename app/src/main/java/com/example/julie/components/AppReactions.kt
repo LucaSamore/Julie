@@ -18,9 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.domain.report.AppDto
 
 @Composable
-internal fun AppReactions(modifier: Modifier) {
+internal fun AppReactions(modifier: Modifier, appDto: AppDto) {
     Row(
         modifier = modifier.fillMaxWidth(.9f),
         horizontalArrangement = Arrangement.Start,
@@ -41,7 +42,10 @@ internal fun AppReactions(modifier: Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "❤", modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp))
-                Text(text = "123", modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp))
+                Text(
+                    text = "${appDto.timesOpened}",
+                    modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
             }
         }
 
@@ -60,7 +64,10 @@ internal fun AppReactions(modifier: Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "💬", modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp))
-                Text(text = "123", modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp))
+                Text(
+                    text = "${appDto.notificationsReceived}",
+                    modifier = modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
             }
         }
     }
