@@ -11,5 +11,5 @@ interface StatisticsDataSource {
 
     fun fetchPerAppTimesOpened(date: LocalDate, endTime: LocalDateTime): Map<String, Int>
 
-    suspend fun fetchPerAppNotificationsReceived(): Map<String, Int>
+    suspend fun fetchPerAppNotificationsReceived(date: LocalDate): Map<String, Int>
 }

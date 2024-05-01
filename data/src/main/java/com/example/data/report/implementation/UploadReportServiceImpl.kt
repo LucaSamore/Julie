@@ -45,7 +45,7 @@ constructor(
     ): List<AppReportDto> {
         val installedAppPackageNames = packageManagerUtils.getInstalledAppPackageNames()
         val screenTimes = statisticsDataSource.fetchPerAppScreenTime(date, endTime)
-        val notifications = statisticsDataSource.fetchPerAppNotificationsReceived()
+        val notifications = statisticsDataSource.fetchPerAppNotificationsReceived(date)
         val timesOpened = statisticsDataSource.fetchPerAppTimesOpened(date, endTime)
         return installedAppPackageNames.map {
             AppReportDto(

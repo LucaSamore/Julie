@@ -1,5 +1,7 @@
 package com.example.data.statistics
 
+import java.time.LocalDate
+
 interface NotificationsDataSource {
 
     /**
@@ -8,5 +10,5 @@ interface NotificationsDataSource {
      * @return A flow of pairs, where the first element is the app package name and the second
      *   element is the number of notifications the app sent
      */
-    suspend fun getPerAppNotificationsReceived(): List<Pair<String, Int>>
+    suspend fun getPerAppNotificationsReceived(date: LocalDate): List<Pair<String, Int>>
 }

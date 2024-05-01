@@ -30,8 +30,8 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
     override fun fetchPerAppTimesOpened(date: LocalDate, endTime: LocalDateTime): Map<String, Int> =
         getDailyStats(date, endTime).associate { it.packageName to it.startTimes.count() }
 
-    override suspend fun fetchPerAppNotificationsReceived(): Map<String, Int> =
-        notificationsDataSource.getPerAppNotificationsReceived().toMap()
+    override suspend fun fetchPerAppNotificationsReceived(date: LocalDate): Map<String, Int> =
+        notificationsDataSource.getPerAppNotificationsReceived(date).toMap()
 
     /**
      * Solution provided by @jguerinet
