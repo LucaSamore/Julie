@@ -36,7 +36,11 @@ internal fun NavigationGraph(
         }
 
         composable(route = Destination.SmartphoneUsage.name) {
-            SmartphoneUsageScreen(modifier = modifier, smartphoneUsageViewModel = hiltViewModel(), paddingValues = paddingValues)
+            SmartphoneUsageScreen(
+                modifier = modifier,
+                smartphoneUsageViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            )
         }
 
         composable(route = Destination.Settings.name) {

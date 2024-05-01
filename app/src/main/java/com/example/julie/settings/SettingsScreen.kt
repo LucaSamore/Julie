@@ -32,13 +32,10 @@ internal fun SettingsScreen(
     var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        modifier = modifier.fillMaxSize().padding(paddingValues),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         if (!errorMessageHidden) {
             Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
         }
