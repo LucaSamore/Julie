@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -50,7 +54,8 @@ import java.time.LocalDate
 internal fun SmartphoneUsageScreen(
     modifier: Modifier,
     smartphoneUsageViewModel: SmartphoneUsageViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onStoryOpen: () -> Unit
 ) {
     val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
 
@@ -62,31 +67,23 @@ internal fun SmartphoneUsageScreen(
 
     Column(
         modifier = modifier.fillMaxSize().padding(paddingValues),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .background(NeobrutalismTheme.colors.contentSecondary)
-                    .drawBehind {
-                        val strokeWidth = 6f
-                        val y = size.height - strokeWidth / 2
-                        drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
-                        drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
-                    }
-                    .horizontalScroll(rememberScrollState())
-        ) {}
-
         when (val currentState = state) {
-            is Lce.Loading -> {}
+            is Lce.Loading -> {
+                CircularProgressIndicator(
+                    modifier = modifier.width(64.dp),
+                    color = NeobrutalismTheme.colors.contentPrimary,
+                    trackColor = NeobrutalismTheme.colors.background,
+                )
+            }
             is Lce.Content -> {
-                val currentAppsStats = currentAppsStatsState
                 val currentAppsStatsPair = currentAppsStatsState to rememberSwipeableCardState()
                 val reports =
                     currentState.value.oldReports.map { it to rememberSwipeableCardState() }
+
+                StoriesHeader(modifier = modifier, onStoryOpen = onStoryOpen)
 
                 if (currentAppsStatsPair.second.swipedDirection == null) {
                     SwipeableAppUsage(
@@ -111,6 +108,26 @@ internal fun SmartphoneUsageScreen(
     }
 }
 
+@Composable
+internal fun StoriesHeader(modifier: Modifier, onStoryOpen: () -> Unit) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .background(NeobrutalismTheme.colors.contentSecondary)
+                .drawBehind {
+                    val strokeWidth = 6f
+                    val y = size.height - strokeWidth / 2
+                    drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
+                    drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+                }
+                .horizontalScroll(rememberScrollState())
+    ) {
+        Button(onClick = onStoryOpen) { Text(text = "Test story") }
+    }
+}
+
 @OptIn(ExperimentalSwipeableCardApi::class)
 @Composable
 internal fun SwipeableAppUsage(
@@ -118,6 +135,10 @@ internal fun SwipeableAppUsage(
     swipeableCardState: SwipeableCardState,
     reportDto: ReportDto
 ) {
+    if (reportDto.appReports.isEmpty()) {
+        Text(text = "No reports to show")
+    }
+
     Box(
         modifier =
             modifier.swipableCard(
@@ -194,7 +215,6 @@ internal fun SwipeableAppUsage(
                         .sortedByDescending { it.screenTime }
                         .forEach { appDto ->
                             AppMessage(modifier = modifier, appDto = appDto)
-
                             AppReactions(modifier = modifier, appDto = appDto)
                         }
                 }

@@ -29,7 +29,8 @@ internal fun JulieApplication(startDestination: String, modifier: Modifier = Mod
                 currentScreen != Destination.SignIn.name &&
                     currentScreen != Destination.SignUp.name &&
                     currentScreen != Destination.VerifyEmail.name &&
-                    currentScreen != Destination.PasswordReset.name
+                    currentScreen != Destination.PasswordReset.name &&
+                    currentScreen != Destination.Story.name
             ) {
                 CenterAlignedTopAppBar(
                     title = {
@@ -47,7 +48,8 @@ internal fun JulieApplication(startDestination: String, modifier: Modifier = Mod
                 currentScreen != Destination.SignIn.name &&
                     currentScreen != Destination.SignUp.name &&
                     currentScreen != Destination.VerifyEmail.name &&
-                    currentScreen != Destination.PasswordReset.name
+                    currentScreen != Destination.PasswordReset.name &&
+                    currentScreen != Destination.Story.name
             ) {
                 NeubrutalBottomBar(modifier = modifier, navController = navController)
             }

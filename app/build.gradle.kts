@@ -66,6 +66,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.coil.compose)
     implementation(libs.swipeablecard)
+    implementation(libs.stories)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

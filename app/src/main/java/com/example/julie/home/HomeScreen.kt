@@ -341,7 +341,9 @@ internal fun HomeScreen(
     }
 
     when (val currentState = homeScreenState) {
-        is Lce.Loading -> errorMessageHidden = true
+        is Lce.Loading -> {
+            errorMessageHidden = true
+        }
         is Lce.Content -> {
             threshold = currentState.value.threshold
             thresholdSliderPosition = screenTimeState.toFloat() / threshold

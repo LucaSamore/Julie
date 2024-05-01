@@ -13,5 +13,7 @@ sealed class Destination(val name: String) {
 
     data object SmartphoneUsage : Destination("Smartphone Usage")
 
+    data object Story : Destination("Story")
+
     data object Settings : Destination("Settings")
 }

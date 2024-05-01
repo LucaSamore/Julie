@@ -13,6 +13,7 @@ import com.example.julie.settings.SettingsScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
 import com.example.julie.smartphoneusage.SmartphoneUsageScreen
+import com.example.julie.smartphoneusage.TestStory
 import com.example.julie.verifyemail.VerifyEmailScreen
 
 @Composable
@@ -40,7 +41,19 @@ internal fun NavigationGraph(
                 modifier = modifier,
                 smartphoneUsageViewModel = hiltViewModel(),
                 paddingValues = paddingValues
-            )
+            ) {
+                navController.navigate(Destination.Story.name) {
+                    popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
+                }
+            }
+        }
+
+        composable(route = Destination.Story.name) {
+            TestStory(modifier = modifier, paddingValues = paddingValues) {
+                navController.navigate(Destination.SmartphoneUsage.name) {
+                    popUpTo(Destination.Story.name) { inclusive = true }
+                }
+            }
         }
 
         composable(route = Destination.Settings.name) {
