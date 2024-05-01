@@ -45,6 +45,20 @@ internal class ReportRepositoryImpl : ReportRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getReportsByUserId(
+        userId: UserId
+    ): Either<RepositoryProblem, Iterable<Report>> {
+        return Either.catch {
+                db.collection(FirestoreReportDto.COLLECTION)
+                    .whereEqualTo("userId", userId.userId)
+                    .get()
+                    .await()
+                    .toObjects(FirestoreReportDto::class.java)
+                    .mapNotNull { FirestoreReportDto.toEntity(it) }
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+    }
+
     override suspend fun getFavouriteApps(
         userId: UserId,
         timeSpanInDays: Int,

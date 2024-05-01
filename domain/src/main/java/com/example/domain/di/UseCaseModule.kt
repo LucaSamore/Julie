@@ -17,8 +17,6 @@ import com.example.domain.authentication.implementation.SignInUseCaseImpl
 import com.example.domain.authentication.implementation.SignOutUseCaseImpl
 import com.example.domain.authentication.implementation.SignUpUseCaseImpl
 import com.example.domain.authentication.implementation.VerifyEmailUseCaseImpl
-import com.example.domain.report.ScheduleUploadReportWorkerUseCase
-import com.example.domain.report.implementation.ScheduleUploadReportWorkerUseCaseImpl
 import com.example.domain.user.CacheUserIdUseCase
 import dagger.Module
 import dagger.Provides
@@ -86,10 +84,4 @@ object UseCaseModule {
         @FirebaseService authenticationService: AuthenticationService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): VerifyEmailUseCase = VerifyEmailUseCaseImpl(authenticationService, ioDispatcher)
-
-    @Singleton
-    @Provides
-    fun provideScheduleUploadReportWorkerUseCase(
-        workerManager: WorkerManager
-    ): ScheduleUploadReportWorkerUseCase = ScheduleUploadReportWorkerUseCaseImpl(workerManager)
 }

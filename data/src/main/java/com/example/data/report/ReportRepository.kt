@@ -6,6 +6,9 @@ import com.example.data.RepositoryProblem
 import com.example.data.user.UserId
 
 interface ReportRepository : Repository<Report, ReportId> {
+
+    suspend fun getReportsByUserId(userId: UserId): Either<RepositoryProblem, Iterable<Report>>
+
     suspend fun getFavouriteApps(
         userId: UserId,
         timeSpanInDays: Int,

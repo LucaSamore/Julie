@@ -2,7 +2,7 @@ package com.example.julie.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.statistics.AppDto
+import com.example.domain.statistics.FavouriteAppDto
 import com.example.domain.statistics.GetCurrentScreenTimeUseCase
 import com.example.domain.statistics.GetFavouriteAppsUseCase
 import com.example.domain.user.GetUserProfileGamificationDataUseCase
@@ -19,7 +19,7 @@ data class HomeScreenContent(
     val threshold: Long = 0L,
     val points: Int = 0,
     val streakValue: Int = 0,
-    val favouriteApps: List<AppDto> = emptyList()
+    val favouriteApps: List<FavouriteAppDto> = emptyList()
 )
 
 @HiltViewModel

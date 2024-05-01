@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.domain.statistics.AppDto
+import com.example.domain.statistics.FavouriteAppDto
 import com.example.julie.Lce
 import com.example.julie.R
 import com.example.julie.components.NeubrutalMusicBox
@@ -69,7 +69,7 @@ internal fun HomeScreen(
     var threshold by rememberSaveable { mutableLongStateOf(0L) }
     var points by rememberSaveable { mutableIntStateOf(0) }
     var streak by rememberSaveable { mutableIntStateOf(0) }
-    val favouriteApps = remember { mutableStateListOf<AppDto>() }
+    val favouriteApps = remember { mutableStateListOf<FavouriteAppDto>() }
 
     var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
     var thresholdSliderPosition by remember { mutableFloatStateOf(.0f) }

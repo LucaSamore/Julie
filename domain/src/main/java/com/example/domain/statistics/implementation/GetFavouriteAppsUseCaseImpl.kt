@@ -6,7 +6,7 @@ import com.example.data.PackageManagerUtils
 import com.example.data.Problem
 import com.example.data.report.ReportRepository
 import com.example.data.user.implementation.UserDatastore
-import com.example.domain.statistics.AppDto
+import com.example.domain.statistics.FavouriteAppDto
 import com.example.domain.statistics.GetFavouriteAppsUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +21,7 @@ constructor(
     private val packageManagerUtils: PackageManagerUtils
 ) : GetFavouriteAppsUseCase {
 
-    override suspend fun invoke(): Either<Problem, List<AppDto>> =
+    override suspend fun invoke(): Either<Problem, List<FavouriteAppDto>> =
         withContext(ioDispatcher) {
             either {
                 val userId = userDatastore.getUserId().bind()
@@ -29,7 +29,7 @@ constructor(
                     .getFavouriteApps(userId = userId, timeSpanInDays = 7, top = 5)
                     .bind()
                     .map {
-                        AppDto(
+                        FavouriteAppDto(
                             appName =
                                 packageManagerUtils.getAppNameFromPackageName(
                                     it.key.appPackageName
