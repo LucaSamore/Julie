@@ -2,8 +2,10 @@ package com.example.julie.smartphoneusage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.report.AppDto
 import com.example.domain.report.GetUserReportsUseCase
 import com.example.domain.report.ReportDto
+import com.example.domain.statistics.GetAppsCurrentStatsUseCase
 import com.example.julie.Lce
 import com.example.julie.SmartphoneUsageScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +22,19 @@ data class SmartphoneUsageScreenContent(
 @HiltViewModel
 internal class SmartphoneUsageViewModel
 @Inject
-constructor(private val getUserReportsUseCase: GetUserReportsUseCase) : ViewModel() {
+constructor(
+    private val getUserReportsUseCase: GetUserReportsUseCase,
+    private val getAppsCurrentStatsUseCase: GetAppsCurrentStatsUseCase,
+) : ViewModel() {
 
     private val _smartphoneUsageScreenState =
         MutableStateFlow<SmartphoneUsageScreenState>(value = Lce.Loading)
 
+    private val _currentAppsStatsState = MutableStateFlow<List<AppDto>>(value = emptyList())
+
     val smartphoneUsageScreenState = _smartphoneUsageScreenState.asStateFlow()
+
+    val currentAppsStatsState = _currentAppsStatsState.asStateFlow()
 
     fun getUserReports() =
         viewModelScope.launch {
@@ -37,4 +46,7 @@ constructor(private val getUserReportsUseCase: GetUserReportsUseCase) : ViewMode
                     }
                 }
         }
+
+    fun getCurrentAppsStats() =
+        viewModelScope.launch { _currentAppsStatsState.update { getAppsCurrentStatsUseCase() } }
 }

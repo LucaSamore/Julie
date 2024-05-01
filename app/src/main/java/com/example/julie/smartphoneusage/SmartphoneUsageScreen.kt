@@ -44,6 +44,7 @@ import com.example.julie.components.AppReactions
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
+import java.time.LocalDate
 
 @Composable
 internal fun SmartphoneUsageScreen(
@@ -52,6 +53,10 @@ internal fun SmartphoneUsageScreen(
     paddingValues: PaddingValues
 ) {
     val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
+
+    val currentAppsStatsState by smartphoneUsageViewModel.currentAppsStatsState.collectAsState()
+
+    LaunchedEffect(key1 = Unit) { smartphoneUsageViewModel.getCurrentAppsStats() }
 
     LaunchedEffect(key1 = Unit) { smartphoneUsageViewModel.getUserReports() }
 
@@ -78,8 +83,18 @@ internal fun SmartphoneUsageScreen(
         when (val currentState = state) {
             is Lce.Loading -> {}
             is Lce.Content -> {
+                val currentAppsStats = currentAppsStatsState
+                val currentAppsStatsPair = currentAppsStatsState to rememberSwipeableCardState()
                 val reports =
                     currentState.value.oldReports.map { it to rememberSwipeableCardState() }
+
+                if (currentAppsStatsPair.second.swipedDirection == null) {
+                    SwipeableAppUsage(
+                        modifier = modifier,
+                        swipeableCardState = currentAppsStatsPair.second,
+                        reportDto = ReportDto(LocalDate.now(), currentAppsStatsPair.first)
+                    )
+                }
 
                 reports.forEach { (report, swipeableState) ->
                     if (swipeableState.swipedDirection == null) {

@@ -30,13 +30,11 @@ constructor(
             val notifications = statisticsDataSource.fetchPerAppNotificationsReceived(today())
             val timesOpened = statisticsDataSource.fetchPerAppTimesOpened(today(), endTime)
             installedAppPackageNames.map {
-                val packageName = packageManagerUtils.getAppNameFromPackageName(it)
+                val appName = packageManagerUtils.getAppNameFromPackageName(it)
                 val icon =
-                    packageManagerUtils.getAppIcon(packageName).fold({ null }) { drawable ->
-                        drawable
-                    }
+                    packageManagerUtils.getAppIcon(it).fold({ null }) { drawable -> drawable }
                 AppDto(
-                    name = packageName,
+                    name = appName,
                     icon = icon,
                     screenTime = screenTimes[it] ?: 0L,
                     notificationsReceived = notifications[it] ?: 0,
