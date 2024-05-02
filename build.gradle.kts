@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.googleServices) apply false
     alias(libs.plugins.daggerHilt) apply false
+    alias(libs.plugins.roomPlugin) apply false
 }

@@ -31,7 +31,7 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
         getDailyStats(date, endTime).associate { it.packageName to it.startTimes.count() }
 
     override suspend fun fetchPerAppNotificationsReceived(date: LocalDate): Map<String, Int> =
-        notificationsDataSource.getPerAppNotificationsReceived(date).toMap()
+        notificationsDataSource.getPerAppNotificationsReceived(date)
 
     /**
      * Solution provided by @jguerinet

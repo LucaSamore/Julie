@@ -79,3 +79,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+roomPlugin = { id = "androidx.room", version.ref = "room" }

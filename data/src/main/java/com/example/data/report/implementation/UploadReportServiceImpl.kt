@@ -32,7 +32,7 @@ constructor(
             val reportDto =
                 CreateReportDto(
                     userId = userId.userId,
-                    dateOfRecording = LocalDate.now(),
+                    dateOfRecording = dateTime.toLocalDate(),
                     appReports = createAppReports(date = dateTime.toLocalDate(), endTime = dateTime)
                 )
             val newReport = createReport(reportDto).bind()

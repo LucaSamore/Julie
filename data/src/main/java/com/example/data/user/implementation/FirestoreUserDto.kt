@@ -120,7 +120,7 @@ internal data class FirestoreCurrentStreakDto(
             FirestoreCurrentStreakDto(
                 value = currentStreak.value.value,
                 started = currentStreak.begin.value.toString(),
-                ended = currentStreak.end?.value?.toString()
+                ended = currentStreak.end.value?.toString()
             )
     }
 }
