@@ -161,7 +161,7 @@ internal fun StoriesHeader(
                     IconButton(
                         onClick = {
                             navController.navigate("${Destination.Story.name}/${it.name}") {
-                                popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
+                                popUpTo("${Destination.Story.name}/${it.name}") { inclusive = true }
                             }
                         },
                         modifier = modifier.padding(horizontal = 6.dp)
