@@ -10,6 +10,7 @@ import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.VerificationEmailSent
 import com.example.julie.home.HomeScreenContent
 import com.example.julie.smartphoneusage.SmartphoneUsageScreenContent
+import com.example.julie.smartphoneusage.StoryContent
 
 sealed interface Lce<out E, out A> {
     data object Loading : Lce<Nothing, Nothing>
@@ -30,5 +31,7 @@ typealias VerifyEmailState = Lce<Problem, VerificationEmailSent>
 typealias HomeScreenState = Lce<Problem, HomeScreenContent>
 
 typealias SmartphoneUsageScreenState = Lce<Problem, SmartphoneUsageScreenContent>
+
+typealias StoryScreenState = Lce<Problem, StoryContent>
 
 typealias SettingsScreenState = Lce<AuthenticationProblem, UserSignedOut>

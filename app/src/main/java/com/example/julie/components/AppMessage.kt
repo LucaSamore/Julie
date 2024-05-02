@@ -18,14 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.report.AppDto
+import com.example.julie.R
 import com.example.julie.ui.theme.NeobrutalismTheme
 import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 internal fun AppMessage(
     modifier: Modifier,
@@ -61,7 +67,21 @@ internal fun AppMessage(
                         "You used me for ${appDto.screenTime.milliseconds.toComponents { hh, mm, _, _ ->
                     "${hh}h ${mm}min"
                 } }",
-                    style = TextStyle(fontSize = 18.sp, color = NeobrutalismTheme.colors.text)
+                    style =
+                        TextStyle(
+                            fontSize = 18.sp,
+                            fontFamily =
+                                FontFamily(
+                                    Font(
+                                        R.font.nunito_variable,
+                                        variationSettings =
+                                            FontVariation.Settings(
+                                                FontVariation.weight(600),
+                                            )
+                                    )
+                                ),
+                            color = NeobrutalismTheme.colors.text
+                        )
                 )
             }
         }

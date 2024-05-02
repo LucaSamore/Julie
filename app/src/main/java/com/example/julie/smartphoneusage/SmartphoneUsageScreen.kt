@@ -1,5 +1,6 @@
 package com.example.julie.smartphoneusage
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,23 +29,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.alexstyl.swipeablecard.Direction
 import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
 import com.alexstyl.swipeablecard.SwipeableCardState
 import com.alexstyl.swipeablecard.rememberSwipeableCardState
 import com.alexstyl.swipeablecard.swipableCard
+import com.example.domain.report.AppDto
 import com.example.domain.report.ReportDto
 import com.example.julie.Lce
 import com.example.julie.R
 import com.example.julie.components.AppMessage
 import com.example.julie.components.AppReactions
+import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
@@ -54,7 +63,7 @@ internal fun SmartphoneUsageScreen(
     modifier: Modifier,
     smartphoneUsageViewModel: SmartphoneUsageViewModel,
     paddingValues: PaddingValues,
-    onStoryOpen: () -> Unit
+    navController: NavHostController
 ) {
     val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
 
@@ -82,7 +91,13 @@ internal fun SmartphoneUsageScreen(
                 val reports =
                     currentState.value.oldReports.map { it to rememberSwipeableCardState() }
 
-                StoriesHeader(modifier = modifier, onStoryOpen = onStoryOpen)
+                val stories =
+                    currentState.value.oldReports
+                        .sortedByDescending { it.date }
+                        .take(2)
+                        .map { it.appReports }
+
+                StoriesHeader(modifier = modifier, stories = stories, navController = navController)
 
                 if (currentAppsStatsPair.second.swipedDirection == null) {
                     SwipeableAppUsage(
@@ -107,13 +122,22 @@ internal fun SmartphoneUsageScreen(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
-internal fun StoriesHeader(modifier: Modifier, onStoryOpen: () -> Unit) {
+internal fun StoriesHeader(
+    modifier: Modifier,
+    stories: List<List<AppDto>>,
+    navController: NavHostController
+) {
+    if (stories.isEmpty() || stories.size == 1) {
+        return
+    }
+
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(64.dp)
+                .height(72.dp)
                 .background(NeobrutalismTheme.colors.contentSecondary)
                 .drawBehind {
                     val strokeWidth = 6f
@@ -121,9 +145,54 @@ internal fun StoriesHeader(modifier: Modifier, onStoryOpen: () -> Unit) {
                     drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
                     drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
                 }
-                .horizontalScroll(rememberScrollState())
+                .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Button(onClick = onStoryOpen) { Text(text = "Test story") }
+        stories
+            .first()
+            .filter { it.screenTime > 0 }
+            .forEach {
+                Column(
+                    modifier = modifier,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("${Destination.Story.name}/${it.name}") {
+                                popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
+                            }
+                        },
+                        modifier = modifier.padding(horizontal = 6.dp)
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = it.icon),
+                            "${it.name} Icon",
+                            contentScale = ContentScale.Crop,
+                            modifier = modifier.size(48.dp, 48.dp)
+                        )
+                    }
+                    Text(
+                        text = it.name,
+                        style =
+                            TextStyle(
+                                fontSize = 12.sp,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                color = NeobrutalismTheme.colors.text
+                            )
+                    )
+                }
+            }
     }
 }
 

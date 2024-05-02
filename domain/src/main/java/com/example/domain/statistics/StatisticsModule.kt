@@ -6,6 +6,7 @@ import com.example.data.di.IoDispatcher
 import com.example.data.report.ReportRepository
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.user.implementation.UserDatastore
+import com.example.domain.statistics.implementation.AppComparisonUseCaseImpl
 import com.example.domain.statistics.implementation.GetAppsCurrentStatsUseCaseImpl
 import com.example.domain.statistics.implementation.GetCurrentScreenTimeUseCaseImpl
 import com.example.domain.statistics.implementation.GetFavouriteAppsUseCaseImpl
@@ -49,4 +50,14 @@ object StatisticsModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): GetAppsCurrentStatsUseCase =
         GetAppsCurrentStatsUseCaseImpl(statisticsDataSource, packageManagerUtils, ioDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideAppComparisonUseCase(
+        @FirebaseRepository reportRepository: ReportRepository,
+        userDatastore: UserDatastore,
+        packageManagerUtils: PackageManagerUtils,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): AppComparisonUseCase =
+        AppComparisonUseCaseImpl(reportRepository, userDatastore, packageManagerUtils, ioDispatcher)
 }

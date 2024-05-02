@@ -40,16 +40,23 @@ internal fun NavigationGraph(
             SmartphoneUsageScreen(
                 modifier = modifier,
                 smartphoneUsageViewModel = hiltViewModel(),
-                paddingValues = paddingValues
-            ) {
-                navController.navigate(Destination.Story.name) {
-                    popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
-                }
-            }
+                paddingValues = paddingValues,
+                navController = navController
+            )
+            //            {
+            //                navController.navigate(Destination.Story.name) {
+            //                    popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
+            //                }
+            //            }
         }
 
-        composable(route = Destination.Story.name) {
-            TestStory(modifier = modifier, paddingValues = paddingValues) {
+        composable(route = "${Destination.Story.name}/{appName}") {
+            TestStory(
+                appName = it.arguments?.getString("appName") ?: "",
+                modifier = modifier,
+                storyViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            ) {
                 navController.navigate(Destination.SmartphoneUsage.name) {
                     popUpTo(Destination.Story.name) { inclusive = true }
                 }
