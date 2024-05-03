@@ -183,22 +183,18 @@ internal fun SignUpScreen(
                     password = it
                 }
 
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Interests"
-                )
-
-                NeubrutalSecondaryButton(
-                    modifier = modifier,
-                    text = "Select interests",
-                    width = 0.8f
-                ) {
-                    showInterestSheet = true
-                }
-
                 Spacer(modifier = modifier.padding(vertical = 16.dp))
             }
         }
+
+        NeubrutalSecondaryButton(
+            modifier = modifier,
+            text = "Back to login",
+            width = .9f,
+            onClick = onBackToSignInScreen
+        )
+
+        Spacer(modifier = modifier.padding(vertical = 8.dp))
 
         NeubrutalPrimaryButton(modifier = modifier, text = "REGISTER") {
             signUpViewModel.signUp(
