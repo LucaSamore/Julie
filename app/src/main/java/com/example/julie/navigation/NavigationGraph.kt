@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.julie.home.HomeScreen
+import com.example.julie.leaderboard.LeaderboardScreen
 import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.settings.SettingsScreen
 import com.example.julie.signin.SignInScreen
@@ -55,6 +56,14 @@ internal fun NavigationGraph(
                     popUpTo(Destination.Story.name) { inclusive = true }
                 }
             }
+        }
+
+        composable(route = Destination.Leaderboard.name) {
+            LeaderboardScreen(
+                modifier = modifier,
+                leaderboardViewModel = hiltViewModel(),
+                paddingValues = paddingValues
+            )
         }
 
         composable(route = Destination.Settings.name) {
