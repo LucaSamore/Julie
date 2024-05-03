@@ -4,9 +4,11 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,14 +22,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -35,8 +40,10 @@ import com.example.domain.statistics.implementation.ComparisonReportDto
 import com.example.julie.Lce
 import com.example.julie.R
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.textColor
+import com.example.julie.ui.theme.backgroundColor
+import com.example.julie.ui.theme.neubrutalismElevation
 import com.ui.simplestories.Stories
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 internal fun Story(
@@ -70,7 +77,10 @@ internal fun Story(
                         modifier
                             .padding(vertical = 42.dp)
                             .fillMaxSize()
-                            .background(NeobrutalismTheme.colors.background),
+                            .paint(
+                                painterResource(id = R.drawable.story_background),
+                                contentScale = ContentScale.Crop
+                            ),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -123,17 +133,18 @@ private fun StoryHeader(modifier: Modifier, appName: String, appIcon: Drawable?)
                             )
                         ),
                     fontWeight = FontWeight.SemiBold,
-                    color = NeobrutalismTheme.colors.text
+                    color = NeobrutalismTheme.colors.background
                 ),
             modifier = modifier.padding(horizontal = 6.dp)
         )
 
         Spacer(modifier = modifier.padding(horizontal = 4.dp))
 
-        Text(text = "23h", style = TextStyle(color = textColor.copy(alpha = .5f)))
+        Text(text = "23h", style = TextStyle(color = backgroundColor.copy(alpha = .5f)))
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun StoryContent(
     modifier: Modifier,
@@ -145,6 +156,105 @@ private fun StoryContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "This is a story for ${mostRecentApp.app.name}")
+        Box(
+            modifier =
+                modifier
+                    .neubrutalismElevation()
+                    .fillMaxWidth(.8f)
+                    .fillMaxHeight(.5f)
+                    .background(NeobrutalismTheme.colors.background)
+        ) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val difference = secondMostRecent.app.screenTime - mostRecentApp.app.screenTime
+
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text =
+                            "Yesterday ${secondMostRecent.app.screenTime.milliseconds.toComponents { hh, mm, ss, _ -> "${hh}h ${mm}min ${ss}sec" }}",
+                        style =
+                            TextStyle(
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            )
+                    )
+                }
+
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text =
+                            "${if (difference > 0) "-" else "+"} ${difference.milliseconds.toComponents { hh, mm, ss, _ -> "${hh}h ${mm}min ${ss}sec"  }}",
+                        style =
+                            TextStyle(
+                                fontSize = 36.sp,
+                                textAlign = TextAlign.Center,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            )
+                    )
+                }
+
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text =
+                            "${mostRecentApp.app.screenTime.milliseconds.toComponents { hh, mm, ss, _ -> "${hh}h ${mm}min ${ss}sec" }} Today",
+                        style =
+                            TextStyle(
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center,
+                                fontFamily =
+                                    FontFamily(
+                                        Font(
+                                            R.font.nunito_variable,
+                                            variationSettings =
+                                                FontVariation.Settings(
+                                                    FontVariation.weight(600),
+                                                )
+                                        )
+                                    ),
+                                fontWeight = FontWeight.Bold,
+                                color = NeobrutalismTheme.colors.text,
+                            )
+                    )
+                }
+            }
+        }
     }
 }
