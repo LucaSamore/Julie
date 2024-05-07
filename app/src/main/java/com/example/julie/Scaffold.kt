@@ -68,10 +68,12 @@ internal fun JulieApplication(startDestination: String, modifier: Modifier = Mod
                                     .clickable {
                                         when (currentScreen) {
                                             Destination.Home.name -> {
-                                                // Navigate to home caption
+                                                navController.navigate(Destination.HomeCaption.name)
                                             }
                                             Destination.SmartphoneUsage.name -> {
-                                                // Navigate to smartphone usage caption
+                                                navController.navigate(
+                                                    Destination.SmartphoneUsageCaption.name
+                                                )
                                             }
                                         }
                                     }

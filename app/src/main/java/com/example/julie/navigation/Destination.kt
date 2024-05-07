@@ -11,7 +11,11 @@ sealed class Destination(val name: String) {
 
     data object Home : Destination("Home")
 
+    data object HomeCaption : Destination("Home Caption")
+
     data object SmartphoneUsage : Destination("Smartphone Usage")
+
+    data object SmartphoneUsageCaption : Destination("Smartphone Usage Caption")
 
     data object Story : Destination("Story")
 

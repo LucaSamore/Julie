@@ -7,12 +7,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.julie.home.HomeCaption
 import com.example.julie.home.HomeScreen
 import com.example.julie.leaderboard.LeaderboardScreen
 import com.example.julie.passwordreset.PasswordResetScreen
 import com.example.julie.settings.SettingsScreen
 import com.example.julie.signin.SignInScreen
 import com.example.julie.signup.SignUpScreen
+import com.example.julie.smartphoneusage.SmartphoneUsageCaption
 import com.example.julie.smartphoneusage.SmartphoneUsageScreen
 import com.example.julie.smartphoneusage.Story
 import com.example.julie.verifyemail.VerifyEmailScreen
@@ -35,6 +37,14 @@ internal fun NavigationGraph(
                 homeViewModel = hiltViewModel(),
                 paddingValues = paddingValues
             )
+        }
+
+        composable(route = Destination.HomeCaption.name) {
+            HomeCaption(modifier = modifier, paddingValues = paddingValues)
+        }
+
+        composable(route = Destination.SmartphoneUsageCaption.name) {
+            SmartphoneUsageCaption(modifier = modifier, paddingValues = paddingValues)
         }
 
         composable(route = Destination.SmartphoneUsage.name) {
