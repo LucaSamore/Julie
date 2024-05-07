@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
@@ -25,8 +26,13 @@ import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
 
 @Composable
-internal fun NeubrutalPointsStreakBox(modifier: Modifier, points: Int, streak: Int) {
-    Row(modifier = modifier.fillMaxWidth(.9f).padding(vertical = 32.dp)) {
+internal fun NeubrutalPointsStreakBox(
+    modifier: Modifier,
+    points: Int,
+    streak: Int,
+    verticalPadding: Dp = 32.dp
+) {
+    Row(modifier = modifier.fillMaxWidth(.9f).padding(vertical = verticalPadding)) {
         Box(
             modifier =
                 modifier
