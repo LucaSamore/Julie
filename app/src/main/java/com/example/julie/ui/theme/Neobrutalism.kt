@@ -111,7 +111,7 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                                 R.font.inconsolata_variable,
                                 variationSettings =
                                     FontVariation.Settings(
-                                        FontVariation.width(140f),
+                                        FontVariation.width(130f),
                                         FontVariation.weight(500)
                                     )
                             )
