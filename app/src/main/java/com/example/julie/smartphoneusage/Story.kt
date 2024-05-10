@@ -43,6 +43,7 @@ import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.backgroundColor
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.ui.simplestories.Stories
+import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -206,7 +207,7 @@ private fun StoryContent(
                 ) {
                     Text(
                         text =
-                            "${if (difference > 0) "-" else "+"} ${difference.milliseconds.toComponents { hh, mm, ss, _ -> "${hh}h ${mm}min ${ss}sec"  }}",
+                            "${if (difference > 0) "-" else "+"} ${abs(difference).milliseconds.toComponents { hh, mm, ss, _ -> "${hh}h ${mm}min ${ss}sec"  }}",
                         style =
                             TextStyle(
                                 fontSize = 36.sp,

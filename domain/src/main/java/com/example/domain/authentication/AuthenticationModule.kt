@@ -1,4 +1,4 @@
-package com.example.domain.di
+package com.example.domain.authentication
 
 import com.example.data.WorkerManager
 import com.example.data.authentication.AuthenticationService
@@ -7,11 +7,6 @@ import com.example.data.di.FirebaseService
 import com.example.data.di.IoDispatcher
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
-import com.example.domain.authentication.PasswordResetUseCase
-import com.example.domain.authentication.SignInUseCase
-import com.example.domain.authentication.SignOutUseCase
-import com.example.domain.authentication.SignUpUseCase
-import com.example.domain.authentication.VerifyEmailUseCase
 import com.example.domain.authentication.implementation.PasswordResetUseCaseImpl
 import com.example.domain.authentication.implementation.SignInUseCaseImpl
 import com.example.domain.authentication.implementation.SignOutUseCaseImpl
@@ -27,8 +22,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UseCaseModule {
-
+object AuthenticationModule {
     @Singleton
     @Provides
     fun provideSignInUseCase(

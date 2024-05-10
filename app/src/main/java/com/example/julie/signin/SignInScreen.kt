@@ -130,7 +130,7 @@ internal fun SignInScreen(
         NeubrutalSecondaryButton(modifier = modifier, text = "Register") { onGoToSignUpScreen() }
 
         Text(
-            modifier = modifier.fillMaxWidth().clickable { onGoToPasswordResetScreen() },
+            modifier = modifier.fillMaxWidth(.5f).clickable { onGoToPasswordResetScreen() },
             text = "Forgot password?",
             style =
                 TextStyle(

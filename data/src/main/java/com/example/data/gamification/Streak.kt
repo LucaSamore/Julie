@@ -44,11 +44,11 @@ value class BeginDate private constructor(val value: LocalDate) {
 value class EndDate private constructor(val value: LocalDate?) {
     companion object {
         operator fun invoke(value: LocalDate?): Either<GamificationProblem, EndDate> = either {
-            //            if (value != null) {
-            //                ensure(value.isBefore(today().plusDays(1))) {
-            //                    EndDateProblem("End date cannot be in the future")
-            //                }
-            //            }
+            if (value != null) {
+                ensure(value.isBefore(today().plusDays(1))) {
+                    EndDateProblem("End date cannot be in the future")
+                }
+            }
             EndDate(value)
         }
     }

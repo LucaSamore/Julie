@@ -46,7 +46,7 @@ internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
 
         Text(
             text =
-                "Musix box is a real time representation of your screen time. " +
+                "The music box is a real-time representation of your screen time. " +
                     "Slider moves as your screen time increases.",
             style =
                 TextStyle(
@@ -67,7 +67,7 @@ internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
 
         Text(
             text =
-                "Volume slider is a real time representation of how close your screen time" +
+                "Volume slider is a real-time representation of how close your screen time" +
                     " is to the threshold value. Slider moves as your screen time increases.",
             style =
                 TextStyle(
@@ -90,9 +90,9 @@ internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
         Text(
             text =
                 "Left box contains the amount of points gained until today. " +
-                    "Points get updated every night at 23:55" +
-                    "Right box contains the streak number. The value is increased if at the " +
-                    "end of the day your screen time is lower than the current threshold." +
+                    "Points are updated every night at 23:55 " +
+                    "Right box contains the streak number. The value is increased if, at the " +
+                    "end of the day, your screen time is lower than the current threshold." +
                     "If your screen time is higher than the threshold, " +
                     "you lose all your points and your current streak.",
             style =
@@ -134,7 +134,7 @@ internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
         Text(
             text =
                 "The recently played section contains a 'playlist' of your most used apps " +
-                    "over the last 7 days.",
+                    "over the last 7 days. Average time use is also provided.",
             style =
                 TextStyle(
                     fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
