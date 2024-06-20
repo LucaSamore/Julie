@@ -60,7 +60,7 @@ constructor(
     }
 
     private fun <T : UserProfile> T.decreaseOrResetThreshold(): UserProfile =
-        if (threshold.nextReset.nextReset == today()) {
+        if (threshold.nextReset.nextReset <= today()) {
             resetThreshold()
         } else {
             decreaseThreshold()
@@ -78,7 +78,7 @@ constructor(
     }
 
     private fun <T : UserProfile> T.increaseOrResetThreshold(): UserProfile =
-        if (threshold.nextReset.nextReset == today()) {
+        if (threshold.nextReset.nextReset <= today()) {
             resetThreshold()
         } else {
             increaseThreshold()

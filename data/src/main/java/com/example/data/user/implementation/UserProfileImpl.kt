@@ -46,7 +46,7 @@ internal data class UserProfileImpl(
             threshold =
                 Threshold(
                     valueInMillis = ThresholdValue(8.hours.inWholeMilliseconds).getOrNull()!!,
-                    nextReset = NextReset(today().plusDays(7)).getOrNull()!!
+                    nextReset = NextReset(today().plusDays(7))
                 )
         )
 
@@ -131,11 +131,10 @@ fun createNewAccount(
         zipOrAccumulate(
             { Points(0).bind() },
             { ThresholdValue(8.hours.inWholeMilliseconds).bind() },
-            { NextReset(today().plusDays(7)).bind() },
             { StreakValue(0).bind() },
             { BeginDate(today()).bind() },
             { EndDate(null).bind() },
-        ) { points, thresholdValue, nextReset, streakValue, beginDate, endDate ->
+        ) { points, thresholdValue, streakValue, beginDate, endDate ->
             UserProfileImpl(
                 id = userId,
                 UserDetails(
@@ -148,7 +147,7 @@ fun createNewAccount(
                     interest = createAccountDto.interest
                 ),
                 points = points,
-                threshold = Threshold(thresholdValue, nextReset),
+                threshold = Threshold(thresholdValue, NextReset(today().plusDays(7))),
                 currentStreak = Streak(userId, streakValue, beginDate, endDate)
             )
         }
@@ -169,11 +168,10 @@ fun createUserProfile(userProfileDto: UserProfileDto): Either<NonEmptyList<Probl
             zipOrAccumulate(
                 { Points(userProfileDto.points).bind() },
                 { ThresholdValue(userProfileDto.threshold.valueInMillis).bind() },
-                { NextReset(userProfileDto.threshold.nextReset).bind() },
                 { StreakValue(userProfileDto.currentStreak.value).bind() },
                 { BeginDate(userProfileDto.currentStreak.begin).bind() },
                 { EndDate(userProfileDto.currentStreak.end).bind() }
-            ) { points, thresholdValue, nextReset, streakValue, beginDate, endDate ->
+            ) { points, thresholdValue, streakValue, beginDate, endDate ->
                 UserProfileImpl(
                     id = userId,
                     UserDetails(
@@ -186,7 +184,8 @@ fun createUserProfile(userProfileDto: UserProfileDto): Either<NonEmptyList<Probl
                         interest = userProfileDto.interest
                     ),
                     points = points,
-                    threshold = Threshold(thresholdValue, nextReset),
+                    threshold =
+                        Threshold(thresholdValue, NextReset(userProfileDto.threshold.nextReset)),
                     currentStreak = Streak(userId, streakValue, beginDate, endDate)
                 )
             }
