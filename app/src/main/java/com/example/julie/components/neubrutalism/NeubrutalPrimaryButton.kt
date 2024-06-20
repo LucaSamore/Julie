@@ -1,4 +1,4 @@
-package com.example.julie.components
+package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,10 +14,10 @@ import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
-fun NeubrutalSecondaryButton(
+fun NeubrutalPrimaryButton(
     modifier: Modifier,
     text: String,
-    width: Float = .5f,
+    width: Float = 0.9f,
     height: Dp = 48.dp,
     onClick: () -> Unit
 ) {
@@ -25,10 +25,10 @@ fun NeubrutalSecondaryButton(
         modifier = modifier.fillMaxWidth(width).height(height).neubrutalismElevation(),
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = NeobrutalismTheme.colors.buttonSecondary,
+                containerColor = NeobrutalismTheme.colors.buttonPrimary,
                 contentColor = NeobrutalismTheme.colors.text,
-                disabledContainerColor = NeobrutalismTheme.colors.buttonSecondary,
-                disabledContentColor = NeobrutalismTheme.colors.buttonSecondary,
+                disabledContainerColor = NeobrutalismTheme.colors.buttonPrimary,
+                disabledContentColor = NeobrutalismTheme.colors.buttonPrimary,
             ),
         shape = NeobrutalismTheme.shapes.surface,
         onClick = onClick

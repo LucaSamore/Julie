@@ -1,4 +1,4 @@
-package com.example.julie.components
+package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text

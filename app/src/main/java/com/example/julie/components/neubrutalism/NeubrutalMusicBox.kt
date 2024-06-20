@@ -1,4 +1,4 @@
-package com.example.julie.components
+package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
@@ -35,14 +36,15 @@ import kotlin.time.Duration.Companion.milliseconds
 internal fun NeubrutalMusicBox(
     modifier: Modifier,
     currentScreenTime: Long,
-    screenTimeSliderPosition: Float
+    screenTimeSliderPosition: Float,
+    verticalPadding: Dp = 16.dp
 ) {
     Box(
         modifier =
             modifier
                 .fillMaxWidth(.9f)
                 .fillMaxHeight(.5f)
-                .padding(vertical = 16.dp)
+                .padding(vertical = verticalPadding)
                 .neubrutalismElevation(),
     ) {
         Column(

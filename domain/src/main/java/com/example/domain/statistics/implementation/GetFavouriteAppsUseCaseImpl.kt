@@ -21,8 +21,8 @@ constructor(
     private val packageManagerUtils: PackageManagerUtils
 ) : GetFavouriteAppsUseCase {
 
-    override suspend fun invoke(): Either<Problem, List<FavouriteAppDto>> =
-        withContext(ioDispatcher) {
+    override suspend fun invoke(): Either<Problem, List<FavouriteAppDto>> {
+        return withContext(ioDispatcher) {
             either {
                 val userId = userDatastore.getUserId().bind()
                 reportRepository
@@ -34,24 +34,23 @@ constructor(
                     .bind()
                     .map {
                         FavouriteAppDto(
-                            appName =
-                                packageManagerUtils.getAppNameFromPackageName(
-                                    it.key.appPackageName
-                                ),
+                            appName = getAppName(it.key.appPackageName),
                             appScreenTime = it.value,
-                            icon =
-                                packageManagerUtils.getAppIcon(it.key.appPackageName).fold({
-                                    null
-                                }) { drawable ->
-                                    drawable
-                                }
+                            icon = getIcon(it.key.appPackageName)
                         )
                     }
             }
         }
+    }
+
+    private fun getAppName(packageName: String) =
+        packageManagerUtils.getAppNameFromPackageName(packageName)
+
+    private fun getIcon(packageName: String) =
+        packageManagerUtils.getAppIcon(packageName).fold({ null }) { drawable -> drawable }
 
     companion object {
-        const val TIME_SPAN_IN_DAYS = 7
+        const val TIME_SPAN_IN_DAYS = 60
         const val TOP = 5
     }
 }

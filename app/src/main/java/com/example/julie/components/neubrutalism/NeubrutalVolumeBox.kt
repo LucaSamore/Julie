@@ -1,4 +1,4 @@
-package com.example.julie.components
+package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
@@ -39,9 +40,10 @@ import kotlin.time.Duration.Companion.milliseconds
 internal fun NeubrutalVolumeBox(
     modifier: Modifier,
     thresholdValue: Long,
-    thresholdSliderPosition: Float
+    thresholdSliderPosition: Float,
+    verticalPadding: Dp = 0.dp
 ) {
-    Row(modifier = modifier.fillMaxWidth(.9f)) {
+    Row(modifier = modifier.fillMaxWidth(.9f).padding(vertical = verticalPadding)) {
         Box(
             modifier =
                 modifier

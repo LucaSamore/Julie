@@ -23,11 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.data.user.UserProblem
 import com.example.julie.Lce
-import com.example.julie.components.NeubrutalErrorMessage
-import com.example.julie.components.NeubrutalLabel
-import com.example.julie.components.NeubrutalPrimaryButton
-import com.example.julie.components.NeubrutalSecondaryButton
-import com.example.julie.components.NeubrutalTextField
+import com.example.julie.components.neubrutalism.NeubrutalErrorMessage
+import com.example.julie.components.neubrutalism.NeubrutalLabel
+import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
+import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
+import com.example.julie.components.neubrutalism.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 

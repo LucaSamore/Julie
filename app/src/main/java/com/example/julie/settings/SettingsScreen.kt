@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.example.julie.Lce
-import com.example.julie.components.NeubrutalPrimaryButton
+import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
 
 @Composable
 internal fun SettingsScreen(

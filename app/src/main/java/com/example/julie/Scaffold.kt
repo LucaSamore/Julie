@@ -20,7 +20,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.julie.components.NeubrutalBottomBar
+import com.example.julie.components.neubrutalism.NeubrutalBottomBar
 import com.example.julie.navigation.Destination
 import com.example.julie.navigation.NavigationGraph
 import com.example.julie.ui.theme.NeobrutalismTheme
