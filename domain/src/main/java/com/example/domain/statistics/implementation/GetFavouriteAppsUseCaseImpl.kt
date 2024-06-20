@@ -26,7 +26,11 @@ constructor(
             either {
                 val userId = userDatastore.getUserId().bind()
                 reportRepository
-                    .getFavouriteApps(userId = userId, timeSpanInDays = 7, top = 5)
+                    .getFavouriteApps(
+                        userId = userId,
+                        timeSpanInDays = TIME_SPAN_IN_DAYS,
+                        top = TOP
+                    )
                     .bind()
                     .map {
                         FavouriteAppDto(
@@ -36,11 +40,18 @@ constructor(
                                 ),
                             appScreenTime = it.value,
                             icon =
-                                packageManagerUtils
-                                    .getAppIcon(it.key.appPackageName)
-                                    .fold({ null }, { drawable -> drawable })
+                                packageManagerUtils.getAppIcon(it.key.appPackageName).fold({
+                                    null
+                                }) { drawable ->
+                                    drawable
+                                }
                         )
                     }
             }
         }
+
+    companion object {
+        const val TIME_SPAN_IN_DAYS = 7
+        const val TOP = 5
+    }
 }

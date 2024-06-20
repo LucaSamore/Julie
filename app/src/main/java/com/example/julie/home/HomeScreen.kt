@@ -14,19 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -40,6 +33,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -53,7 +47,6 @@ import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.textColor
 import kotlin.time.Duration.Companion.milliseconds
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 internal fun HomeScreen(
     modifier: Modifier,
@@ -65,44 +58,59 @@ internal fun HomeScreen(
 
     homeViewModel.getCurrentScreenTime()
 
-    var currentScreenTime by rememberSaveable { mutableLongStateOf(0L) }
-    var threshold by rememberSaveable { mutableLongStateOf(0L) }
-    var points by rememberSaveable { mutableIntStateOf(0) }
-    var streak by rememberSaveable { mutableIntStateOf(0) }
-    val favouriteApps = remember { mutableStateListOf<FavouriteAppDto>() }
-
-    var screenTimeSliderPosition by remember { mutableFloatStateOf(.0f) }
-    var thresholdSliderPosition by remember { mutableFloatStateOf(.0f) }
-
-    var errorMessage by rememberSaveable { mutableStateOf("") }
-    var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
-
     LaunchedEffect(key1 = Unit) { homeViewModel.getContent() }
 
     Column(
         modifier =
             modifier.fillMaxSize().padding(paddingValues).verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val currentScreenTimeState = screenTimeState
-        currentScreenTime = currentScreenTimeState
-        screenTimeSliderPosition = (currentScreenTime.toFloat() / (24 * 60 * 60 * 1000))
+        when (val currentState = homeScreenState) {
+            is Lce.Loading -> {
+                CircularProgressIndicator(
+                    modifier = modifier.width(64.dp),
+                    color = NeobrutalismTheme.colors.contentPrimary,
+                    trackColor = NeobrutalismTheme.colors.background,
+                )
+            }
+            is Lce.Content -> {
+                NeubrutalMusicBox(
+                    modifier = modifier,
+                    currentScreenTime = screenTimeState,
+                    screenTimeSliderPosition = (screenTimeState.toFloat() / (24 * 60 * 60 * 1000))
+                )
 
-        NeubrutalMusicBox(
-            modifier = modifier,
-            currentScreenTime = currentScreenTime,
-            screenTimeSliderPosition = screenTimeSliderPosition
-        )
+                Column(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    NeubrutalVolumeBox(
+                        modifier = modifier,
+                        thresholdValue = currentState.value.threshold,
+                        thresholdSliderPosition =
+                            screenTimeState.toFloat() / currentState.value.threshold
+                    )
 
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (!errorMessageHidden) {
+                    NeubrutalPointsStreakBox(
+                        modifier = modifier,
+                        points = currentState.value.points,
+                        streak = currentState.value.streakValue
+                    )
+                }
+
+                if (currentState.value.favouriteApps.isNotEmpty()) {
+                    RecentlyPlayedHeader(modifier = modifier)
+                    RecentlyPlayedContent(
+                        modifier = modifier,
+                        favouriteApps = currentState.value.favouriteApps
+                    )
+                }
+            }
+            is Lce.Failure -> {
                 Text(
-                    text = errorMessage,
+                    text = currentState.error.message,
                     style =
                         TextStyle(
                             fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
@@ -113,250 +121,140 @@ internal fun HomeScreen(
                         ),
                     modifier = modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 16.dp)
                 )
-                return
             }
-
-            NeubrutalVolumeBox(
-                modifier = modifier,
-                thresholdValue = threshold,
-                thresholdSliderPosition = thresholdSliderPosition
-            )
-
-            NeubrutalPointsStreakBox(modifier = modifier, points = points, streak = streak)
         }
+    }
+}
 
-        Row(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .background(color = NeobrutalismTheme.colors.buttonSecondary)
-                    .drawBehind {
-                        val strokeWidth = 6f
-                        val y = size.height - strokeWidth / 2
-                        drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
-                        drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
-                    }
-        ) {
-            Text(
-                text = "Recently played",
-                style =
-                    TextStyle(
-                        fontSize = 32.sp,
-                        fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
-                        textAlign = TextAlign.Center,
-                        color = textColor,
-                    ),
-                modifier = modifier.fillMaxWidth().padding(vertical = 12.dp)
-            )
-        }
-
-        Row(
-            modifier =
-                modifier.fillMaxWidth().height(64.dp).background(color = Color.White).drawBehind {
+@Composable
+private fun RecentlyPlayedHeader(modifier: Modifier) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(color = NeobrutalismTheme.colors.buttonSecondary)
+                .drawBehind {
                     val strokeWidth = 6f
                     val y = size.height - strokeWidth / 2
+                    drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
                     drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
-                },
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "#",
-                style =
-                    TextStyle(
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start,
-                        fontFamily =
-                            FontFamily(
-                                Font(
-                                    R.font.nunito_variable,
-                                    variationSettings =
-                                        FontVariation.Settings(
-                                            FontVariation.weight(600),
-                                        )
-                                )
-                            ),
-                        fontWeight = FontWeight.Bold,
-                        color = NeobrutalismTheme.colors.text,
-                    ),
-                modifier = modifier
-            )
-
-            Text(
-                text = "Icon",
-                style =
-                    TextStyle(
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        fontFamily =
-                            FontFamily(
-                                Font(
-                                    R.font.nunito_variable,
-                                    variationSettings =
-                                        FontVariation.Settings(
-                                            FontVariation.weight(600),
-                                        )
-                                )
-                            ),
-                        fontWeight = FontWeight.Bold,
-                        color = NeobrutalismTheme.colors.text,
-                    ),
-                modifier = modifier.width(48.dp)
-            )
-
-            Text(
-                text = "Title",
-                style =
-                    TextStyle(
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start,
-                        fontFamily =
-                            FontFamily(
-                                Font(
-                                    R.font.nunito_variable,
-                                    variationSettings =
-                                        FontVariation.Settings(
-                                            FontVariation.weight(600),
-                                        )
-                                )
-                            ),
-                        fontWeight = FontWeight.Bold,
-                        color = NeobrutalismTheme.colors.text,
-                    ),
-                modifier = modifier.width(96.dp)
-            )
-
-            Text(
-                text = "Played for",
-                style =
-                    TextStyle(
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.End,
-                        fontFamily =
-                            FontFamily(
-                                Font(
-                                    R.font.nunito_variable,
-                                    variationSettings =
-                                        FontVariation.Settings(
-                                            FontVariation.weight(600),
-                                        )
-                                )
-                            ),
-                        fontWeight = FontWeight.Bold,
-                        color = NeobrutalismTheme.colors.text,
-                    ),
-                modifier = modifier.width(96.dp)
-            )
-        }
-
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            favouriteApps.forEachIndexed { index, app ->
-                Row(
-                    modifier = modifier.fillMaxWidth().height(96.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "${index + 1}",
-                        style =
-                            TextStyle(
-                                fontSize = 32.sp,
-                                textAlign = TextAlign.Start,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                fontWeight = FontWeight.Normal,
-                                color = NeobrutalismTheme.colors.text,
-                            ),
-                        modifier = modifier
-                    )
-
-                    Image(
-                        painter = rememberAsyncImagePainter(model = app.icon),
-                        "${app.appName} Icon",
-                        contentScale = ContentScale.Crop,
-                        modifier = modifier.size(48.dp, 48.dp)
-                    )
-
-                    Text(
-                        text = app.appName,
-                        style =
-                            TextStyle(
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Start,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                fontWeight = FontWeight.Normal,
-                                color = NeobrutalismTheme.colors.text,
-                            ),
-                        modifier = modifier.width(96.dp)
-                    )
-
-                    Text(
-                        text =
-                            app.appScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
-                                "~${hh}h ${mm}min"
-                            },
-                        style =
-                            TextStyle(
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.End,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                fontWeight = FontWeight.Normal,
-                                color = NeobrutalismTheme.colors.text,
-                            ),
-                        modifier = modifier.width(96.dp)
-                    )
                 }
-            }
-        }
+    ) {
+        Text(
+            text = "Recently played",
+            style =
+                TextStyle(
+                    fontSize = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                    textAlign = TextAlign.Center,
+                    color = textColor,
+                ),
+            modifier = modifier.fillMaxWidth().padding(vertical = 12.dp)
+        )
     }
 
-    when (val currentState = homeScreenState) {
-        is Lce.Loading -> {
-            errorMessageHidden = true
-        }
-        is Lce.Content -> {
-            threshold = currentState.value.threshold
-            thresholdSliderPosition = screenTimeState.toFloat() / threshold
-            points = currentState.value.points
-            streak = currentState.value.streakValue
-            favouriteApps.apply {
-                clear()
-                addAll(currentState.value.favouriteApps)
+    Row(
+        modifier =
+            modifier.fillMaxWidth().height(64.dp).background(color = Color.White).drawBehind {
+                val strokeWidth = 6f
+                val y = size.height - strokeWidth / 2
+                drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+            },
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RecentlyPlayedText(modifier = modifier, text = "#", textAlign = TextAlign.Start)
+        RecentlyPlayedText(
+            modifier = modifier.width(48.dp),
+            text = "Icon",
+            textAlign = TextAlign.Center
+        )
+        RecentlyPlayedText(
+            modifier = modifier.width(96.dp),
+            text = "Title",
+            textAlign = TextAlign.Start
+        )
+        RecentlyPlayedText(
+            modifier = modifier.width(96.dp),
+            text = "Played for",
+            textAlign = TextAlign.End
+        )
+    }
+}
+
+@Composable
+private fun RecentlyPlayedContent(modifier: Modifier, favouriteApps: List<FavouriteAppDto>) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        favouriteApps.forEachIndexed { index, app ->
+            Row(
+                modifier = modifier.fillMaxWidth().height(96.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RecentlyPlayedText(
+                    modifier = modifier,
+                    text = "${index + 1}",
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Start
+                )
+
+                Image(
+                    painter = rememberAsyncImagePainter(model = app.icon),
+                    "${app.appName} Icon",
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier.size(48.dp, 48.dp)
+                )
+
+                RecentlyPlayedText(
+                    modifier = modifier.width(96.dp),
+                    text = app.appName,
+                    textAlign = TextAlign.Start
+                )
+
+                RecentlyPlayedText(
+                    modifier = modifier.width(96.dp),
+                    text =
+                        app.appScreenTime.milliseconds.toComponents { hh, mm, _, _ ->
+                            "${hh}h ${mm}min"
+                        },
+                    textAlign = TextAlign.End
+                )
             }
         }
-        is Lce.Failure -> {
-            errorMessage = currentState.error.message
-            errorMessageHidden = false
-        }
     }
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+private fun RecentlyPlayedText(
+    modifier: Modifier,
+    text: String,
+    fontSize: TextUnit = 18.sp,
+    textAlign: TextAlign,
+) {
+    Text(
+        text = text,
+        style =
+            TextStyle(
+                fontSize = fontSize,
+                textAlign = textAlign,
+                fontFamily =
+                    FontFamily(
+                        Font(
+                            R.font.nunito_variable,
+                            variationSettings =
+                                FontVariation.Settings(
+                                    FontVariation.weight(600),
+                                )
+                        )
+                    ),
+                fontWeight = FontWeight.Normal,
+                color = NeobrutalismTheme.colors.text,
+            ),
+        modifier = modifier
+    )
 }
