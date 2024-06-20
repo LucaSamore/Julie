@@ -39,5 +39,8 @@ jobs:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo $DATA > google-services.json
 
+      - name: Lint
+        run: ./gradlew lintDebug
+
       - name: Build and test
         run: ./gradlew build
