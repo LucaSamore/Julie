@@ -1,6 +1,7 @@
 package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
 
 @Composable
@@ -38,7 +39,7 @@ internal fun NeubrutalPointsStreakBox(
                 modifier
                     .fillMaxWidth(.5f)
                     .height(78.dp)
-                    .neubrutalismElevation()
+                    .border(2.dp, NeobrutalismTheme.colors.text, RoundedCornerShape(4.dp))
                     .background(color = NeobrutalismTheme.colors.buttonPrimary)
         ) {
             Column(
@@ -77,7 +78,7 @@ internal fun NeubrutalPointsStreakBox(
                 modifier
                     .fillMaxWidth()
                     .height(78.dp)
-                    .neubrutalismElevation()
+                    .border(2.dp, NeobrutalismTheme.colors.text, RoundedCornerShape(4.dp))
                     .background(color = NeobrutalismTheme.colors.buttonPrimary)
         ) {
             Column(

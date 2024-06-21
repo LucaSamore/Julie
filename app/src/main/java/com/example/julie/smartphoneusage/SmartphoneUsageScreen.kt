@@ -2,6 +2,7 @@ package com.example.julie.smartphoneusage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,8 +54,8 @@ import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
-import com.github.theapache64.twyper.Twyper
-import com.github.theapache64.twyper.rememberTwyperController
+import com.github.theapache64.twyper.flip.TwyperFlip
+import com.github.theapache64.twyper.flip.rememberTwyperFlipController
 
 @Composable
 internal fun SmartphoneUsageScreen(
@@ -66,7 +67,7 @@ internal fun SmartphoneUsageScreen(
     val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
     val currentAppsStatsState by smartphoneUsageViewModel.currentAppsStatsState.collectAsState()
 
-    val twyperController = rememberTwyperController()
+    val twyperFlipController = rememberTwyperFlipController()
     val reports = remember { mutableStateListOf<ReportDto>() }
 
     LaunchedEffect(key1 = Unit) { smartphoneUsageViewModel.getCurrentAppsStats() }
@@ -75,16 +76,22 @@ internal fun SmartphoneUsageScreen(
 
     Column(
         modifier = modifier.fillMaxSize().padding(paddingValues),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (val currentState = state) {
             is Lce.Loading -> {
-                CircularProgressIndicator(
-                    modifier = modifier.width(64.dp),
-                    color = NeobrutalismTheme.colors.contentPrimary,
-                    trackColor = NeobrutalismTheme.colors.background,
-                )
+                Column(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        modifier = modifier.width(64.dp),
+                        color = NeobrutalismTheme.colors.contentPrimary,
+                        trackColor = NeobrutalismTheme.colors.background,
+                    )
+                }
             }
             is Lce.Content -> {
                 reports.apply {
@@ -101,16 +108,20 @@ internal fun SmartphoneUsageScreen(
 
                 StoriesHeader(modifier = modifier, stories = stories, navController = navController)
 
-                Twyper(
+                TwyperFlip(
                     items = reports,
-                    twyperController = twyperController,
+                    twyperFlipController = twyperFlipController,
                     onItemRemoved = { item, _ -> reports.remove(item) },
-                    stackCount = reports.count(),
+                    cardModifier = { modifier },
+                    stackCount = 3,
                     paddingBetweenCards = 0f,
-                    modifier = modifier.padding(vertical = 32.dp)
-                ) {
-                    SwipeableAppUsage(modifier = modifier, reportDto = it)
-                }
+                    modifier =
+                        modifier.padding(vertical = 32.dp).clickable {
+                            twyperFlipController.flip()
+                        },
+                    front = { SwipeableAppUsage(modifier = modifier, reportDto = it) },
+                    back = { /* TODO */}
+                )
             }
             is Lce.Failure -> {}
         }
@@ -124,15 +135,10 @@ internal fun StoriesHeader(
     stories: List<List<AppDto>>,
     navController: NavHostController
 ) {
-    if (stories.isEmpty() || stories.size == 1) {
-        return
-    }
-
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(72.dp)
                 .background(NeobrutalismTheme.colors.contentSecondary)
                 .drawBehind {
                     val strokeWidth = 6f
@@ -140,13 +146,14 @@ internal fun StoriesHeader(
                     drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
                     drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
                 }
+                .padding(vertical = 8.dp)
                 .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         stories
             .first()
-            .filter { it.screenTime > 0 }
+            // .filter { it.screenTime > 0 }
             .forEach {
                 Column(
                     modifier = modifier,
