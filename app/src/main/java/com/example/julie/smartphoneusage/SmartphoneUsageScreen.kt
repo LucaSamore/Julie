@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -41,11 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.alexstyl.swipeablecard.Direction
-import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
-import com.alexstyl.swipeablecard.SwipeableCardState
-import com.alexstyl.swipeablecard.rememberSwipeableCardState
-import com.alexstyl.swipeablecard.swipableCard
 import com.example.domain.report.AppDto
 import com.example.domain.report.ReportDto
 import com.example.julie.Lce
@@ -56,7 +53,8 @@ import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
-import java.time.LocalDate
+import com.github.theapache64.twyper.Twyper
+import com.github.theapache64.twyper.rememberTwyperController
 
 @Composable
 internal fun SmartphoneUsageScreen(
@@ -66,8 +64,10 @@ internal fun SmartphoneUsageScreen(
     navController: NavHostController
 ) {
     val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
-
     val currentAppsStatsState by smartphoneUsageViewModel.currentAppsStatsState.collectAsState()
+
+    val twyperController = rememberTwyperController()
+    val reports = remember { mutableStateListOf<ReportDto>() }
 
     LaunchedEffect(key1 = Unit) { smartphoneUsageViewModel.getCurrentAppsStats() }
 
@@ -87,9 +87,11 @@ internal fun SmartphoneUsageScreen(
                 )
             }
             is Lce.Content -> {
-                val currentAppsStatsPair = currentAppsStatsState to rememberSwipeableCardState()
-                val reports =
-                    currentState.value.oldReports.map { it to rememberSwipeableCardState() }
+                reports.apply {
+                    clear()
+                    add(currentAppsStatsState)
+                    addAll(currentState.value.oldReports.reversed())
+                }
 
                 val stories =
                     currentState.value.oldReports
@@ -99,22 +101,15 @@ internal fun SmartphoneUsageScreen(
 
                 StoriesHeader(modifier = modifier, stories = stories, navController = navController)
 
-                if (currentAppsStatsPair.second.swipedDirection == null) {
-                    SwipeableAppUsage(
-                        modifier = modifier,
-                        swipeableCardState = currentAppsStatsPair.second,
-                        reportDto = ReportDto(LocalDate.now(), currentAppsStatsPair.first)
-                    )
-                }
-
-                reports.forEach { (report, swipeableState) ->
-                    if (swipeableState.swipedDirection == null) {
-                        SwipeableAppUsage(
-                            modifier = modifier,
-                            swipeableCardState = swipeableState,
-                            reportDto = report
-                        )
-                    }
+                Twyper(
+                    items = reports,
+                    twyperController = twyperController,
+                    onItemRemoved = { item, _ -> reports.remove(item) },
+                    stackCount = reports.count(),
+                    paddingBetweenCards = 0f,
+                    modifier = modifier.padding(vertical = 32.dp)
+                ) {
+                    SwipeableAppUsage(modifier = modifier, reportDto = it)
                 }
             }
             is Lce.Failure -> {}
@@ -196,96 +191,70 @@ internal fun StoriesHeader(
     }
 }
 
-@OptIn(ExperimentalSwipeableCardApi::class)
 @Composable
-internal fun SwipeableAppUsage(
-    modifier: Modifier,
-    swipeableCardState: SwipeableCardState,
-    reportDto: ReportDto
-) {
-    if (reportDto.appReports.isEmpty()) {
-        Text(text = "No reports to show")
-    }
-
+internal fun SwipeableAppUsage(modifier: Modifier, reportDto: ReportDto) {
     Box(
         modifier =
-            modifier.swipableCard(
-                state = swipeableCardState,
-                blockedDirections = listOf(Direction.Down, Direction.Up),
-                onSwiped = {},
-                onSwipeCancel = {}
-            )
+            modifier
+                .neubrutalismElevation(cornersRadius = 0.dp, borderWidth = 4.dp)
+                .fillMaxWidth(.9f)
+                .fillMaxHeight()
+                .background(Color.White)
     ) {
-        Box(
-            modifier =
-                modifier
-                    .padding(vertical = 16.dp)
-                    .neubrutalismElevation(cornersRadius = 0.dp, borderWidth = 4.dp)
-                    .fillMaxWidth(.9f)
-                    .fillMaxHeight()
-                    .background(Color.White)
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Row(
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .background(NeobrutalismTheme.colors.buttonSecondary)
+                        .drawBehind {
+                            val strokeWidth = 6f
+                            val y = size.height - strokeWidth / 2
+                            drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
+                        },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                Row(
-                    modifier =
-                        modifier
-                            .fillMaxWidth()
-                            .height(64.dp)
-                            .background(NeobrutalismTheme.colors.buttonSecondary)
-                            .drawBehind {
-                                val strokeWidth = 6f
-                                val y = size.height - strokeWidth / 2
-                                drawLine(
-                                    textColor,
-                                    Offset(0f, y),
-                                    Offset(size.width, y),
-                                    strokeWidth
-                                )
-                            },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        text = "App Usage",
-                        style =
-                            TextStyle(
-                                fontSize = 36.sp,
-                                fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
-                                color = textColor,
-                            ),
-                        modifier = modifier.fillMaxWidth(.5f).padding(horizontal = 16.dp)
-                    )
+                Text(
+                    text = "App Usage",
+                    style =
+                        TextStyle(
+                            fontSize = 36.sp,
+                            fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                            color = textColor,
+                        ),
+                    modifier = modifier.fillMaxWidth(.5f).padding(horizontal = 16.dp)
+                )
 
-                    Text(
-                        text = reportDto.date.toString(),
-                        style =
-                            TextStyle(
-                                fontSize = 24.sp,
-                                fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
-                                color = textColor.copy(alpha = .5f),
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            ),
-                        modifier = modifier.fillMaxWidth()
-                    )
-                }
+                Text(
+                    text = reportDto.date.toString(),
+                    style =
+                        TextStyle(
+                            fontSize = 24.sp,
+                            fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                            color = textColor.copy(alpha = .5f),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        ),
+                    modifier = modifier.fillMaxWidth()
+                )
+            }
 
-                Column(
-                    modifier =
-                        modifier.padding(vertical = 16.dp).verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.Top,
-                ) {
-                    reportDto.appReports
-                        .sortedByDescending { it.screenTime }
-                        .forEach { appDto ->
-                            AppMessage(modifier = modifier, appDto = appDto)
-                            AppReactions(modifier = modifier, appDto = appDto)
-                        }
-                }
+            Column(
+                modifier = modifier.padding(vertical = 16.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Top,
+            ) {
+                reportDto.appReports
+                    .sortedByDescending { it.screenTime }
+                    .forEach { appDto ->
+                        AppMessage(modifier = modifier, appDto = appDto)
+                        AppReactions(modifier = modifier, appDto = appDto)
+                    }
             }
         }
     }

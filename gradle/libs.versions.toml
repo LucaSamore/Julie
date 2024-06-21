@@ -26,8 +26,8 @@ hiltWork = "1.0.0"
 hiltCompiler = "1.0.0"
 room = "2.6.0"
 coil = "2.6.0"
-swipeablecard = "0.1.0"
 stories = "1.0.2"
+twyper = "0.0.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,8 +65,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
-swipeablecard = { group = "com.alexstyl.swipeablecard", name = "swipeablecard", version.ref = "swipeablecard" }
 stories = { group = "com.github.raipankaj", name = "Stories", version.ref = "stories" }
+twyper = { group = "com.github.theapache64", name = "twyper", version.ref = "twyper" }
 
 [bundles]
 arrow = ["arrow-core", "arrow-fx-coroutines"]

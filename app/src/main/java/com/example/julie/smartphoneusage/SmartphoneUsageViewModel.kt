@@ -2,13 +2,13 @@ package com.example.julie.smartphoneusage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.report.AppDto
 import com.example.domain.report.GetUserReportsUseCase
 import com.example.domain.report.ReportDto
 import com.example.domain.statistics.GetAppsCurrentStatsUseCase
 import com.example.julie.Lce
 import com.example.julie.SmartphoneUsageScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +30,8 @@ constructor(
     private val _smartphoneUsageScreenState =
         MutableStateFlow<SmartphoneUsageScreenState>(value = Lce.Loading)
 
-    private val _currentAppsStatsState = MutableStateFlow<List<AppDto>>(value = emptyList())
+    private val _currentAppsStatsState =
+        MutableStateFlow(value = ReportDto(date = LocalDate.now(), appReports = emptyList()))
 
     val smartphoneUsageScreenState = _smartphoneUsageScreenState.asStateFlow()
 
@@ -48,5 +49,9 @@ constructor(
         }
 
     fun getCurrentAppsStats() =
-        viewModelScope.launch { _currentAppsStatsState.update { getAppsCurrentStatsUseCase() } }
+        viewModelScope.launch {
+            _currentAppsStatsState.update {
+                ReportDto(date = LocalDate.now(), appReports = getAppsCurrentStatsUseCase())
+            }
+        }
 }
