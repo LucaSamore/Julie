@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import com.example.domain.report.AppDto
 import com.example.domain.report.ReportDto
 import com.example.julie.Lce
 import com.example.julie.R
+import com.example.julie.bounceClick
 import com.example.julie.components.AppMessage
 import com.example.julie.components.AppReactions
 import com.example.julie.navigation.Destination
@@ -113,10 +115,13 @@ internal fun SmartphoneUsageScreen(
                     twyperFlipController = twyperFlipController,
                     onItemRemoved = { item, _ -> reports.remove(item) },
                     cardModifier = { modifier },
-                    stackCount = 3,
+                    stackCount = reports.count(),
                     paddingBetweenCards = 0f,
                     modifier =
-                        modifier.padding(vertical = 32.dp).clickable {
+                        modifier.padding(vertical = 32.dp).bounceClick().clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
                             twyperFlipController.flip()
                         },
                     front = { SwipeableAppUsage(modifier = modifier, reportDto = it) },
@@ -135,6 +140,10 @@ internal fun StoriesHeader(
     stories: List<List<AppDto>>,
     navController: NavHostController
 ) {
+    if (stories.isEmpty() || stories.size == 1) {
+        return
+    }
+
     Row(
         modifier =
             modifier
@@ -143,7 +152,7 @@ internal fun StoriesHeader(
                 .drawBehind {
                     val strokeWidth = 6f
                     val y = size.height - strokeWidth / 2
-                    drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth)
+                    drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth + 6f)
                     drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
                 }
                 .padding(vertical = 8.dp)
@@ -166,7 +175,7 @@ internal fun StoriesHeader(
                                 popUpTo("${Destination.Story.name}/${it.name}") { inclusive = true }
                             }
                         },
-                        modifier = modifier.padding(horizontal = 6.dp)
+                        modifier = modifier.padding(horizontal = 6.dp).bounceClick()
                     ) {
                         Image(
                             painter = rememberAsyncImagePainter(model = it.icon),

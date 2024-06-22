@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.julie.bounceClick
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 
@@ -22,7 +23,8 @@ fun NeubrutalPrimaryButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.fillMaxWidth(width).height(height).neubrutalismElevation(),
+        modifier =
+            modifier.fillMaxWidth(width).height(height).bounceClick().neubrutalismElevation(),
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = NeobrutalismTheme.colors.buttonPrimary,
