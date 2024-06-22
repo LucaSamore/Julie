@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) : ViewModel() {
+internal class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) :
+    ViewModel() {
 
     private val _signUpScreenState = MutableStateFlow<SignUpScreenState>(value = Lce.Loading)
 

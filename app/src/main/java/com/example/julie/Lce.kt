@@ -12,7 +12,7 @@ import com.example.julie.home.HomeScreenContent
 import com.example.julie.smartphoneusage.SmartphoneUsageScreenContent
 import com.example.julie.smartphoneusage.StoryContent
 
-sealed interface Lce<out E, out A> {
+internal sealed interface Lce<out E, out A> {
     data object Loading : Lce<Nothing, Nothing>
 
     data class Content<A>(val value: A) : Lce<Nothing, A>
@@ -20,18 +20,18 @@ sealed interface Lce<out E, out A> {
     data class Failure<E>(val error: E) : Lce<E, Nothing>
 }
 
-typealias SignInScreenState = Lce<NonEmptyList<Problem>, UserSignedIn>
+internal typealias SignInScreenState = Lce<NonEmptyList<Problem>, UserSignedIn>
 
-typealias SignUpScreenState = Lce<NonEmptyList<Problem>, UserSignedUp>
+internal typealias SignUpScreenState = Lce<NonEmptyList<Problem>, UserSignedUp>
 
-typealias PasswordResetState = Lce<Problem, PasswordReset>
+internal typealias PasswordResetState = Lce<Problem, PasswordReset>
 
-typealias VerifyEmailState = Lce<Problem, VerificationEmailSent>
+internal typealias VerifyEmailState = Lce<Problem, VerificationEmailSent>
 
-typealias HomeScreenState = Lce<Problem, HomeScreenContent>
+internal typealias HomeScreenState = Lce<Problem, HomeScreenContent>
 
-typealias SmartphoneUsageScreenState = Lce<Problem, SmartphoneUsageScreenContent>
+internal typealias SmartphoneUsageScreenState = Lce<Problem, SmartphoneUsageScreenContent>
 
-typealias StoryScreenState = Lce<Problem, StoryContent>
+internal typealias StoryScreenState = Lce<Problem, StoryContent>
 
-typealias SettingsScreenState = Lce<AuthenticationProblem, UserSignedOut>
+internal typealias SettingsScreenState = Lce<AuthenticationProblem, UserSignedOut>

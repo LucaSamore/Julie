@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class HomeScreenContent(
+internal data class HomeScreenContent(
     val threshold: Long = 0L,
     val points: Int = 0,
     val streakValue: Int = 0,
@@ -23,7 +23,7 @@ data class HomeScreenContent(
 )
 
 @HiltViewModel
-class HomeViewModel
+internal class HomeViewModel
 @Inject
 constructor(
     private val getCurrentScreenTimeUseCase: GetCurrentScreenTimeUseCase,

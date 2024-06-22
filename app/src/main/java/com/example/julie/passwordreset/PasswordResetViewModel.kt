@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class PasswordResetViewModel
+internal class PasswordResetViewModel
 @Inject
 constructor(private val passwordResetUseCase: PasswordResetUseCase) : ViewModel() {
 

@@ -33,33 +33,32 @@ import com.example.julie.ui.theme.neubrutalismElevation
 internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostController) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: Destination.SignIn.name
+    val navItems =
+        listOf(
+            NavigationItemData(
+                destination = Destination.Home,
+                icon = ImageVector.vectorResource(R.drawable.baseline_home_filled_24),
+                contentDescription = "Home"
+            ),
+            NavigationItemData(
+                destination = Destination.SmartphoneUsage,
+                icon = ImageVector.vectorResource(R.drawable.baseline_pie_chart_24),
+                contentDescription = "Data Visualization"
+            ),
+            NavigationItemData(
+                destination = Destination.Leaderboard,
+                icon = ImageVector.vectorResource(R.drawable.baseline_leaderboard_24),
+                contentDescription = "Leaderboard"
+            ),
+            NavigationItemData(
+                destination = Destination.Settings,
+                icon = Icons.Filled.Settings,
+                contentDescription = "Settings"
+            )
+        )
 
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         NavigationBar(containerColor = NeobrutalismTheme.colors.contentSecondary) {
-            val navItems =
-                listOf(
-                    NavigationItemData(
-                        destination = Destination.Home,
-                        icon = ImageVector.vectorResource(R.drawable.baseline_home_filled_24),
-                        contentDescription = "Home"
-                    ),
-                    NavigationItemData(
-                        destination = Destination.SmartphoneUsage,
-                        icon = ImageVector.vectorResource(R.drawable.baseline_pie_chart_24),
-                        contentDescription = "Data Visualization"
-                    ),
-                    NavigationItemData(
-                        destination = Destination.Leaderboard,
-                        icon = ImageVector.vectorResource(R.drawable.baseline_leaderboard_24),
-                        contentDescription = "Leaderboard"
-                    ),
-                    NavigationItemData(
-                        destination = Destination.Settings,
-                        icon = Icons.Filled.Settings,
-                        contentDescription = "Settings"
-                    )
-                )
-
             navItems.forEach { item ->
                 NavigationBarItem(
                     selected = currentScreen == item.destination.name,

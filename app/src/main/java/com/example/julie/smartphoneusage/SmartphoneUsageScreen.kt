@@ -3,7 +3,6 @@ package com.example.julie.smartphoneusage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -58,6 +59,7 @@ import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
 import com.github.theapache64.twyper.flip.TwyperFlip
 import com.github.theapache64.twyper.flip.rememberTwyperFlipController
+import java.time.LocalDate
 
 @Composable
 internal fun SmartphoneUsageScreen(
@@ -66,8 +68,8 @@ internal fun SmartphoneUsageScreen(
     paddingValues: PaddingValues,
     navController: NavHostController
 ) {
-    val state by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
-    val currentAppsStatsState by smartphoneUsageViewModel.currentAppsStatsState.collectAsState()
+    val usageState by smartphoneUsageViewModel.smartphoneUsageScreenState.collectAsState()
+    val currentUsageState by smartphoneUsageViewModel.currentAppsStatsState.collectAsState()
 
     val twyperFlipController = rememberTwyperFlipController()
     val reports = remember { mutableStateListOf<ReportDto>() }
@@ -81,7 +83,7 @@ internal fun SmartphoneUsageScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when (val currentState = state) {
+        when (val currentState = usageState) {
             is Lce.Loading -> {
                 Column(
                     modifier = modifier.fillMaxSize(),
@@ -98,24 +100,22 @@ internal fun SmartphoneUsageScreen(
             is Lce.Content -> {
                 reports.apply {
                     clear()
-                    add(currentAppsStatsState)
+                    add(currentUsageState)
                     addAll(currentState.value.oldReports.reversed())
                 }
 
-                val stories =
-                    currentState.value.oldReports
-                        .sortedByDescending { it.date }
-                        .take(2)
-                        .map { it.appReports }
-
-                StoriesHeader(modifier = modifier, stories = stories, navController = navController)
+                StoriesHeader(
+                    modifier = modifier,
+                    stories = getStories(currentState.value.oldReports),
+                    navController = navController
+                )
 
                 TwyperFlip(
                     items = reports,
                     twyperFlipController = twyperFlipController,
                     onItemRemoved = { item, _ -> reports.remove(item) },
                     cardModifier = { modifier },
-                    stackCount = reports.count(),
+                    stackCount = 2,
                     paddingBetweenCards = 0f,
                     modifier =
                         modifier.padding(vertical = 32.dp).bounceClick().clickable(
@@ -125,10 +125,31 @@ internal fun SmartphoneUsageScreen(
                             twyperFlipController.flip()
                         },
                     front = { SwipeableAppUsage(modifier = modifier, reportDto = it) },
-                    back = { /* TODO */}
+                    back = { /* TODO */ }
+                )
+
+                Column(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "No more reports")
+                }
+            }
+            is Lce.Failure -> {
+                Text(
+                    text = currentState.error.message,
+                    style =
+                        TextStyle(
+                            fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = NeobrutalismTheme.colors.text,
+                        ),
+                    modifier = modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 16.dp)
                 )
             }
-            is Lce.Failure -> {}
         }
     }
 }
@@ -140,11 +161,17 @@ internal fun StoriesHeader(
     stories: List<List<AppDto>>,
     navController: NavHostController
 ) {
-    if (stories.isEmpty() || stories.size == 1) {
+    if (stories.isEmpty()) {
         return
     }
 
-    Row(
+    val show = stories.first().filter { it.screenTime > 0 }
+
+    if (show.isEmpty()) {
+        return
+    }
+
+    LazyRow(
         modifier =
             modifier
                 .fillMaxWidth()
@@ -155,55 +182,51 @@ internal fun StoriesHeader(
                     drawLine(textColor, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth + 6f)
                     drawLine(textColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
                 }
-                .padding(vertical = 8.dp)
-                .horizontalScroll(rememberScrollState()),
+                .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        stories
-            .first()
-            // .filter { it.screenTime > 0 }
-            .forEach {
-                Column(
-                    modifier = modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+        items(show) {
+            Column(
+                modifier = modifier,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate("${Destination.Story.name}/${it.name}") {
+                            popUpTo("${Destination.Story.name}/${it.name}") { inclusive = true }
+                        }
+                    },
+                    modifier = modifier.padding(horizontal = 6.dp).bounceClick()
                 ) {
-                    IconButton(
-                        onClick = {
-                            navController.navigate("${Destination.Story.name}/${it.name}") {
-                                popUpTo("${Destination.Story.name}/${it.name}") { inclusive = true }
-                            }
-                        },
-                        modifier = modifier.padding(horizontal = 6.dp).bounceClick()
-                    ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = it.icon),
-                            "${it.name} Icon",
-                            contentScale = ContentScale.Crop,
-                            modifier = modifier.size(48.dp, 48.dp)
-                        )
-                    }
-                    Text(
-                        text = it.name,
-                        style =
-                            TextStyle(
-                                fontSize = 12.sp,
-                                fontFamily =
-                                    FontFamily(
-                                        Font(
-                                            R.font.nunito_variable,
-                                            variationSettings =
-                                                FontVariation.Settings(
-                                                    FontVariation.weight(600),
-                                                )
-                                        )
-                                    ),
-                                color = NeobrutalismTheme.colors.text
-                            )
+                    Image(
+                        painter = rememberAsyncImagePainter(model = it.icon),
+                        "${it.name} Icon",
+                        contentScale = ContentScale.Crop,
+                        modifier = modifier.size(48.dp, 48.dp)
                     )
                 }
+                Text(
+                    text = it.name,
+                    style =
+                        TextStyle(
+                            fontSize = 12.sp,
+                            fontFamily =
+                                FontFamily(
+                                    Font(
+                                        R.font.nunito_variable,
+                                        variationSettings =
+                                            FontVariation.Settings(
+                                                FontVariation.weight(600),
+                                            )
+                                    )
+                                ),
+                            color = NeobrutalismTheme.colors.text
+                        )
+                )
             }
+        }
     }
 }
 
@@ -274,4 +297,14 @@ internal fun SwipeableAppUsage(modifier: Modifier, reportDto: ReportDto) {
             }
         }
     }
+}
+
+private fun getStories(oldReports: Iterable<ReportDto>): List<List<AppDto>> {
+    return oldReports
+        .asSequence()
+        .sortedByDescending { it.date }
+        .take(2)
+        .filter { it.date.isAfter(LocalDate.now().minusDays(4)) }
+        .map { it.appReports }
+        .toList()
 }

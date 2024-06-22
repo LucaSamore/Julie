@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class VerifyEmailViewModel @Inject constructor(private val verifyEmailUseCase: VerifyEmailUseCase) :
-    ViewModel() {
+internal class VerifyEmailViewModel
+@Inject
+constructor(private val verifyEmailUseCase: VerifyEmailUseCase) : ViewModel() {
 
     private val _verifyEmailScreenState = MutableStateFlow<VerifyEmailState>(value = Lce.Loading)
 
