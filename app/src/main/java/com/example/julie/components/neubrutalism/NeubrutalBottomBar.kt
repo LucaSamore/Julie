@@ -36,156 +36,82 @@ internal fun NeubrutalBottomBar(modifier: Modifier, navController: NavHostContro
 
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         NavigationBar(containerColor = NeobrutalismTheme.colors.contentSecondary) {
-            NavigationBarItem(
-                selected = currentScreen == Destination.Home.name,
-                onClick = {
-                    navController.navigate(Destination.Home.name) {
-                        popUpTo(Destination.Home.name) { inclusive = true }
-                    }
-                },
-                icon = {
-                    Box(
-                        modifier =
-                            modifier
-                                .neubrutalismElevation()
-                                .background(
-                                    color =
-                                        if (currentScreen == Destination.Home.name)
-                                            NeobrutalismTheme.colors.buttonPrimary
-                                        else NeobrutalismTheme.colors.contentPrimary
-                                )
-                    ) {
-                        Icon(
-                            ImageVector.vectorResource(R.drawable.baseline_home_filled_24),
-                            contentDescription = "Home",
-                            tint =
-                                if (currentScreen == Destination.Home.name)
-                                    NeobrutalismTheme.colors.text
-                                else Color.White,
-                            modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
-                        )
-                    }
-                },
-                colors =
-                    NavigationBarItemDefaults.colors(
-                        indicatorColor = NeobrutalismTheme.colors.contentSecondary
+            val navItems =
+                listOf(
+                    NavigationItemData(
+                        destination = Destination.Home,
+                        icon = ImageVector.vectorResource(R.drawable.baseline_home_filled_24),
+                        contentDescription = "Home"
                     ),
-                modifier = modifier.bounceClick(),
-            )
+                    NavigationItemData(
+                        destination = Destination.SmartphoneUsage,
+                        icon = ImageVector.vectorResource(R.drawable.baseline_pie_chart_24),
+                        contentDescription = "Data Visualization"
+                    ),
+                    NavigationItemData(
+                        destination = Destination.Leaderboard,
+                        icon = ImageVector.vectorResource(R.drawable.baseline_leaderboard_24),
+                        contentDescription = "Leaderboard"
+                    ),
+                    NavigationItemData(
+                        destination = Destination.Settings,
+                        icon = Icons.Filled.Settings,
+                        contentDescription = "Settings"
+                    )
+                )
 
-            NavigationBarItem(
-                selected = currentScreen == Destination.SmartphoneUsage.name,
-                onClick = {
-                    navController.navigate(Destination.SmartphoneUsage.name) {
-                        popUpTo(Destination.SmartphoneUsage.name) { inclusive = true }
-                    }
-                },
-                icon = {
-                    Box(
-                        modifier =
-                            modifier
-                                .neubrutalismElevation()
-                                .background(
-                                    color =
-                                        if (currentScreen == Destination.SmartphoneUsage.name)
-                                            NeobrutalismTheme.colors.buttonPrimary
-                                        else NeobrutalismTheme.colors.contentPrimary
-                                )
-                    ) {
-                        Icon(
-                            ImageVector.vectorResource(R.drawable.baseline_pie_chart_24),
-                            contentDescription = "Data Visualization",
-                            tint =
-                                if (currentScreen == Destination.SmartphoneUsage.name)
-                                    NeobrutalismTheme.colors.text
-                                else Color.White,
-                            modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
+            navItems.forEach { item ->
+                NavigationBarItem(
+                    selected = currentScreen == item.destination.name,
+                    onClick = {
+                        navController.navigate(item.destination.name) {
+                            popUpTo(item.destination.name) { inclusive = true }
+                        }
+                    },
+                    icon = {
+                        NavigationIcon(
+                            modifier = modifier,
+                            item = item,
+                            isSelected = currentScreen == item.destination.name
                         )
-                    }
-                },
-                colors =
-                    NavigationBarItemDefaults.colors(
-                        indicatorColor = NeobrutalismTheme.colors.contentSecondary
-                    ),
-                modifier = modifier.bounceClick()
-            )
-
-            NavigationBarItem(
-                selected = currentScreen == Destination.Leaderboard.name,
-                onClick = {
-                    navController.navigate(Destination.Leaderboard.name) {
-                        popUpTo(Destination.Leaderboard.name) { inclusive = true }
-                    }
-                },
-                icon = {
-                    Box(
-                        modifier =
-                            modifier
-                                .neubrutalismElevation()
-                                .background(
-                                    color =
-                                        if (currentScreen == Destination.Leaderboard.name)
-                                            NeobrutalismTheme.colors.buttonPrimary
-                                        else NeobrutalismTheme.colors.contentPrimary
-                                )
-                    ) {
-                        Icon(
-                            ImageVector.vectorResource(R.drawable.baseline_leaderboard_24),
-                            contentDescription = "Leaderboard",
-                            tint =
-                                if (currentScreen == Destination.Leaderboard.name)
-                                    NeobrutalismTheme.colors.text
-                                else Color.White,
-                            modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
-                        )
-                    }
-                },
-                colors =
-                    NavigationBarItemDefaults.colors(
-                        indicatorColor = NeobrutalismTheme.colors.contentSecondary
-                    ),
-                modifier = modifier.bounceClick()
-            )
-
-            NavigationBarItem(
-                selected = currentScreen == Destination.Settings.name,
-                onClick = {
-                    navController.navigate(Destination.Settings.name) {
-                        popUpTo(Destination.Settings.name) { inclusive = true }
-                    }
-                },
-                icon = {
-                    Box(
-                        modifier =
-                            modifier
-                                .neubrutalismElevation()
-                                .background(
-                                    color =
-                                        if (currentScreen == Destination.Settings.name)
-                                            NeobrutalismTheme.colors.buttonPrimary
-                                        else NeobrutalismTheme.colors.contentPrimary
-                                )
-                    ) {
-                        Icon(
-                            Icons.Filled.Settings,
-                            contentDescription = "Settings",
-                            tint =
-                                if (currentScreen == Destination.Settings.name)
-                                    NeobrutalismTheme.colors.text
-                                else Color.White,
-                            modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
-                        )
-                    }
-                },
-                colors =
-                    NavigationBarItemDefaults.colors(
-                        indicatorColor = NeobrutalismTheme.colors.contentSecondary
-                    ),
-                modifier = modifier.bounceClick()
-            )
+                    },
+                    colors =
+                        NavigationBarItemDefaults.colors(
+                            indicatorColor = NeobrutalismTheme.colors.contentSecondary
+                        ),
+                    modifier = modifier.bounceClick()
+                )
+            }
         }
     }
 }
+
+@Composable
+private fun NavigationIcon(modifier: Modifier, item: NavigationItemData, isSelected: Boolean) {
+    Box(
+        modifier =
+            modifier
+                .neubrutalismElevation()
+                .background(
+                    color =
+                        if (isSelected) NeobrutalismTheme.colors.buttonPrimary
+                        else NeobrutalismTheme.colors.contentPrimary
+                )
+    ) {
+        Icon(
+            item.icon,
+            contentDescription = item.contentDescription,
+            tint = if (isSelected) NeobrutalismTheme.colors.text else Color.White,
+            modifier = modifier.padding(6.dp).size(32.dp, 32.dp)
+        )
+    }
+}
+
+private data class NavigationItemData(
+    val destination: Destination,
+    val icon: ImageVector,
+    val contentDescription: String
+)
 
 private object NoRippleTheme : RippleTheme {
     @Composable override fun defaultColor() = Color.Unspecified
