@@ -8,14 +8,13 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
@@ -124,7 +123,7 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                     fontSize = 24.sp,
                     fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
                     color = textColor,
-                    drawStyle = Stroke(width = 3f, join = StrokeJoin.Round)
+                    textAlign = TextAlign.Left
                 ),
             buttons =
                 TextStyle(

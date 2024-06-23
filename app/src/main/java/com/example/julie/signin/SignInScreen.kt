@@ -2,6 +2,7 @@ package com.example.julie.signin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,8 +36,8 @@ import com.example.data.user.PasswordProblem
 import com.example.data.user.UserProblem
 import com.example.julie.Lce
 import com.example.julie.R
+import com.example.julie.bounceClick
 import com.example.julie.components.neubrutalism.NeubrutalErrorMessage
-import com.example.julie.components.neubrutalism.NeubrutalLabel
 import com.example.julie.components.neubrutalism.NeubrutalPasswordTextField
 import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
 import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
@@ -88,27 +90,23 @@ internal fun SignInScreen(
                     NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
                 }
 
-                NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Email Address")
-
-                if (!emailValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
-                }
-
                 NeubrutalTextField(
                     modifier = modifier,
                     value = emailAddress,
-                    placeholder = "test@gmail.com"
+                    placeholder = "test@gmail.com",
+                    label = "Email Address",
+                    errorMessage = emailValidationError,
+                    errorMessageHidden = emailValidationErrorHidden
                 ) {
                     emailAddress = it
                 }
 
-                NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Password")
-
-                if (!passwordValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = passwordValidationError)
-                }
-
-                NeubrutalPasswordTextField(modifier = modifier, password = password) {
+                NeubrutalPasswordTextField(
+                    modifier = modifier,
+                    password = password,
+                    errorMessage = passwordValidationError,
+                    errorMessageHidden = passwordValidationErrorHidden
+                ) {
                     password = it
                 }
             }
@@ -130,7 +128,13 @@ internal fun SignInScreen(
         NeubrutalSecondaryButton(modifier = modifier, text = "Register") { onGoToSignUpScreen() }
 
         Text(
-            modifier = modifier.fillMaxWidth(.5f).clickable { onGoToPasswordResetScreen() },
+            modifier =
+                modifier.fillMaxWidth(.5f).bounceClick().clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    onGoToPasswordResetScreen()
+                },
             text = "Forgot password?",
             style =
                 TextStyle(

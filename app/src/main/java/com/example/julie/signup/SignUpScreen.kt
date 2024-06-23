@@ -1,10 +1,11 @@
 package com.example.julie.signup
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,11 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.data.user.BirthDateProblem
 import com.example.data.user.EmailAddressProblem
 import com.example.data.user.FirstNameProblem
@@ -34,6 +42,8 @@ import com.example.data.user.PasswordProblem
 import com.example.data.user.UserProblem
 import com.example.data.user.UsernameProblem
 import com.example.julie.Lce
+import com.example.julie.R
+import com.example.julie.bounceClick
 import com.example.julie.components.InterestModalBottomSheet
 import com.example.julie.components.neubrutalism.NeubrutalErrorMessage
 import com.example.julie.components.neubrutalism.NeubrutalLabel
@@ -42,7 +52,6 @@ import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
 import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
 import com.example.julie.components.neubrutalism.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.neubrutalismElevation
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -63,156 +72,183 @@ internal fun SignUpScreen(
     var username by rememberSaveable { mutableStateOf("") }
     var emailAddress by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     var showInterestSheet by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
     var firstNameValidationError by rememberSaveable { mutableStateOf("") }
     var firstNameValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var lastNameValidationError by rememberSaveable { mutableStateOf("") }
     var lastNameValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var birthdateValidationError by rememberSaveable { mutableStateOf("") }
     var birthdateValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var usernameValidationError by rememberSaveable { mutableStateOf("") }
     var usernameValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var emailValidationError by rememberSaveable { mutableStateOf("") }
     var emailValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var passwordValidationError by rememberSaveable { mutableStateOf("") }
     var passwordValidationErrorHidden by rememberSaveable { mutableStateOf(true) }
+
     var errorMessage by rememberSaveable { mutableStateOf("") }
     var errorMessageHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier =
             modifier.fillMaxSize().padding(paddingValues).verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = modifier.fillMaxWidth(0.9f).padding(vertical = 16.dp).neubrutalismElevation()
+        if (!errorMessageHidden) {
+            NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
+        }
+
+        NeubrutalTextField(
+            modifier = modifier,
+            value = firstName,
+            placeholder = "Your first name",
+            label = "First Name",
+            errorMessage = firstNameValidationError,
+            errorMessageHidden = firstNameValidationErrorHidden
         ) {
-            Column(
-                modifier =
-                    modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (!errorMessageHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
-                }
+            firstName = it
+        }
 
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "First Name"
-                )
+        NeubrutalTextField(
+            modifier = modifier,
+            value = lastName,
+            placeholder = "Your last name",
+            label = "Last Name",
+            errorMessage = lastNameValidationError,
+            errorMessageHidden = lastNameValidationErrorHidden
+        ) {
+            lastName = it
+        }
 
-                if (!firstNameValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = firstNameValidationError)
-                }
+        Column(
+            modifier = modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            NeubrutalLabel(modifier = modifier, text = "Birth Date")
 
-                NeubrutalTextField(modifier = modifier, value = firstName, placeholder = "Mario") {
-                    firstName = it
-                }
+            if (!birthdateValidationErrorHidden) {
+                NeubrutalErrorMessage(modifier = modifier, message = birthdateValidationError)
+            }
 
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Last Name"
-                )
-
-                if (!lastNameValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = lastNameValidationError)
-                }
-
-                NeubrutalTextField(modifier = modifier, value = lastName, placeholder = "Rossi") {
-                    lastName = it
-                }
-
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Birth Date"
-                )
-
-                if (!birthdateValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = birthdateValidationError)
-                }
-
-                NeubrutalSecondaryButton(modifier = modifier, text = "Select Date", width = 0.8f) {
-                    showDateDialog = true
-                }
-
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Username"
-                )
-
-                if (!usernameValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = usernameValidationError)
-                }
-
-                NeubrutalTextField(modifier = modifier, value = username, placeholder = "marione") {
-                    username = it
-                }
-
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Email Address"
-                )
-
-                if (!emailValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
-                }
-
-                NeubrutalTextField(
-                    modifier = modifier,
-                    value = emailAddress,
-                    placeholder = "test@gmail.com"
-                ) {
-                    emailAddress = it
-                }
-
-                NeubrutalLabel(
-                    modifier = modifier.fillMaxWidth(.8f).padding(vertical = 16.dp),
-                    text = "Password"
-                )
-
-                if (!passwordValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = passwordValidationError)
-                }
-
-                NeubrutalPasswordTextField(modifier = modifier, password = password) {
-                    password = it
-                }
-
-                Spacer(modifier = modifier.padding(vertical = 16.dp))
+            NeubrutalSecondaryButton(modifier = modifier, text = "Select Date", width = 0.8f) {
+                showDateDialog = true
             }
         }
 
-        NeubrutalSecondaryButton(
+        NeubrutalTextField(
             modifier = modifier,
-            text = "Back to login",
-            width = .9f,
-            onClick = onBackToSignInScreen
-        )
-
-        Spacer(modifier = modifier.padding(vertical = 8.dp))
-
-        NeubrutalPrimaryButton(modifier = modifier, text = "REGISTER") {
-            signUpViewModel.signUp(
-                firstName,
-                lastName,
-                if (datePickerState.selectedDateMillis == null) LocalDate.now()
-                else
-                    Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate(),
-                username,
-                emailAddress,
-                password,
-                emptyList()
-            )
+            value = username,
+            placeholder = "Your username",
+            label = "Username",
+            errorMessage = usernameValidationError,
+            errorMessageHidden = usernameValidationErrorHidden
+        ) {
+            username = it
         }
 
-        Spacer(modifier = modifier.padding(vertical = 8.dp))
+        NeubrutalTextField(
+            modifier = modifier,
+            value = emailAddress,
+            placeholder = "Your email address",
+            label = "Email Address",
+            errorMessage = emailValidationError,
+            errorMessageHidden = emailValidationErrorHidden
+        ) {
+            emailAddress = it
+        }
+
+        NeubrutalPasswordTextField(
+            modifier = modifier,
+            password = password,
+            errorMessage = passwordValidationError,
+            errorMessageHidden = passwordValidationErrorHidden
+        ) {
+            password = it
+        }
+
+        Column(
+            modifier = modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            NeubrutalLabel(modifier = modifier, text = "Interest")
+
+            NeubrutalSecondaryButton(modifier = modifier, text = "Select Interest", width = 0.8f) {
+                showInterestSheet = true
+            }
+        }
+
+        Column(
+            modifier = modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = modifier.fillMaxWidth(.8f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = modifier,
+                    text = "Have an account?",
+                    style =
+                        TextStyle(
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
+                            color = NeobrutalismTheme.colors.text,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Normal,
+                        ),
+                )
+
+                Spacer(modifier = modifier.padding(horizontal = 8.dp))
+
+                Text(
+                    modifier =
+                        modifier.bounceClick().clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onBackToSignInScreen()
+                        },
+                    text = "Sign In",
+                    style =
+                        TextStyle(
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                            color = NeobrutalismTheme.colors.text,
+                            fontSize = 18.sp,
+                        ),
+                )
+            }
+
+            Spacer(modifier = modifier.padding(vertical = 16.dp))
+
+            NeubrutalPrimaryButton(modifier = modifier, text = "REGISTER") {
+                signUpViewModel.signUp(
+                    firstName,
+                    lastName,
+                    if (datePickerState.selectedDateMillis == null) LocalDate.now()
+                    else
+                        Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate(),
+                    username,
+                    emailAddress,
+                    password,
+                    emptyList()
+                )
+            }
+        }
     }
 
     if (showInterestSheet) {

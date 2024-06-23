@@ -1,7 +1,9 @@
 package com.example.julie.components.neubrutalism
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,75 +31,85 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.backgroundColor
+import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
 
 @Composable
 internal fun NeubrutalPasswordTextField(
     modifier: Modifier,
     password: String,
+    errorMessage: String,
+    errorMessageHidden: Boolean,
     onPasswordChange: (password: String) -> Unit
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
-    TextField(
-        value = password,
-        singleLine = true,
-        modifier =
-            modifier
-                .fillMaxWidth(.8f)
-                .border(width = 2.dp, color = textColor, shape = NeobrutalismTheme.shapes.surface),
-        onValueChange = onPasswordChange,
-        placeholder = {
-            Text(
-                modifier = modifier.alpha(0.75f),
-                text = "••••••••••",
-                style =
-                    TextStyle(
-                        fontFamily = FontFamily(Font(R.font.nunito_variable)),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                    )
-            )
-        },
-        colors =
-            TextFieldDefaults.colors(
-                focusedContainerColor = backgroundColor,
-                focusedTextColor = textColor,
-                disabledTextColor = Color.Transparent,
-                unfocusedContainerColor = backgroundColor,
-                unfocusedTextColor = textColor,
-                disabledContainerColor = backgroundColor,
-                focusedPlaceholderColor = textColor,
-                unfocusedPlaceholderColor = textColor,
-                disabledPlaceholderColor = textColor,
-                cursorColor = textColor,
-                errorCursorColor = textColor,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-            ),
-        textStyle =
-            TextStyle(
-                fontFamily = FontFamily(Font(R.font.nunito_variable)),
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 18.sp,
-            ),
-        shape = NeobrutalismTheme.shapes.surface,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation =
-            if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-        trailingIcon = {
-            IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                val visibilityIcon =
-                    if (!passwordHidden) R.drawable.baseline_visibility_24
-                    else R.drawable.baseline_visibility_off_24
-                val description = if (passwordHidden) "Show password" else "Hide password"
-                Icon(
-                    imageVector = ImageVector.vectorResource(visibilityIcon),
-                    contentDescription = description
-                )
-            }
+    Column(
+        modifier = modifier.padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        NeubrutalLabel(modifier = modifier, text = "Password")
+
+        if (!errorMessageHidden) {
+            NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
         }
-    )
+
+        TextField(
+            value = password,
+            singleLine = true,
+            modifier = modifier.fillMaxWidth(.8f).neubrutalismElevation(),
+            onValueChange = onPasswordChange,
+            placeholder = {
+                Text(
+                    modifier = modifier.alpha(0.75f),
+                    text = "••••••••••",
+                    style =
+                        TextStyle(
+                            fontFamily = FontFamily(Font(R.font.nunito_variable)),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                        )
+                )
+            },
+            colors =
+                TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = textColor,
+                    disabledTextColor = Color.Transparent,
+                    unfocusedContainerColor = Color.White,
+                    unfocusedTextColor = textColor,
+                    disabledContainerColor = Color.White,
+                    focusedPlaceholderColor = textColor,
+                    unfocusedPlaceholderColor = textColor,
+                    disabledPlaceholderColor = textColor,
+                    cursorColor = textColor,
+                    errorCursorColor = textColor,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+            textStyle =
+                TextStyle(
+                    fontFamily = FontFamily(Font(R.font.nunito_variable)),
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 18.sp,
+                ),
+            shape = NeobrutalismTheme.shapes.surface,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation =
+                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+            trailingIcon = {
+                IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                    val visibilityIcon =
+                        if (!passwordHidden) R.drawable.baseline_visibility_24
+                        else R.drawable.baseline_visibility_off_24
+                    val description = if (passwordHidden) "Show password" else "Hide password"
+                    Icon(
+                        imageVector = ImageVector.vectorResource(visibilityIcon),
+                        contentDescription = description
+                    )
+                }
+            }
+        )
+    }
 }

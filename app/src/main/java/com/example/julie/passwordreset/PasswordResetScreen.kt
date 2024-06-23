@@ -23,8 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.data.user.UserProblem
 import com.example.julie.Lce
-import com.example.julie.components.neubrutalism.NeubrutalErrorMessage
-import com.example.julie.components.neubrutalism.NeubrutalLabel
 import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
 import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
 import com.example.julie.components.neubrutalism.NeubrutalTextField
@@ -68,16 +66,13 @@ internal fun PasswordResetScreen(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                NeubrutalLabel(modifier = modifier.fillMaxWidth(.8f), text = "Email Address")
-
-                if (!emailValidationErrorHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = emailValidationError)
-                }
-
                 NeubrutalTextField(
                     modifier = modifier,
                     value = emailAddress,
-                    placeholder = "test@gmail.com"
+                    placeholder = "test@gmail.com",
+                    label = "Email Address",
+                    errorMessage = emailValidationError,
+                    errorMessageHidden = emailValidationErrorHidden
                 ) {
                     emailAddress = it
                 }

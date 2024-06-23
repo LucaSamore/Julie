@@ -125,7 +125,7 @@ internal fun SmartphoneUsageScreen(
                             twyperFlipController.flip()
                         },
                     front = { SwipeableAppUsage(modifier = modifier, reportDto = it) },
-                    back = { /* TODO */ }
+                    back = { /* TODO */}
                 )
 
                 Column(

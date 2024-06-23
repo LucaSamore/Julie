@@ -1,6 +1,7 @@
 package com.example.julie.components.neubrutalism
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,18 +11,19 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.julie.R
-import com.example.julie.ui.theme.backgroundColor
+import com.example.julie.ui.theme.textColor
 
 @Composable
 fun NeubrutalErrorMessage(
     modifier: Modifier,
     message: String,
     width: Float = 0.8f,
-    color: Color = backgroundColor
+    color: Color = textColor
 ) {
     Text(
-        modifier = modifier.fillMaxWidth(width),
+        modifier = modifier.fillMaxWidth(width).padding(vertical = 8.dp),
         text = message,
         style =
             TextStyle(
