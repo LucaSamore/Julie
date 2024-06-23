@@ -15,7 +15,7 @@ import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
-fun NeubrutalSecondaryButton(
+internal fun NeubrutalSecondaryButton(
     modifier: Modifier,
     text: String,
     width: Float = .5f,

@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.R
-import com.example.julie.bounceClick
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
 import com.example.julie.ui.theme.textColor
@@ -46,7 +45,7 @@ internal fun NeubrutalTextField(
         TextField(
             value = value,
             singleLine = true,
-            modifier = modifier.fillMaxWidth(.8f).bounceClick().neubrutalismElevation(),
+            modifier = modifier.fillMaxWidth(.8f).neubrutalismElevation(),
             onValueChange = onValueChanged,
             placeholder = {
                 Text(

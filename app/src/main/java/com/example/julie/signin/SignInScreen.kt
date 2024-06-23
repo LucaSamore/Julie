@@ -1,16 +1,18 @@
 package com.example.julie.signin
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,12 +23,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.authentication.AuthenticationError
 import com.example.data.authentication.AuthenticationProblem
@@ -40,7 +45,6 @@ import com.example.julie.bounceClick
 import com.example.julie.components.neubrutalism.NeubrutalErrorMessage
 import com.example.julie.components.neubrutalism.NeubrutalPasswordTextField
 import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
-import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
 import com.example.julie.components.neubrutalism.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
@@ -79,53 +83,91 @@ internal fun SignInScreen(
             textAlign = TextAlign.Center
         )
 
-        Box(modifier = modifier.fillMaxWidth(.9f).fillMaxHeight(.4f).neubrutalismElevation()) {
-            Column(
-                modifier =
-                    modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            NeubrutalTextField(
+                modifier = modifier,
+                value = emailAddress,
+                placeholder = "test@gmail.com",
+                label = "Email Address",
+                errorMessage = emailValidationError,
+                errorMessageHidden = emailValidationErrorHidden
             ) {
-                if (!errorMessageHidden) {
-                    NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
-                }
+                emailAddress = it
+            }
 
-                NeubrutalTextField(
-                    modifier = modifier,
-                    value = emailAddress,
-                    placeholder = "test@gmail.com",
-                    label = "Email Address",
-                    errorMessage = emailValidationError,
-                    errorMessageHidden = emailValidationErrorHidden
-                ) {
-                    emailAddress = it
-                }
+            NeubrutalPasswordTextField(
+                modifier = modifier,
+                password = password,
+                errorMessage = passwordValidationError,
+                errorMessageHidden = passwordValidationErrorHidden
+            ) {
+                password = it
+            }
 
-                NeubrutalPasswordTextField(
-                    modifier = modifier,
-                    password = password,
-                    errorMessage = passwordValidationError,
-                    errorMessageHidden = passwordValidationErrorHidden
-                ) {
-                    password = it
-                }
+            if (!errorMessageHidden) {
+                NeubrutalErrorMessage(modifier = modifier, message = errorMessage)
             }
         }
 
-        Text(
-            modifier = modifier.fillMaxWidth(),
-            text = "New User?",
-            style =
-                TextStyle(
-                    textAlign = TextAlign.Center,
-                    fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
-                    color = NeobrutalismTheme.colors.text,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-        )
+        Column(
+            modifier = modifier.fillMaxWidth(.8f),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = modifier.fillMaxWidth(),
+                text = "New User?",
+                style =
+                    TextStyle(
+                        textAlign = TextAlign.Start,
+                        fontFamily = FontFamily(Font(R.font.bebas_neue_regular)),
+                        color = NeobrutalismTheme.colors.text,
+                        fontSize = 32.sp,
+                    ),
+            )
 
-        NeubrutalSecondaryButton(modifier = modifier, text = "Register") { onGoToSignUpScreen() }
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.arrow),
+                    contentDescription = "Arrow",
+                    modifier = modifier.fillMaxWidth(.45f)
+                )
+
+                Button(
+                    modifier =
+                        modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .graphicsLayer(rotationZ = 20f)
+                            .bounceClick()
+                            .neubrutalismElevation(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = NeobrutalismTheme.colors.buttonSecondary,
+                            contentColor = NeobrutalismTheme.colors.text,
+                            disabledContainerColor = NeobrutalismTheme.colors.buttonSecondary,
+                            disabledContentColor = NeobrutalismTheme.colors.buttonSecondary,
+                        ),
+                    shape = NeobrutalismTheme.shapes.surface,
+                    onClick = onGoToSignUpScreen
+                ) {
+                    Text(
+                        text = "Register",
+                        modifier = modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = NeobrutalismTheme.typography.buttons
+                    )
+                }
+            }
+        }
 
         Text(
             modifier =
