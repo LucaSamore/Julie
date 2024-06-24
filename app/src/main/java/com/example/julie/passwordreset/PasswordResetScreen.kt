@@ -1,11 +1,8 @@
 package com.example.julie.passwordreset
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +24,6 @@ import com.example.julie.components.neubrutalism.NeubrutalPrimaryButton
 import com.example.julie.components.neubrutalism.NeubrutalSecondaryButton
 import com.example.julie.components.neubrutalism.NeubrutalTextField
 import com.example.julie.ui.theme.NeobrutalismTheme
-import com.example.julie.ui.theme.neubrutalismElevation
 
 @Composable
 internal fun PasswordResetScreen(
@@ -54,46 +50,36 @@ internal fun PasswordResetScreen(
     ) {
         Text(
             text = "Password Reset",
-            modifier = modifier.fillMaxWidth(.9f),
+            modifier = modifier.fillMaxWidth(),
             style = NeobrutalismTheme.typography.mainTitle,
             textAlign = TextAlign.Center
         )
 
-        Box(modifier = modifier.fillMaxWidth(.9f).fillMaxHeight(.5f).neubrutalismElevation()) {
-            Column(
-                modifier =
-                    modifier.fillMaxSize().background(NeobrutalismTheme.colors.contentPrimary),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                NeubrutalTextField(
-                    modifier = modifier,
-                    value = emailAddress,
-                    placeholder = "test@gmail.com",
-                    label = "Email Address",
-                    errorMessage = emailValidationError,
-                    errorMessageHidden = emailValidationErrorHidden
-                ) {
-                    emailAddress = it
-                }
+        NeubrutalTextField(
+            modifier = modifier,
+            value = emailAddress,
+            placeholder = "test@gmail.com",
+            label = "Email Address",
+            errorMessage = emailValidationError,
+            errorMessageHidden = emailValidationErrorHidden
+        ) {
+            emailAddress = it
+        }
 
-                if (!resetPasswordEmailHiddem) {
-                    Text(text = resetPasswordEmail, textAlign = TextAlign.Center)
-                }
+        if (!resetPasswordEmailHiddem) {
+            Text(text = resetPasswordEmail, textAlign = TextAlign.Center)
+        }
 
-                if (!errorMessageHidden) {
-                    Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
-                }
+        if (!errorMessageHidden) {
+            Text(text = errorMessage, color = Color.Red, textAlign = TextAlign.Center)
+        }
 
-                NeubrutalPrimaryButton(
-                    modifier = modifier,
-                    text = "SEND PASSWORD RESET EMAIL",
-                    width = .8f,
-                    height = 64.dp
-                ) {
-                    passwordResetViewModel.sendResetPasswordEmail(emailAddress)
-                }
-            }
+        NeubrutalPrimaryButton(
+            modifier = modifier,
+            text = "SEND PASSWORD RESET EMAIL",
+            height = 64.dp
+        ) {
+            passwordResetViewModel.sendResetPasswordEmail(emailAddress)
         }
 
         NeubrutalSecondaryButton(modifier = modifier, text = "Back") { onBackToSignInScreen() }
