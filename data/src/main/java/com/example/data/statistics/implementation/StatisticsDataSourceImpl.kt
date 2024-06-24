@@ -33,91 +33,72 @@ constructor(private val notificationsDataSource: NotificationsDataSource, contex
     override suspend fun fetchPerAppNotificationsReceived(date: LocalDate): Map<String, Int> =
         notificationsDataSource.getPerAppNotificationsReceived(date)
 
-    /**
-     * Solution provided by @jguerinet
-     * https://stackoverflow.com/questions/36238481/android-usagestatsmanager-not-returning-correct-daily-results
-     */
     private fun getDailyStats(
         date: LocalDate = LocalDate.now(),
         endDateTime: LocalDateTime
     ): List<Stat> {
-        // The timezones we'll need
-        val utc = ZoneId.of("UTC")
+        val utcZone = ZoneId.of("UTC")
         val defaultZone = ZoneId.systemDefault()
 
-        // Set the starting and ending times to be midnight in UTC time
-        val startDate = date.atStartOfDay(defaultZone).withZoneSameInstant(utc)
+        val startDateTime = date.atStartOfDay(defaultZone).withZoneSameInstant(utcZone)
+        val startMillis = startDateTime.toInstant().toEpochMilli()
+        val endMillis = endDateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
 
-        val start = startDate.toInstant().toEpochMilli()
-        val end = endDateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
-
-        // This will keep a map of all of the events per package name
         val sortedEvents = mutableMapOf<String, MutableList<UsageEvents.Event>>()
-
-        // Query the list of events that has happened within that time frame
-        val systemEvents = usageStatsManager.queryEvents(start, end)
+        val systemEvents = usageStatsManager.queryEvents(startMillis, endMillis)
 
         while (systemEvents.hasNextEvent()) {
             val event = UsageEvents.Event()
             systemEvents.getNextEvent(event)
-
-            // Get the list of events for the package name, create one if it doesn't exist
-            val packageEvents = sortedEvents[event.packageName] ?: mutableListOf()
-            packageEvents.add(event)
-            sortedEvents[event.packageName] = packageEvents
+            sortedEvents.computeIfAbsent(event.packageName) { mutableListOf() }.add(event)
         }
 
-        // This will keep a list of our final stats
-        val stats = mutableListOf<Stat>()
+        return sortedEvents.map { (packageName, events) ->
+            val (totalTime, startTimes) =
+                calculateUsageStats(events, startMillis, endMillis, utcZone, defaultZone)
+            Stat(packageName, totalTime, startTimes)
+        }
+    }
 
-        // Go through the events by package name
-        sortedEvents.forEach { (packageName, events) ->
-            // Keep track of the current start and end times
-            var startTime = 0L
-            var endTime = 0L
-            // Keep track of the total usage time for this app
-            var totalTime = 0L
-            // Keep track of the start times for this app
-            val startTimes = mutableListOf<ZonedDateTime>()
-            events.forEach {
-                if (it.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
-                    // App was moved to the foreground: set the start time
+    private fun calculateUsageStats(
+        events: List<UsageEvents.Event>,
+        startMillis: Long,
+        endMillis: Long,
+        utcZone: ZoneId,
+        defaultZone: ZoneId
+    ): Pair<Long, List<ZonedDateTime>> {
+        var totalTime = 0L
+        var startTime = 0L
+        val startTimes = mutableListOf<ZonedDateTime>()
+
+        events.forEach {
+            when (it.eventType) {
+                UsageEvents.Event.ACTIVITY_RESUMED -> {
                     startTime = it.timeStamp
-                    // Add the start time within this timezone to the list
                     startTimes.add(
-                        Instant.ofEpochMilli(startTime).atZone(utc).withZoneSameInstant(defaultZone)
+                        Instant.ofEpochMilli(startTime)
+                            .atZone(utcZone)
+                            .withZoneSameInstant(defaultZone)
                     )
-                } else if (it.eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
-                    // App was moved to background: set the end time
-                    endTime = it.timeStamp
                 }
-
-                // If there's an end time with no start time, this might mean that
-                //  The app was started on the previous day, so take midnight
-                //  As the start time
-                if (startTime == 0L && endTime != 0L) {
-                    startTime = start
-                }
-
-                // If both start and end are defined, we have a session
-                if (startTime != 0L && endTime != 0L) {
-                    // Add the session time to the total time
-                    totalTime += endTime - startTime
-                    // Reset the start/end times to 0
+                UsageEvents.Event.ACTIVITY_PAUSED -> {
+                    val endTime = it.timeStamp
+                    totalTime += calculateSessionTime(startTime, endTime, startMillis)
                     startTime = 0L
-                    endTime = 0L
                 }
             }
-
-            // If there is a start time without an end time, this might mean that
-            //  the app was used past midnight, so take (midnight - 1 second)
-            //  as the end time
-            if (startTime != 0L && endTime == 0L) {
-                totalTime += end - 1000 - startTime
-            }
-            stats.add(Stat(packageName, totalTime, startTimes))
         }
-        return stats
+
+        if (startTime != 0L) {
+            totalTime += endMillis - 1000 - startTime
+        }
+
+        return totalTime to startTimes
+    }
+
+    private fun calculateSessionTime(startTime: Long, endTime: Long, defaultStartTime: Long): Long {
+        val adjustedStartTime = if (startTime == 0L) defaultStartTime else startTime
+        return endTime - adjustedStartTime
     }
 }
 

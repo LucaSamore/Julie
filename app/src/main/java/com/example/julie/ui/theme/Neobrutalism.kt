@@ -95,7 +95,7 @@ fun NeobrutalismTheme(content: @Composable () -> Unit) {
                                 R.font.nunito_variable,
                                 variationSettings =
                                     FontVariation.Settings(
-                                        FontVariation.weight(800),
+                                        FontVariation.weight(750),
                                     )
                             )
                         ),

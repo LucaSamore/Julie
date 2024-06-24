@@ -78,7 +78,7 @@ internal fun SignInScreen(
     ) {
         Text(
             text = "Demo App",
-            modifier = modifier.fillMaxWidth(.9f),
+            modifier = modifier.fillMaxWidth(),
             style = NeobrutalismTheme.typography.mainTitle,
             textAlign = TextAlign.Center
         )
