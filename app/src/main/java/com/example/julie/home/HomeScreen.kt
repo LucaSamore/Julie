@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.julie.Lce
 import com.example.julie.R
+import com.example.julie.components.LoadingBar
 import com.example.julie.components.RecentlyPlayedContent
 import com.example.julie.components.RecentlyPlayedHeader
 import com.example.julie.components.neubrutalism.NeubrutalMusicBox
@@ -54,11 +53,7 @@ internal fun HomeScreen(
     ) {
         when (val currentState = homeScreenState) {
             is Lce.Loading -> {
-                CircularProgressIndicator(
-                    modifier = modifier.width(64.dp),
-                    color = NeobrutalismTheme.colors.contentPrimary,
-                    trackColor = NeobrutalismTheme.colors.background,
-                )
+                LoadingBar(modifier)
             }
             is Lce.Content -> {
                 NeubrutalMusicBox(

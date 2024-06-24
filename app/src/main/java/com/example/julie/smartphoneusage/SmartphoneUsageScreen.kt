@@ -15,12 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,6 +50,7 @@ import com.example.julie.R
 import com.example.julie.bounceClick
 import com.example.julie.components.AppMessage
 import com.example.julie.components.AppReactions
+import com.example.julie.components.LoadingBar
 import com.example.julie.navigation.Destination
 import com.example.julie.ui.theme.NeobrutalismTheme
 import com.example.julie.ui.theme.neubrutalismElevation
@@ -85,17 +83,7 @@ internal fun SmartphoneUsageScreen(
     ) {
         when (val currentState = usageState) {
             is Lce.Loading -> {
-                Column(
-                    modifier = modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(
-                        modifier = modifier.width(64.dp),
-                        color = NeobrutalismTheme.colors.contentPrimary,
-                        trackColor = NeobrutalismTheme.colors.background,
-                    )
-                }
+                LoadingBar(modifier)
             }
             is Lce.Content -> {
                 reports.apply {
@@ -115,7 +103,7 @@ internal fun SmartphoneUsageScreen(
                     twyperFlipController = twyperFlipController,
                     onItemRemoved = { item, _ -> reports.remove(item) },
                     cardModifier = { modifier },
-                    stackCount = 2,
+                    stackCount = reports.count(),
                     paddingBetweenCards = 0f,
                     modifier =
                         modifier.padding(vertical = 32.dp).bounceClick().clickable(
@@ -284,16 +272,14 @@ internal fun SwipeableAppUsage(modifier: Modifier, reportDto: ReportDto) {
                 )
             }
 
-            Column(
-                modifier = modifier.padding(vertical = 16.dp).verticalScroll(rememberScrollState()),
+            LazyColumn(
+                modifier = modifier.padding(vertical = 16.dp),
                 verticalArrangement = Arrangement.Top,
             ) {
-                reportDto.appReports
-                    .sortedByDescending { it.screenTime }
-                    .forEach { appDto ->
-                        AppMessage(modifier = modifier, appDto = appDto)
-                        AppReactions(modifier = modifier, appDto = appDto)
-                    }
+                items(reportDto.appReports.sortedByDescending { it.screenTime }) {
+                    AppMessage(modifier = modifier, appDto = it)
+                    AppReactions(modifier = modifier, appDto = it)
+                }
             }
         }
     }
