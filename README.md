@@ -1,4 +1,10 @@
 # Thesis Project
+An Android application designed to enhance digital well-being through a humanistic approach to data visualization.
+
+## Screenshots
+![Sign In Screen](screenshots/signin.png)
+![Home Screen](screenshots/home.png)
+![Smartphone Usage Screen](screenshots/usage.png)
 
 ## Featuring
 - JetPack
