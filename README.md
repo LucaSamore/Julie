@@ -2,9 +2,11 @@
 An Android application designed to enhance digital well-being through a humanistic approach to data visualization.
 
 ## Screenshots
-![Sign In Screen](screenshots/signin.png)
-![Home Screen](screenshots/home.png)
-![Smartphone Usage Screen](screenshots/usage.png)
+<div style="display: flex; justify-content: center;">
+    <img src="screenshots/signin.png" alt="Sign In Screen" width="200" />
+    <img src="screenshots/home.png" alt="Home Screen" width="200" />
+    <img src="screenshots/usage.png" alt="Smartphone Usage Screen" width="200" />
+</div>
 
 ## Featuring
 - JetPack
