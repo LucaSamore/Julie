@@ -4,27 +4,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.julie.R
+import com.example.julie.components.CaptionDescription
 import com.example.julie.components.RecentlyPlayedHeader
 import com.example.julie.components.neubrutalism.NeubrutalMusicBox
 import com.example.julie.components.neubrutalism.NeubrutalPointsStreakBox
 import com.example.julie.components.neubrutalism.NeubrutalVolumeBox
-import com.example.julie.ui.theme.NeobrutalismTheme
 
 @Composable
 internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
@@ -88,22 +79,6 @@ internal fun HomeCaption(modifier: Modifier, paddingValues: PaddingValues) {
                     "over the last 7 days. Average time use is also provided."
         )
     }
-}
-
-@Composable
-private fun CaptionDescription(modifier: Modifier, text: String) {
-    Text(
-        text = text,
-        style =
-            TextStyle(
-                fontFamily = FontFamily(Font(R.font.inconsolata_variable)),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Justify,
-                color = NeobrutalismTheme.colors.text,
-            ),
-        modifier = modifier.fillMaxWidth(.9f).padding(vertical = 8.dp)
-    )
 }
 
 private const val CAPTION_ST = 10637392L

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,10 +44,12 @@ internal fun AppMessage(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = appDto.icon),
+            painter =
+                if (appDto.icon != null) rememberAsyncImagePainter(model = appDto.icon)
+                else rememberAsyncImagePainter(model = R.drawable.default_icon),
             "${appDto.name} Icon",
             contentScale = ContentScale.Crop,
-            modifier = modifier.padding(horizontal = 16.dp).size(48.dp, 48.dp)
+            modifier = modifier.padding(horizontal = 16.dp).size(48.dp, 48.dp).clip(CircleShape)
         )
 
         Box(
