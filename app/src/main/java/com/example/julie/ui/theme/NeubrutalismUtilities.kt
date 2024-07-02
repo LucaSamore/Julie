@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-val backgroundColor = Color(0xFFFFFAF0)
+internal val backgroundColor = Color(0xFFFBF2E3)
 
-val textColor = Color(0xFF1E1E1E)
+internal val textColor = Color(0xFF050407)
 
-fun Modifier.neubrutalismElevation(
-    backgroundColor: Color = Color.White,
-    shadowColor: Color = Color(0xFF1E1E1E),
+internal fun Modifier.neubrutalismElevation(
+    backgroundColor: Color = Color(0xFFFBF2E3),
+    shadowColor: Color = Color(0xFF050407),
     alpha: Float = 1f,
     borderWidth: Dp = 2.dp,
     cornersRadius: Dp = 4.dp,
