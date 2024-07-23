@@ -3,8 +3,8 @@ package com.example.data.gamification
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.example.data.today
 import com.example.data.user.UserId
-import com.example.data.util.today
 import java.time.LocalDate
 
 data class Streak(

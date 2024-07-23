@@ -13,7 +13,7 @@ internal data class FirestoreStreakDto(
 
         fun fromEntity(streak: Streak): FirestoreStreakDto =
             FirestoreStreakDto(
-                userId = streak.userId.userId,
+                userId = streak.userId.value,
                 value = streak.value.value,
                 started = streak.begin.value.toString(),
                 ended = streak.end.value.toString()

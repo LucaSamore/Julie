@@ -176,16 +176,17 @@ internal fun SignUpScreen(
             password = it
         }
 
-        Column(
-            modifier = modifier.padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            NeubrutalLabel(modifier = modifier, text = "Interest")
-
-            NeubrutalSecondaryButton(modifier = modifier, text = "Select Interest", width = 0.8f) {
-                showInterestSheet = true
-            }
-        }
+        //        Column(
+        //            modifier = modifier.padding(vertical = 16.dp),
+        //            verticalArrangement = Arrangement.SpaceEvenly
+        //        ) {
+        //            NeubrutalLabel(modifier = modifier, text = "Interest")
+        //
+        //            NeubrutalSecondaryButton(modifier = modifier, text = "Select Interest", width
+        // = 0.8f) {
+        //                showInterestSheet = true
+        //            }
+        //        }
 
         Column(
             modifier = modifier.padding(vertical = 16.dp),

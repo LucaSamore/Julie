@@ -1,11 +1,11 @@
 package com.example.data.report
 
 import arrow.core.Either
-import com.example.data.Repository
+import com.example.data.CrudRepository
 import com.example.data.RepositoryProblem
 import com.example.data.user.UserId
 
-interface ReportRepository : Repository<Report, ReportId> {
+interface ReportRepository : CrudRepository<Report, ReportId> {
 
     suspend fun getReportsByUserId(userId: UserId): Either<RepositoryProblem, Iterable<Report>>
 

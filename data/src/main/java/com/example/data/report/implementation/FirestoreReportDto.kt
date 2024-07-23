@@ -10,9 +10,6 @@ data class FirestoreReportDto(
     val id: String? = null,
     val userId: String? = null,
     val date: String? = null,
-    val totalScreenTime: Long? = null,
-    val totalNotificationsReceived: Int? = null,
-    val totalTimesOpened: Int? = null,
     val appUsage: List<FirestoreAppUsageDto>? = null
 ) {
     companion object {
@@ -20,55 +17,50 @@ data class FirestoreReportDto(
 
         private const val TAG = "FirestoreReportDto"
 
-        fun fromEntity(report: Report): FirestoreReportDto =
-            FirestoreReportDto(
-                id = report.id.reportId,
-                userId = report.userId.userId,
-                date = report.dateOfRecording.dateOfRecording.toString(),
-                totalScreenTime = report.totalScreenTime().screenTime,
-                totalNotificationsReceived =
-                    report.totalNotificationsReceived().notificationsReceived,
-                totalTimesOpened = report.totalTimesOpened().timesOpened,
+        fun fromEntity(report: Report): FirestoreReportDto {
+            return FirestoreReportDto(
+                id = report.id.value,
+                userId = report.userId.value,
+                date = report.dateOfRecording.value.toString(),
                 appUsage =
                     report.appReports.map {
                         FirestoreAppUsageDto(
-                            appName = it.appName.appName,
-                            appPackageName = it.appPackageName.appPackageName,
-                            screenTime = it.screenTime.screenTime,
-                            notifications = it.notificationsReceived.notificationsReceived,
-                            timesOpened = it.timesOpened.timesOpened,
-                            wasOpenedFirst = it.wasOpenedFirst.wasOpenedFirst
+                            appName = it.appName.value,
+                            appPackageName = it.appPackageName.value,
+                            screenTime = it.screenTime.value,
+                            notifications = it.notificationsReceived.value,
+                            timesOpened = it.timesOpened.value,
+                            wasOpenedFirst = it.wasOpenedFirst.value
                         )
                     }
             )
+        }
 
-        fun toEntity(dto: FirestoreReportDto): Report? =
-            createReport(
-                    createReportDto =
-                        CreateReportDto(
-                            userId = dto.userId ?: "",
-                            dateOfRecording =
-                                LocalDate.parse(dto.date) ?: LocalDate.now().plusDays(1),
-                            appReports =
-                                dto.appUsage?.map {
-                                    AppReportDto(
-                                        appName = it.appName ?: "",
-                                        appPackageName = it.appPackageName ?: "",
-                                        screenTime = it.screenTime ?: 0L,
-                                        notificationsReceived = it.notifications ?: 0,
-                                        timesOpened = it.timesOpened ?: 0,
-                                        wasOpenedFirst = it.wasOpenedFirst ?: false
-                                    )
-                                } ?: emptyList()
-                        )
+        fun toEntity(dto: FirestoreReportDto): Report? {
+            val reportDto =
+                CreateReportDto(
+                    userId = dto.userId ?: "",
+                    dateOfRecording = LocalDate.parse(dto.date) ?: LocalDate.now().plusDays(1),
+                    appReports =
+                        dto.appUsage?.map {
+                            AppReportDto(
+                                appName = it.appName ?: "",
+                                appPackageName = it.appPackageName ?: "",
+                                screenTime = it.screenTime ?: 0L,
+                                notificationsReceived = it.notifications ?: 0,
+                                timesOpened = it.timesOpened ?: 0,
+                                wasOpenedFirst = it.wasOpenedFirst ?: false
+                            )
+                        } ?: emptyList()
                 )
-                .fold(
-                    { errors ->
-                        errors.forEach { Log.e(TAG, it.message) }
-                        null
-                    },
-                    { it }
-                )
+
+            return createReport(reportDto).fold({
+                it.forEach { e -> Log.e(TAG, e.message) }
+                null
+            }) {
+                it
+            }
+        }
     }
 }
 

@@ -10,7 +10,7 @@ data class Threshold(val valueInMillis: ThresholdValue, val nextReset: NextReset
 data class ThresholdDto(val valueInMillis: Long, val nextReset: LocalDate)
 
 @JvmInline
-value class ThresholdValue private constructor(val valueInMillis: Long) {
+value class ThresholdValue private constructor(val value: Long) {
     companion object {
         operator fun invoke(valueInMillis: Long): Either<GamificationProblem, ThresholdValue> =
             either {
@@ -22,6 +22,6 @@ value class ThresholdValue private constructor(val valueInMillis: Long) {
     }
 }
 
-@JvmInline value class NextReset(val nextReset: LocalDate)
+@JvmInline value class NextReset(val value: LocalDate)
 
 @JvmInline value class ThresholdValueProblem(override val message: String) : GamificationProblem

@@ -2,7 +2,7 @@ package com.example.domain.statistics.implementation
 
 import com.example.data.PackageManagerUtils
 import com.example.data.statistics.StatisticsDataSource
-import com.example.data.util.today
+import com.example.data.today
 import com.example.domain.report.AppDto
 import com.example.domain.statistics.GetAppsCurrentStatsUseCase
 import java.time.Instant

@@ -1,6 +1,7 @@
-package com.example.data
+package com.example.data.scheduling
 
 import arrow.core.Either
+import com.example.data.Problem
 
 interface WorkerManager {
 

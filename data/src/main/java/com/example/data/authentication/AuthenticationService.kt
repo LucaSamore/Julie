@@ -2,6 +2,7 @@ package com.example.data.authentication
 
 import arrow.core.Either
 import com.example.data.Problem
+import com.example.data.UnknownError
 import com.example.data.user.BirthDate
 import com.example.data.user.EmailAddress
 import com.example.data.user.FirstName
@@ -71,5 +72,3 @@ value class AuthenticationError(override val message: String) : AuthenticationPr
 }
 
 @JvmInline value class EmailNotVerified(override val message: String) : AuthenticationProblem
-
-const val UnknownError = "Unknown error"

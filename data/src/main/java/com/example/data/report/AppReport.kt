@@ -14,7 +14,7 @@ data class AppReport(
 )
 
 @JvmInline
-value class AppName private constructor(val appName: String) {
+value class AppName private constructor(val value: String) {
     companion object {
         operator fun invoke(appName: String): Either<ReportProblem, AppName> = either {
             ensure(appName.isNotBlank()) { AppNameProblem("App name cannot be empty") }
@@ -25,7 +25,7 @@ value class AppName private constructor(val appName: String) {
 }
 
 @JvmInline
-value class AppPackageName private constructor(val appPackageName: String) {
+value class AppPackageName private constructor(val value: String) {
     companion object {
         operator fun invoke(appPackageName: String): Either<ReportProblem, AppPackageName> =
             either {
@@ -39,8 +39,11 @@ value class AppPackageName private constructor(val appPackageName: String) {
 }
 
 @JvmInline
-value class ScreenTime private constructor(val screenTime: Long) {
+value class ScreenTime private constructor(val value: Long) {
     companion object {
+        val default
+            get() = ScreenTime(0L)
+
         operator fun invoke(screenTime: Long): Either<ReportProblem, ScreenTime> = either {
             ensure(screenTime >= 0) { ScreenTimeProblem("Screen time cannot be negative") }
 
@@ -48,12 +51,15 @@ value class ScreenTime private constructor(val screenTime: Long) {
         }
     }
 
-    operator fun plus(other: ScreenTime): ScreenTime = ScreenTime(screenTime + other.screenTime)
+    operator fun plus(other: ScreenTime): ScreenTime = ScreenTime(value + other.value)
 }
 
 @JvmInline
-value class NotificationsReceived private constructor(val notificationsReceived: Int) {
+value class NotificationsReceived private constructor(val value: Int) {
     companion object {
+        val default
+            get() = NotificationsReceived(0)
+
         operator fun invoke(
             notificationsReceived: Int
         ): Either<ReportProblem, NotificationsReceived> = either {
@@ -67,8 +73,11 @@ value class NotificationsReceived private constructor(val notificationsReceived:
 }
 
 @JvmInline
-value class TimesOpened private constructor(val timesOpened: Int) {
+value class TimesOpened private constructor(val value: Int) {
     companion object {
+        val default
+            get() = TimesOpened(0)
+
         operator fun invoke(timesOpened: Int): Either<ReportProblem, TimesOpened> = either {
             ensure(timesOpened >= 0) { TimesOpenedProblem("Times opened cannot be negative") }
 
@@ -77,4 +86,4 @@ value class TimesOpened private constructor(val timesOpened: Int) {
     }
 }
 
-@JvmInline value class WasOpenedFirst(val wasOpenedFirst: Boolean)
+@JvmInline value class WasOpenedFirst(val value: Boolean)

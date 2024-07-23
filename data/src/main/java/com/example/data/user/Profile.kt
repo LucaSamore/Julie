@@ -37,7 +37,7 @@ interface UserProfile : Entity<UserId> {
 }
 
 @JvmInline
-value class UserId private constructor(val userId: String) : Identifier {
+value class UserId private constructor(val value: String) : Identifier {
     companion object {
         operator fun invoke(userId: String): Either<UserProblem, UserId> = either {
             ensure(userId.isNotEmpty()) { UserIdProblem("User id cannot be empty") }

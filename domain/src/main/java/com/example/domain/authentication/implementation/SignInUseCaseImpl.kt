@@ -5,17 +5,17 @@ import arrow.core.NonEmptyList
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.example.data.Problem
-import com.example.data.WorkerManager
+import com.example.data.accumulateIfLeft
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.EmailNotVerified
 import com.example.data.authentication.UserSignedIn
 import com.example.data.authentication.ValidatedCredentials
+import com.example.data.dateTimeOfRecording
+import com.example.data.scheduling.WorkerManager
 import com.example.data.user.EmailAddress
 import com.example.data.user.Password
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
-import com.example.data.util.accumulateIfLeft
-import com.example.data.util.dateTimeOfRecording
 import com.example.domain.authentication.SignInUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import javax.inject.Inject
@@ -50,7 +50,7 @@ constructor(
                         .getUserIdByEmailAddress(validatedCredentials.emailAddress)
                         .accumulateIfLeft()
                         .bind()
-                cacheUserIdUseCase(userId.userId)
+                cacheUserIdUseCase(userId.value)
                 userDatastore.saveDateTimeOfRecordingToDataStore(dateTimeOfRecording())
                 workerManager.scheduleUploadReportWorker().accumulateIfLeft().bind()
                 workerManager.scheduleDailyChallengeWorker().accumulateIfLeft().bind()

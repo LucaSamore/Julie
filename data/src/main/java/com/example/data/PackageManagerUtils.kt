@@ -30,8 +30,9 @@ class PackageManagerUtils @Inject constructor(context: Context) {
         return Either.catch { packageManager.getApplicationInfo(packageName, 0) }
             .fold(
                 { packageName },
-                { packageManager.getApplicationLabel(it).toString() },
-            )
+            ) {
+                packageManager.getApplicationLabel(it).toString()
+            }
     }
 
     fun getAppIcon(packageName: String): Either<String, Drawable> {

@@ -1,7 +1,7 @@
 package com.example.domain.statistics.implementation
 
 import com.example.data.statistics.StatisticsDataSource
-import com.example.data.util.today
+import com.example.data.today
 import com.example.domain.statistics.GetCurrentScreenTimeUseCase
 import java.time.Instant
 import java.time.ZoneId

@@ -6,8 +6,8 @@ import arrow.core.raise.ensure
 import com.example.data.Entity
 import com.example.data.Identifier
 import com.example.data.Problem
+import com.example.data.today
 import com.example.data.user.UserId
-import com.example.data.util.today
 import java.time.LocalDate
 
 interface Report : Entity<ReportId> {
@@ -17,17 +17,17 @@ interface Report : Entity<ReportId> {
 
     val appReports: List<AppReport>
 
-    fun totalScreenTime(): ScreenTime
+    val totalScreenTime: ScreenTime
 
-    fun totalNotificationsReceived(): NotificationsReceived
+    val totalNotificationsReceived: NotificationsReceived
 
-    fun totalTimesOpened(): TimesOpened
+    val totalTimesOpened: TimesOpened
 
-    fun mostUsedApp(): AppName
+    val mostUsedApp: AppName
 }
 
 @JvmInline
-value class ReportId private constructor(val reportId: String) : Identifier {
+value class ReportId private constructor(val value: String) : Identifier {
     companion object {
         operator fun invoke(reportId: String): Either<ReportProblem, ReportId> = either {
             ensure(reportId.isNotEmpty()) { ReportIdProblem("Report id cannot be empty") }
@@ -38,7 +38,7 @@ value class ReportId private constructor(val reportId: String) : Identifier {
 }
 
 @JvmInline
-value class DateOfRecording private constructor(val dateOfRecording: LocalDate) {
+value class DateOfRecording private constructor(val value: LocalDate) {
     companion object {
         operator fun invoke(dateOfRecording: LocalDate): Either<ReportProblem, DateOfRecording> =
             either {

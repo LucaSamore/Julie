@@ -34,9 +34,9 @@ constructor(
                     .bind()
                     .map {
                         FavouriteAppDto(
-                            appName = getAppName(it.key.appPackageName),
+                            appName = getAppName(it.key.value),
                             appScreenTime = it.value,
-                            icon = getIcon(it.key.appPackageName)
+                            icon = getIcon(it.key.value)
                         )
                     }
             }

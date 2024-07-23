@@ -3,6 +3,7 @@ package com.example.data.user
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import com.example.data.today
 import com.example.data.user.implementation.MAX_AGE
 import com.example.data.user.implementation.MIN_AGE
 import com.example.data.user.implementation.NAME_MAX_LENGTH
@@ -19,7 +20,6 @@ import com.example.data.user.implementation.containsAtLeastOneUpperCaseLetter
 import com.example.data.user.implementation.isEmailValid
 import com.example.data.user.implementation.isNumeric
 import com.example.data.user.implementation.lengthIsBetween
-import com.example.data.util.today
 import java.time.LocalDate
 
 data class UserDetails(
@@ -35,7 +35,7 @@ data class UserDetails(
 data class Interest(val name: Name, val category: Category)
 
 @JvmInline
-value class FirstName private constructor(val firstName: String) {
+value class FirstName private constructor(val value: String) {
     companion object {
         operator fun invoke(firstName: String): Either<UserProblem, FirstName> = either {
             ensure(firstName.isNotBlank()) { FirstNameProblem("First name cannot be empty") }
@@ -52,7 +52,7 @@ value class FirstName private constructor(val firstName: String) {
 }
 
 @JvmInline
-value class LastName private constructor(val lastName: String) {
+value class LastName private constructor(val value: String) {
     companion object {
         operator fun invoke(lastName: String): Either<UserProblem, LastName> = either {
             ensure(lastName.isNotBlank()) { LastNameProblem("Last name cannot be empty") }
@@ -69,7 +69,7 @@ value class LastName private constructor(val lastName: String) {
 }
 
 @JvmInline
-value class BirthDate private constructor(val birthDate: LocalDate) {
+value class BirthDate private constructor(val value: LocalDate) {
     companion object {
         operator fun invoke(birthDate: LocalDate): Either<UserProblem, BirthDate> = either {
             ensure(birthDate.isBefore(today().minusYears(MIN_AGE.toLong()))) {
@@ -86,7 +86,7 @@ value class BirthDate private constructor(val birthDate: LocalDate) {
 }
 
 @JvmInline
-value class Username private constructor(val username: String) {
+value class Username private constructor(val value: String) {
     companion object {
         operator fun invoke(username: String): Either<UserProblem, Username> = either {
             ensure(username.isNotBlank()) { UsernameProblem("Username cannot be empty") }
@@ -103,7 +103,7 @@ value class Username private constructor(val username: String) {
 }
 
 @JvmInline
-value class EmailAddress private constructor(val emailAddress: String) {
+value class EmailAddress private constructor(val value: String) {
     companion object {
         operator fun invoke(emailAddress: String): Either<UserProblem, EmailAddress> = either {
             ensure(emailAddress.isNotBlank()) {
@@ -118,7 +118,7 @@ value class EmailAddress private constructor(val emailAddress: String) {
 }
 
 @JvmInline
-value class Password private constructor(val password: String) {
+value class Password private constructor(val value: String) {
     companion object {
         operator fun invoke(password: String): Either<UserProblem, Password> = either {
             ensure(password.isNotBlank()) { PasswordProblem("Password cannot be empty") }
@@ -154,6 +154,6 @@ value class Password private constructor(val password: String) {
     }
 }
 
-@JvmInline value class Name(val name: String)
+@JvmInline value class Name(val value: String)
 
-@JvmInline value class Category(val category: String)
+@JvmInline value class Category(val value: String)

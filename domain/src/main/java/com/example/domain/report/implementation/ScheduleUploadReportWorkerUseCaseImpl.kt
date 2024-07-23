@@ -1,6 +1,6 @@
 package com.example.domain.report.implementation
 
-import com.example.data.WorkerManager
+import com.example.data.scheduling.WorkerManager
 import com.example.domain.report.ScheduleUploadReportWorkerUseCase
 import javax.inject.Inject
 

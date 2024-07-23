@@ -1,9 +1,8 @@
-package com.example.data.util
+package com.example.data
 
 import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.nonEmptyListOf
-import com.example.data.Problem
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -43,3 +42,5 @@ fun millisecondsUntil11PM(): Long {
         now.until(tomorrow11PM, ChronoUnit.MILLIS)
     }
 }
+
+const val UnknownError = "Unknown error"

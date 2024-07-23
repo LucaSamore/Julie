@@ -7,10 +7,10 @@ import com.example.data.gamification.CalculatePointsStrategy
 import com.example.data.gamification.DailyChallengeService
 import com.example.data.gamification.Threshold
 import com.example.data.statistics.StatisticsDataSource
+import com.example.data.today
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
-import com.example.data.util.today
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ constructor(
             statisticsDataSource.getScreenTime(date = dateTime.toLocalDate(), endTime = dateTime)
         val updatedUser =
             when {
-                (screenTimeInMillis <= threshold.valueInMillis.valueInMillis) -> {
+                (screenTimeInMillis <= threshold.valueInMillis.value) -> {
                     addPointsAndIncreaseStreak(user, screenTimeInMillis, threshold)
                         .bind()
                         .decreaseOrResetThreshold()
@@ -52,7 +52,7 @@ constructor(
             pointsStrategy
                 .calculatePoints(
                     screenTime,
-                    threshold.valueInMillis.valueInMillis,
+                    threshold.valueInMillis.value,
                     user.currentStreak.value.value
                 )
                 .bind()
@@ -60,7 +60,7 @@ constructor(
     }
 
     private fun <T : UserProfile> T.decreaseOrResetThreshold(): UserProfile =
-        if (threshold.nextReset.nextReset <= today()) {
+        if (threshold.nextReset.value <= today()) {
             resetThreshold()
         } else {
             decreaseThreshold()
@@ -78,7 +78,7 @@ constructor(
     }
 
     private fun <T : UserProfile> T.increaseOrResetThreshold(): UserProfile =
-        if (threshold.nextReset.nextReset <= today()) {
+        if (threshold.nextReset.value <= today()) {
             resetThreshold()
         } else {
             increaseThreshold()

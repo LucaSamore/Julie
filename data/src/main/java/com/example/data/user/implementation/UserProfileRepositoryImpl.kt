@@ -24,10 +24,10 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     override suspend fun create(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
-                    .document(entity.id.userId)
+                    .document(entity.id.value)
                     .set(
                         FirestoreUserDto.fromEntity(entity)
-                            .copy(password = hashPassword(entity.userDetails.password.password))
+                            .copy(password = hashPassword(entity.userDetails.password.value))
                     )
                     .await()
             }
@@ -43,7 +43,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
         return Either.catch {
                 val dto =
                     db.collection(FirestoreUserDto.COLLECTION)
-                        .document(id.userId)
+                        .document(id.value)
                         .get()
                         .await()
                         .toObject(FirestoreUserDto::class.java)!!
@@ -64,14 +64,12 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     override suspend fun update(entity: UserProfile): Either<RepositoryProblem, UserProfile> {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
-                    .document(entity.id.userId)
+                    .document(entity.id.value)
                     .update(
                         mapOf(
-                            "points" to entity.points.points,
-                            "threshold.valueInMillis" to
-                                entity.threshold.valueInMillis.valueInMillis,
-                            "threshold.nextReset" to
-                                entity.threshold.nextReset.nextReset.toString(),
+                            "points" to entity.points.value,
+                            "threshold.valueInMillis" to entity.threshold.valueInMillis.value,
+                            "threshold.nextReset" to entity.threshold.nextReset.value.toString(),
                             "currentStreak.value" to entity.currentStreak.value.value,
                             "currentStreak.started" to entity.currentStreak.begin.value.toString(),
                             "currentStreak.ended" to
@@ -94,7 +92,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     ): Either<Problem, UserId> {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
-                    .whereEqualTo("emailAddress", emailAddress.emailAddress)
+                    .whereEqualTo("emailAddress", emailAddress.value)
                     .get()
                     .await()
                     .toObjects(FirestoreUserDto::class.java)
@@ -108,7 +106,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     ): Either<RepositoryProblem, Boolean> {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
-                    .whereEqualTo("emailAddress", emailAddress.emailAddress)
+                    .whereEqualTo("emailAddress", emailAddress.value)
                     .get()
                     .await()
             }
@@ -121,7 +119,7 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     ): Either<RepositoryProblem, Boolean> {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
-                    .whereEqualTo("username", username.username)
+                    .whereEqualTo("username", username.value)
                     .get()
                     .await()
             }

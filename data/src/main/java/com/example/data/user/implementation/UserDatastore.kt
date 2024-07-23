@@ -9,12 +9,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import arrow.core.Either
 import arrow.core.flatMap
 import com.example.data.Problem
-import com.example.data.authentication.UnknownError
+import com.example.data.UnknownError
+import com.example.data.prettyFormat
 import com.example.data.report.DateOfRecordingProblem
 import com.example.data.user.UserId
 import com.example.data.user.UserIdProblem
 import com.example.data.user.UserProblem
-import com.example.data.util.prettyFormat
 import java.time.LocalDateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

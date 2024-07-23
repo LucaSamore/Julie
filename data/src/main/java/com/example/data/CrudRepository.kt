@@ -1,9 +1,8 @@
 package com.example.data
 
 import arrow.core.Either
-import com.example.data.authentication.UnknownError
 
-interface Repository<E, I : Identifier> where E : Entity<I> {
+interface CrudRepository<E, I : Identifier> where E : Entity<I> {
     suspend fun create(entity: E): Either<RepositoryProblem, E>
 
     suspend fun findMany(): Either<RepositoryProblem, Iterable<E>>

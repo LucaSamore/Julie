@@ -6,16 +6,16 @@ import arrow.core.raise.ensure
 import com.example.data.Problem
 
 @JvmInline
-value class Points private constructor(val points: Int) : Comparable<Int> {
-    operator fun plus(other: Points) = Points(points + other.points)
+value class Points private constructor(val value: Int) : Comparable<Int> {
+    operator fun plus(other: Points) = Points(value + other.value)
 
-    operator fun minus(other: Points) = Points(points - other.points)
+    operator fun minus(other: Points) = Points(value - other.value)
 
-    operator fun times(other: Points) = Points(points * other.points)
+    operator fun times(other: Points) = Points(value * other.value)
 
-    operator fun div(other: Points) = Points(points / other.points)
+    operator fun div(other: Points) = Points(value / other.value)
 
-    override fun compareTo(other: Int): Int = points.compareTo(other)
+    override fun compareTo(other: Int): Int = value.compareTo(other)
 
     companion object {
         operator fun invoke(points: Int): Either<GamificationProblem, Points> = either {

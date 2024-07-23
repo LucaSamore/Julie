@@ -21,7 +21,7 @@ internal class ReportRepositoryImpl : ReportRepository {
     override suspend fun create(entity: Report): Either<RepositoryProblem, Report> {
         return Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
-                    .document(entity.id.reportId)
+                    .document(entity.id.value)
                     .set(FirestoreReportDto.fromEntity(entity))
                     .await()
             }
@@ -50,12 +50,12 @@ internal class ReportRepositoryImpl : ReportRepository {
     ): Either<RepositoryProblem, Iterable<Report>> {
         return Either.catch {
                 db.collection(FirestoreReportDto.COLLECTION)
-                    .whereEqualTo("userId", userId.userId)
+                    .whereEqualTo("userId", userId.value)
                     .get()
                     .await()
                     .toObjects(FirestoreReportDto::class.java)
                     .mapNotNull { FirestoreReportDto.toEntity(it) }
-                    .sortedBy { it.dateOfRecording.dateOfRecording }
+                    .sortedBy { it.dateOfRecording.value }
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
     }
@@ -69,7 +69,7 @@ internal class ReportRepositoryImpl : ReportRepository {
                 db.collection(FirestoreReportDto.COLLECTION)
                     .where(
                         Filter.and(
-                            Filter.equalTo("userId", userId.userId),
+                            Filter.equalTo("userId", userId.value),
                             Filter.greaterThanOrEqualTo(
                                 "date",
                                 LocalDate.now().minusDays(timeSpanInDays.toLong()).toString()
@@ -90,7 +90,7 @@ internal class ReportRepositoryImpl : ReportRepository {
             .flatMap { it.appReports }
             .groupBy { it.appPackageName }
             .mapValues {
-                (it.value.sumOf { appReport -> appReport.screenTime.screenTime }.toDouble() /
+                (it.value.sumOf { appReport -> appReport.screenTime.value }.toDouble() /
                         it.value.size)
                     .toLong()
             }

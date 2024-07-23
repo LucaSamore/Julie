@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.example.data.gamification.CalculatePointsStrategy
 import com.example.data.gamification.GamificationProblem
 import com.example.data.gamification.Points
-import com.example.data.util.inMinutes
+import com.example.data.inMinutes
 import kotlin.math.abs
 
 internal class DefaultCalculatePointsStrategy : CalculatePointsStrategy {

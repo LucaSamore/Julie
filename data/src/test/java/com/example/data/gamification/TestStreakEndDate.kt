@@ -1,6 +1,6 @@
 package com.example.data.gamification
 
-import com.example.data.util.today
+import com.example.data.today
 import org.junit.Test
 
 class TestStreakEndDate {

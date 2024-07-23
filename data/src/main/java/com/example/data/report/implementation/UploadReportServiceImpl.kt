@@ -5,6 +5,7 @@ import arrow.core.NonEmptyList
 import arrow.core.raise.either
 import com.example.data.PackageManagerUtils
 import com.example.data.Problem
+import com.example.data.accumulateIfLeft
 import com.example.data.report.AppReportDto
 import com.example.data.report.CreateReportDto
 import com.example.data.report.Report
@@ -12,7 +13,6 @@ import com.example.data.report.ReportRepository
 import com.example.data.report.UploadReportService
 import com.example.data.statistics.StatisticsDataSource
 import com.example.data.user.implementation.UserDatastore
-import com.example.data.util.accumulateIfLeft
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -31,7 +31,7 @@ constructor(
             val userId = userDatastore.getUserId().accumulateIfLeft().bind()
             val reportDto =
                 CreateReportDto(
-                    userId = userId.userId,
+                    userId = userId.value,
                     dateOfRecording = dateTime.toLocalDate(),
                     appReports = createAppReports(date = dateTime.toLocalDate(), endTime = dateTime)
                 )

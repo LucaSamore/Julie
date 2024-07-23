@@ -19,28 +19,37 @@ import com.example.data.report.WasOpenedFirst
 import com.example.data.user.UserId
 import java.util.UUID
 
-internal class ReportImpl(
+internal data class ReportImpl(
     override val id: ReportId,
     override val userId: UserId,
     override val dateOfRecording: DateOfRecording,
     override val appReports: List<AppReport>
 ) : Report {
-    override fun totalScreenTime(): ScreenTime =
-        ScreenTime(appReports.sumOf { it.screenTime.screenTime }).getOrNull()!!
+    override val totalScreenTime: ScreenTime
+        get() {
+            val total = appReports.sumOf { it.screenTime.value }
+            return ScreenTime(total).fold({ ScreenTime.default }) { it }
+        }
 
-    override fun totalNotificationsReceived(): NotificationsReceived =
-        NotificationsReceived(appReports.sumOf { it.notificationsReceived.notificationsReceived })
-            .getOrNull()!!
+    override val totalNotificationsReceived: NotificationsReceived
+        get() {
+            val total = appReports.sumOf { it.notificationsReceived.value }
+            return NotificationsReceived(total).fold({ NotificationsReceived.default }) { it }
+        }
 
-    override fun totalTimesOpened(): TimesOpened =
-        TimesOpened(appReports.sumOf { it.timesOpened.timesOpened }).getOrNull()!!
+    override val totalTimesOpened: TimesOpened
+        get() {
+            val total = appReports.sumOf { it.timesOpened.value }
+            return TimesOpened(total).fold({ TimesOpened.default }) { it }
+        }
 
-    override fun mostUsedApp(): AppName =
-        appReports
-            .map { Pair(it.appName, it.screenTime.screenTime) }
-            .sortedByDescending { it.second }
-            .map { it.first }
-            .first()
+    override val mostUsedApp: AppName
+        get() =
+            appReports
+                .map { it.appName to it.screenTime.value }
+                .sortedByDescending { it.second }
+                .map { it.first }
+                .first()
 }
 
 fun createReport(createReportDto: CreateReportDto): Either<NonEmptyList<Problem>, Report> = either {

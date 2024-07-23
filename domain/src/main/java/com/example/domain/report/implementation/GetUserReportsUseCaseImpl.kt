@@ -28,19 +28,18 @@ constructor(
                 val reports = reportRepository.getReportsByUserId(userId).bind()
                 reports.map {
                     ReportDto(
-                        date = it.dateOfRecording.dateOfRecording,
+                        date = it.dateOfRecording.value,
                         appReports =
                             it.appReports.map { appReport ->
                                 AppDto(
-                                    name = appReport.appName.appName,
+                                    name = appReport.appName.value,
                                     icon =
                                         packageManagerUtils
-                                            .getAppIcon(appReport.appPackageName.appPackageName)
+                                            .getAppIcon(appReport.appPackageName.value)
                                             .fold({ null }) { drawable -> drawable },
-                                    screenTime = appReport.screenTime.screenTime,
-                                    notificationsReceived =
-                                        appReport.notificationsReceived.notificationsReceived,
-                                    timesOpened = appReport.timesOpened.timesOpened
+                                    screenTime = appReport.screenTime.value,
+                                    notificationsReceived = appReport.notificationsReceived.value,
+                                    timesOpened = appReport.timesOpened.value
                                 )
                             }
                     )

@@ -13,6 +13,7 @@ import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakValue
 import com.example.data.gamification.Threshold
 import com.example.data.gamification.ThresholdValue
+import com.example.data.today
 import com.example.data.user.BirthDate
 import com.example.data.user.CreateAccountDto
 import com.example.data.user.EmailAddress
@@ -24,9 +25,8 @@ import com.example.data.user.UserId
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileDto
 import com.example.data.user.Username
-import com.example.data.util.today
-import java.time.LocalDate
 import java.util.UUID
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -37,83 +37,54 @@ internal data class UserProfileImpl(
     override val threshold: Threshold,
     override val currentStreak: Streak
 ) : UserProfile {
+
     override fun addPoints(pointsToAdd: Points): UserProfile = copy(points = points + pointsToAdd)
 
-    override fun resetPoints(): UserProfile = copy(points = Points(0).getOrNull()!!)
+    override fun resetPoints(): UserProfile = copy(points = Points(0).getOrNull() ?: points)
 
-    override fun resetThreshold(): UserProfile =
-        copy(
-            threshold =
-                Threshold(
-                    valueInMillis = ThresholdValue(8.hours.inWholeMilliseconds).getOrNull()!!,
-                    nextReset = NextReset(today().plusDays(7))
-                )
-        )
+    override fun resetThreshold(): UserProfile = copy(threshold = createDefaultThreshold())
 
-    override fun increaseThreshold(): UserProfile =
-        copy(
-            threshold =
-                Threshold(
-                    valueInMillis =
-                        ThresholdValue(
-                                threshold.valueInMillis.valueInMillis.milliseconds.inWholeHours
-                                    .hours
-                                    .plus(1.hours)
-                                    .inWholeMilliseconds
-                            )
-                            .getOrNull()!!,
-                    nextReset = threshold.nextReset
-                )
-        )
+    override fun increaseThreshold(): UserProfile = updateThreshold { it.plus(1.hours) }
 
-    override fun decreaseThreshold(): UserProfile =
-        copy(
-            threshold =
-                Threshold(
-                    valueInMillis =
-                        ThresholdValue(
-                                threshold.valueInMillis.valueInMillis.milliseconds.inWholeHours
-                                    .hours
-                                    .minus(1.hours)
-                                    .inWholeMilliseconds
-                            )
-                            .getOrNull()!!,
-                    nextReset = threshold.nextReset
-                )
-        )
+    override fun decreaseThreshold(): UserProfile = updateThreshold { it.minus(1.hours) }
 
     override fun incrementCurrentStreak(): UserProfile =
-        copy(
-            currentStreak =
-                Streak(
-                    userId = id,
-                    value = currentStreak.value + 1,
-                    begin = currentStreak.begin,
-                    end = currentStreak.end
-                )
-        )
+        copy(currentStreak = currentStreak.copy(value = currentStreak.value + 1))
 
-    override fun resetStreak(): UserProfile =
-        copy(
-            currentStreak =
-                Streak(
-                    userId = id,
-                    value = StreakValue(0).getOrNull()!!,
-                    begin = BeginDate(LocalDate.now()).getOrNull()!!,
-                    end = EndDate(null).getOrNull()!!
-                )
-        )
+    override fun resetStreak(): UserProfile = copy(currentStreak = createInitialStreak())
 
     override fun endCurrentStreak(): UserProfile =
         copy(
             currentStreak =
-                Streak(
-                    userId = id,
-                    value = currentStreak.value,
-                    begin = currentStreak.begin,
-                    end = EndDate(today()).getOrNull()!!
-                )
+                currentStreak.copy(end = EndDate(today()).getOrNull() ?: currentStreak.end)
         )
+
+    private fun createDefaultThreshold(): Threshold {
+        val thresholdValue =
+            ThresholdValue(DEFAULT_THRESHOLD.hours.inWholeMilliseconds).getOrNull()
+                ?: return threshold
+        val nextReset = NextReset(today().plusDays(DAYS_UNTIL_NEXT_RESET))
+        return Threshold(thresholdValue, nextReset)
+    }
+
+    private fun updateThreshold(update: (Duration) -> Duration): UserProfile {
+        val newValueInMillis =
+            ThresholdValue(update(threshold.valueInMillis.value.milliseconds).inWholeMilliseconds)
+                .getOrNull() ?: return this
+        return copy(threshold = threshold.copy(valueInMillis = newValueInMillis))
+    }
+
+    private fun createInitialStreak(): Streak {
+        val begin = BeginDate(today()).getOrNull() ?: currentStreak.begin
+        val end = EndDate(null).getOrNull() ?: currentStreak.end
+        val value = StreakValue(0).getOrNull() ?: currentStreak.value
+        return Streak(id, value, begin, end)
+    }
+
+    companion object {
+        private const val DEFAULT_THRESHOLD = 8
+        private const val DAYS_UNTIL_NEXT_RESET = 7L
+    }
 }
 
 fun createNewAccount(

@@ -25,8 +25,8 @@ constructor(
                 val userId = userDatastore.getUserId().bind()
                 val user = userProfileRepository.findOne(userId).bind()
                 UserGamificationDataDto(
-                    threshold = user.threshold.valueInMillis.valueInMillis,
-                    points = user.points.points,
+                    threshold = user.threshold.valueInMillis.value,
+                    points = user.points.value,
                     currentStreakValue = user.currentStreak.value.value
                 )
             }

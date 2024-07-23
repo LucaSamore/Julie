@@ -1,4 +1,4 @@
-package com.example.data.implementation
+package com.example.data.scheduling.implementation
 
 import android.content.Context
 import androidx.work.WorkManager
@@ -6,11 +6,11 @@ import androidx.work.workDataOf
 import arrow.core.Either
 import arrow.core.raise.either
 import com.example.data.Problem
-import com.example.data.WorkerManager
 import com.example.data.gamification.implementation.DefaultDailyChallengeWorkerRequest
+import com.example.data.millisecondsUntil11PM
 import com.example.data.report.implementation.DefaultUploadReportWorkerRequest
+import com.example.data.scheduling.WorkerManager
 import com.example.data.user.implementation.UserDatastore
-import com.example.data.util.millisecondsUntil11PM
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

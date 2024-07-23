@@ -36,24 +36,25 @@ constructor(
 
     private fun getComparisonReports(appName: String, userReports: Iterable<Report>) =
         userReports
-            .sortedByDescending { it.dateOfRecording.dateOfRecording }
+            .sortedByDescending { it.dateOfRecording.value }
             .take(2)
             .map {
                 ComparisonReportDto(
-                    it.dateOfRecording.dateOfRecording,
+                    it.dateOfRecording.value,
                     it.appReports
-                        .filter { app -> app.appName.appName == appName }
+                        .filter { app -> app.appName.value == appName }
                         .map { app ->
                             AppDto(
-                                name = app.appName.appName,
+                                name = app.appName.value,
                                 icon =
-                                    packageManagerUtils
-                                        .getAppIcon(app.appPackageName.appPackageName)
-                                        .fold({ null }) { drawable -> drawable },
-                                screenTime = app.screenTime.screenTime,
-                                notificationsReceived =
-                                    app.notificationsReceived.notificationsReceived,
-                                timesOpened = app.timesOpened.timesOpened
+                                    packageManagerUtils.getAppIcon(app.appPackageName.value).fold({
+                                        null
+                                    }) { drawable ->
+                                        drawable
+                                    },
+                                screenTime = app.screenTime.value,
+                                notificationsReceived = app.notificationsReceived.value,
+                                timesOpened = app.timesOpened.value
                             )
                         }
                         .first()

@@ -1,10 +1,10 @@
 package com.example.domain.authentication
 
-import com.example.data.WorkerManager
 import com.example.data.authentication.AuthenticationService
 import com.example.data.di.FirebaseRepository
 import com.example.data.di.FirebaseService
 import com.example.data.di.IoDispatcher
+import com.example.data.scheduling.WorkerManager
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import com.example.domain.authentication.implementation.PasswordResetUseCaseImpl

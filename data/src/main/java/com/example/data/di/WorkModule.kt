@@ -1,8 +1,8 @@
 package com.example.data.di
 
 import android.content.Context
-import com.example.data.WorkerManager
-import com.example.data.implementation.WorkerManagerImpl
+import com.example.data.scheduling.WorkerManager
+import com.example.data.scheduling.implementation.WorkerManagerImpl
 import com.example.data.user.implementation.UserDatastore
 import dagger.Module
 import dagger.Provides

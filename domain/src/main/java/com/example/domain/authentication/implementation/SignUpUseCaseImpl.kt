@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.NonEmptyList
 import arrow.core.raise.either
 import com.example.data.Problem
+import com.example.data.accumulateIfLeft
 import com.example.data.authentication.AuthenticationService
 import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.ValidatedCredentials
@@ -15,7 +16,6 @@ import com.example.data.user.UserProfileRepository
 import com.example.data.user.Username
 import com.example.data.user.UsernameProblem
 import com.example.data.user.implementation.createNewAccount
-import com.example.data.util.accumulateIfLeft
 import com.example.domain.authentication.SignUpUseCase
 import com.example.domain.user.CacheUserIdUseCase
 import javax.inject.Inject
@@ -44,7 +44,7 @@ constructor(
                 storeNewAccount(newUser).accumulateIfLeft().bind()
                 val signedUser = signUser(newUser).accumulateIfLeft().bind()
                 authenticationService.sendVerificationEmail().accumulateIfLeft().bind()
-                cacheUserIdUseCase(newUser.id.userId)
+                cacheUserIdUseCase(newUser.id.value)
                 signedUser
             }
         }

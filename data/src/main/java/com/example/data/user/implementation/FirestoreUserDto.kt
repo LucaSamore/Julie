@@ -7,13 +7,13 @@ import com.example.data.gamification.Streak
 import com.example.data.gamification.StreakDto
 import com.example.data.gamification.Threshold
 import com.example.data.gamification.ThresholdDto
+import com.example.data.prettyFormat
+import com.example.data.today
 import com.example.data.user.Category
 import com.example.data.user.Interest
 import com.example.data.user.Name
 import com.example.data.user.UserProfile
 import com.example.data.user.UserProfileDto
-import com.example.data.util.prettyFormat
-import com.example.data.util.today
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -36,15 +36,15 @@ internal data class FirestoreUserDto(
 
         fun fromEntity(user: UserProfile): FirestoreUserDto {
             return FirestoreUserDto(
-                id = user.id.userId,
-                firstName = user.userDetails.firstName.firstName,
-                lastName = user.userDetails.lastName.lastName,
-                birthDate = user.userDetails.birthDate.birthDate.toString(),
-                username = user.userDetails.username.username,
-                emailAddress = user.userDetails.emailAddress.emailAddress,
-                password = user.userDetails.password.password,
+                id = user.id.value,
+                firstName = user.userDetails.firstName.value,
+                lastName = user.userDetails.lastName.value,
+                birthDate = user.userDetails.birthDate.value.toString(),
+                username = user.userDetails.username.value,
+                emailAddress = user.userDetails.emailAddress.value,
+                password = user.userDetails.password.value,
                 interest = user.userDetails.interest.map { FirestoreInterestDto.fromEntity(it) },
-                points = user.points.points,
+                points = user.points.value,
                 threshold = FirestoreThresholdDto.fromEntity(user.threshold),
                 currentStreak = FirestoreCurrentStreakDto.fromEntity(user.currentStreak)
             )
@@ -104,8 +104,8 @@ internal data class FirestoreThresholdDto(
     companion object {
         fun fromEntity(threshold: Threshold): FirestoreThresholdDto =
             FirestoreThresholdDto(
-                valueInMillis = threshold.valueInMillis.valueInMillis,
-                nextReset = threshold.nextReset.nextReset.toString()
+                valueInMillis = threshold.valueInMillis.value,
+                nextReset = threshold.nextReset.value.toString()
             )
     }
 }
@@ -128,6 +128,6 @@ internal data class FirestoreCurrentStreakDto(
 internal data class FirestoreInterestDto(val name: String? = null, val category: String? = null) {
     companion object {
         fun fromEntity(interest: Interest): FirestoreInterestDto =
-            FirestoreInterestDto(name = interest.name.name, category = interest.category.category)
+            FirestoreInterestDto(name = interest.name.value, category = interest.category.value)
     }
 }

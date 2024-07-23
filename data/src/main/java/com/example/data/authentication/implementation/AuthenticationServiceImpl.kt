@@ -25,8 +25,8 @@ internal class AuthenticationServiceImpl : AuthenticationService {
         return Either.catch {
                 auth
                     .signInWithEmailAndPassword(
-                        signInCredentials.emailAddress.emailAddress,
-                        signInCredentials.password.password
+                        signInCredentials.emailAddress.value,
+                        signInCredentials.password.value
                     )
                     .await()
             }
@@ -40,8 +40,8 @@ internal class AuthenticationServiceImpl : AuthenticationService {
         return Either.catch {
                 auth
                     .createUserWithEmailAndPassword(
-                        signUpCredentials.emailAddress.emailAddress,
-                        signUpCredentials.password.password
+                        signUpCredentials.emailAddress.value,
+                        signUpCredentials.password.value
                     )
                     .await()
             }
@@ -52,7 +52,7 @@ internal class AuthenticationServiceImpl : AuthenticationService {
     override suspend fun passwordReset(
         emailAddress: EmailAddress
     ): Either<AuthenticationProblem, PasswordReset> {
-        return Either.catch { auth.sendPasswordResetEmail(emailAddress.emailAddress).await() }
+        return Either.catch { auth.sendPasswordResetEmail(emailAddress.value).await() }
             .mapLeft { AuthenticationError.fromThrowable(it) }
             .map { PasswordReset }
     }
