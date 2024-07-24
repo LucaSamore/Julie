@@ -9,6 +9,7 @@ import com.example.data.authentication.UserSignedOut
 import com.example.data.authentication.UserSignedUp
 import com.example.data.authentication.VerificationEmailSent
 import com.example.julie.home.HomeScreenContent
+import com.example.julie.leaderboard.LeaderboardScreenContent
 import com.example.julie.smartphoneusage.SmartphoneUsageScreenContent
 import com.example.julie.smartphoneusage.StoryContent
 
@@ -33,5 +34,7 @@ internal typealias HomeScreenState = Lce<Problem, HomeScreenContent>
 internal typealias SmartphoneUsageScreenState = Lce<Problem, SmartphoneUsageScreenContent>
 
 internal typealias StoryScreenState = Lce<Problem, StoryContent>
+
+internal typealias LeaderboardScreenState = Lce<Problem, LeaderboardScreenContent>
 
 internal typealias SettingsScreenState = Lce<AuthenticationProblem, UserSignedOut>

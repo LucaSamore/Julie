@@ -5,6 +5,7 @@ import com.example.data.di.IoDispatcher
 import com.example.data.user.UserProfileRepository
 import com.example.data.user.implementation.UserDatastore
 import com.example.domain.user.implementation.CacheUserIdUseCaseImpl
+import com.example.domain.user.implementation.GetLeaderboardUseCaseImpl
 import com.example.domain.user.implementation.GetUserProfileGamificationDataUseCaseImpl
 import dagger.Module
 import dagger.Provides
@@ -34,4 +35,11 @@ object UserModule {
             userDatastore,
             ioDispatcher
         )
+
+    @Singleton
+    @Provides
+    fun provideGetLeaderboardUseCase(
+        @FirebaseRepository userProfileRepository: UserProfileRepository,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): GetLeaderboardUseCase = GetLeaderboardUseCaseImpl(userProfileRepository, ioDispatcher)
 }

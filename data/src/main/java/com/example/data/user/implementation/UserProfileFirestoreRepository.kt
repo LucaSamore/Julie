@@ -142,6 +142,8 @@ internal class UserProfileFirestoreRepository : UserProfileRepository {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .whereGreaterThan("points", 0)
+                    .orderBy("points")
+                    .limit(LEADERBOARD_TOP)
                     .get()
                     .await()
                     .toObjects(FirestoreUserDto::class.java)
@@ -152,6 +154,8 @@ internal class UserProfileFirestoreRepository : UserProfileRepository {
 
     companion object {
         private const val BCRYPT_COST = 12
+
+        private const val LEADERBOARD_TOP = 100L
 
         private fun hashPassword(plainPassword: String): String =
             BCrypt.withDefaults().hashToString(BCRYPT_COST, plainPassword.toCharArray())
