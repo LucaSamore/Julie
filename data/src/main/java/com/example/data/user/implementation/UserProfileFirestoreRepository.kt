@@ -15,6 +15,7 @@ import com.example.data.user.UserProfileRepository
 import com.example.data.user.Username
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
@@ -142,7 +143,7 @@ internal class UserProfileFirestoreRepository : UserProfileRepository {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .whereGreaterThan("points", 0)
-                    .orderBy("points")
+                    .orderBy("points", Query.Direction.DESCENDING)
                     .limit(LEADERBOARD_TOP)
                     .get()
                     .await()
