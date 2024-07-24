@@ -1,9 +1,9 @@
 package com.example.data.di
 
 import com.example.data.report.ReportRepository
-import com.example.data.report.implementation.ReportRepositoryImpl
+import com.example.data.report.implementation.ReportFirestoreRepository
 import com.example.data.user.UserProfileRepository
-import com.example.data.user.implementation.UserProfileRepositoryImpl
+import com.example.data.user.implementation.UserProfileFirestoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,12 +18,12 @@ object RepositoryModule {
     @FirebaseRepository
     @Singleton
     @Provides
-    fun provideUserProfileRepository(): UserProfileRepository = UserProfileRepositoryImpl()
+    fun provideUserProfileRepository(): UserProfileRepository = UserProfileFirestoreRepository()
 
     @FirebaseRepository
     @Singleton
     @Provides
-    fun provideReportRepository(): ReportRepository = ReportRepositoryImpl()
+    fun provideReportRepository(): ReportRepository = ReportFirestoreRepository()
 }
 
 @Retention(AnnotationRetention.BINARY) @Qualifier annotation class FirebaseRepository

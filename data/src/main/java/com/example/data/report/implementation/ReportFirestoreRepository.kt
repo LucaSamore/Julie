@@ -1,20 +1,21 @@
 package com.example.data.report.implementation
 
 import arrow.core.Either
+import com.example.data.EntityDeleted
 import com.example.data.RepositoryProblem
 import com.example.data.report.AppPackageName
 import com.example.data.report.Report
 import com.example.data.report.ReportId
 import com.example.data.report.ReportRepository
+import com.example.data.today
 import com.example.data.user.UserId
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import java.time.LocalDate
 import kotlinx.coroutines.tasks.await
 
-internal class ReportRepositoryImpl : ReportRepository {
+internal class ReportFirestoreRepository : ReportRepository {
 
     private val db: FirebaseFirestore = Firebase.firestore
 
@@ -41,8 +42,12 @@ internal class ReportRepositoryImpl : ReportRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun delete(id: ReportId): Either<RepositoryProblem, Report> {
-        TODO("Not yet implemented")
+    override suspend fun delete(id: ReportId): Either<RepositoryProblem, EntityDeleted> {
+        return Either.catch {
+                db.collection(FirestoreReportDto.COLLECTION).document(id.value).delete().await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { EntityDeleted }
     }
 
     override suspend fun getReportsByUserId(
@@ -72,7 +77,7 @@ internal class ReportRepositoryImpl : ReportRepository {
                             Filter.equalTo("userId", userId.value),
                             Filter.greaterThanOrEqualTo(
                                 "date",
-                                LocalDate.now().minusDays(timeSpanInDays.toLong()).toString()
+                                today().minusDays(timeSpanInDays.toLong()).toString()
                             )
                         )
                     )

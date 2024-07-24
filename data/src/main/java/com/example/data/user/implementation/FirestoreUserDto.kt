@@ -94,6 +94,24 @@ internal data class FirestoreUserDto(
                 )
             )
         }
+
+        fun entityToDocumentFields(entity: UserProfile) =
+            mapOf(
+                "firstName" to entity.userDetails.firstName.value,
+                "lastName" to entity.userDetails.lastName.value,
+                "birthDate" to entity.userDetails.birthDate.value.toString(),
+                "username" to entity.userDetails.username.value,
+                "emailAddress" to entity.userDetails.emailAddress.value,
+                "password" to entity.userDetails.password.value,
+                "points" to entity.points.value,
+                "threshold.valueInMillis" to entity.threshold.valueInMillis.value,
+                "threshold.nextReset" to entity.threshold.nextReset.value.toString(),
+                "currentStreak.value" to entity.currentStreak.value.value,
+                "currentStreak.started" to entity.currentStreak.begin.value.toString(),
+                "currentStreak.ended" to
+                    if (entity.currentStreak.end.value == null) null
+                    else entity.currentStreak.end.value.toString()
+            )
     }
 }
 

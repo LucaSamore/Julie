@@ -11,7 +11,7 @@ interface CrudRepository<E, I : Identifier> where E : Entity<I> {
 
     suspend fun update(entity: E): Either<RepositoryProblem, E>
 
-    suspend fun delete(id: I): Either<RepositoryProblem, E>
+    suspend fun delete(id: I): Either<RepositoryProblem, EntityDeleted>
 }
 
 @JvmInline
@@ -21,3 +21,5 @@ value class RepositoryProblem(override val message: String) : Problem {
             RepositoryProblem(throwable.message ?: UnknownError)
     }
 }
+
+data object EntityDeleted

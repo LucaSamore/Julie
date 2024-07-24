@@ -3,6 +3,7 @@ package com.example.data.user.implementation
 import arrow.core.Either
 import arrow.core.flatMap
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.data.EntityDeleted
 import com.example.data.Problem
 import com.example.data.RepositoryProblem
 import com.example.data.gamification.Streak
@@ -17,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
-internal class UserProfileRepositoryImpl : UserProfileRepository {
+internal class UserProfileFirestoreRepository : UserProfileRepository {
 
     private val db: FirebaseFirestore = Firebase.firestore
 
@@ -36,7 +37,14 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
     }
 
     override suspend fun findMany(): Either<RepositoryProblem, Iterable<UserProfile>> {
-        TODO("Not yet implemented")
+        return Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .get()
+                    .await()
+                    .toObjects(FirestoreUserDto::class.java)
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { it.mapNotNull { dto -> FirestoreUserDto.toEntity(dto).getOrNull() } }
     }
 
     override suspend fun findOne(id: UserId): Either<RepositoryProblem, UserProfile> {
@@ -65,26 +73,19 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
         return Either.catch {
                 db.collection(FirestoreUserDto.COLLECTION)
                     .document(entity.id.value)
-                    .update(
-                        mapOf(
-                            "points" to entity.points.value,
-                            "threshold.valueInMillis" to entity.threshold.valueInMillis.value,
-                            "threshold.nextReset" to entity.threshold.nextReset.value.toString(),
-                            "currentStreak.value" to entity.currentStreak.value.value,
-                            "currentStreak.started" to entity.currentStreak.begin.value.toString(),
-                            "currentStreak.ended" to
-                                if (entity.currentStreak.end.value == null) null
-                                else entity.currentStreak.end.value.toString()
-                        )
-                    )
+                    .update(FirestoreUserDto.entityToDocumentFields(entity))
                     .await()
             }
             .mapLeft { RepositoryProblem.fromThrowable(it) }
             .map { entity }
     }
 
-    override suspend fun delete(id: UserId): Either<RepositoryProblem, UserProfile> {
-        TODO("Not yet implemented")
+    override suspend fun delete(id: UserId): Either<RepositoryProblem, EntityDeleted> {
+        return Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION).document(id.value).delete().await()
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { EntityDeleted }
     }
 
     override suspend fun getUserIdByEmailAddress(
@@ -137,16 +138,22 @@ internal class UserProfileRepositoryImpl : UserProfileRepository {
             .map { streak }
     }
 
-    override suspend fun getPastStreaks(
-        userId: UserId
-    ): Either<RepositoryProblem, Iterable<Streak>> {
-        TODO("Not yet implemented")
+    override suspend fun getLeaderboard(): Either<RepositoryProblem, Iterable<UserProfile>> {
+        return Either.catch {
+                db.collection(FirestoreUserDto.COLLECTION)
+                    .whereGreaterThan("points", 0)
+                    .get()
+                    .await()
+                    .toObjects(FirestoreUserDto::class.java)
+            }
+            .mapLeft { RepositoryProblem.fromThrowable(it) }
+            .map { it.mapNotNull { dto -> FirestoreUserDto.toEntity(dto).getOrNull() } }
     }
 
     companion object {
         private const val BCRYPT_COST = 12
 
-        fun hashPassword(plainPassword: String): String =
+        private fun hashPassword(plainPassword: String): String =
             BCrypt.withDefaults().hashToString(BCRYPT_COST, plainPassword.toCharArray())
     }
 }

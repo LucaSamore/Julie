@@ -18,5 +18,5 @@ interface UserProfileRepository : CrudRepository<UserProfile, UserId> {
 
     suspend fun addEndedStreak(streak: Streak): Either<RepositoryProblem, Streak>
 
-    suspend fun getPastStreaks(userId: UserId): Either<RepositoryProblem, Iterable<Streak>>
+    suspend fun getLeaderboard(): Either<RepositoryProblem, Iterable<UserProfile>>
 }
