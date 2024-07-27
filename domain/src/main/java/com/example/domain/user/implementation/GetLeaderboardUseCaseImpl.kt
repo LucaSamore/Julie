@@ -18,10 +18,10 @@ constructor(
     override suspend fun invoke(): Either<Problem, List<LeaderboardItem>> =
         withContext(ioDispatcher) {
             userProfileRepository.getLeaderboard().map {
-                it.map { u ->
+                it.map { user ->
                     LeaderboardItem(
-                        username = u.userDetails.username.value,
-                        points = u.points.value
+                        username = user.userDetails.username.value,
+                        points = user.points.value
                     )
                 }
             }

@@ -22,17 +22,13 @@ constructor(
     override suspend fun invoke(): List<AppDto> =
         withContext(ioDispatcher) {
             val installedAppPackageNames = packageManagerUtils.getInstalledAppPackageNames()
-            val endTime =
-                Instant.ofEpochMilli(System.currentTimeMillis())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime()
-            val screenTimes = statisticsDataSource.fetchPerAppScreenTime(today(), endTime)
+            val screenTimes = statisticsDataSource.fetchPerAppScreenTime(today(), now())
             val notifications = statisticsDataSource.fetchPerAppNotificationsReceived(today())
-            val timesOpened = statisticsDataSource.fetchPerAppTimesOpened(today(), endTime)
+            val timesOpened = statisticsDataSource.fetchPerAppTimesOpened(today(), now())
+
             installedAppPackageNames.map {
                 val appName = packageManagerUtils.getAppNameFromPackageName(it)
-                val icon =
-                    packageManagerUtils.getAppIcon(it).fold({ null }) { drawable -> drawable }
+                val icon = packageManagerUtils.getAppIcon(it).getOrNull()
                 AppDto(
                     name = appName,
                     icon = icon,
@@ -42,4 +38,11 @@ constructor(
                 )
             }
         }
+
+    companion object {
+        private fun now() =
+            Instant.ofEpochMilli(System.currentTimeMillis())
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDateTime()
+    }
 }

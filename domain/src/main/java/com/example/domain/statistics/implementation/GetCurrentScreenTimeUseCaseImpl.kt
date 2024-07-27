@@ -11,12 +11,12 @@ internal class GetCurrentScreenTimeUseCaseImpl
 @Inject
 constructor(private val statisticsDataSource: StatisticsDataSource) : GetCurrentScreenTimeUseCase {
 
-    override fun invoke(): Long =
-        statisticsDataSource.getScreenTime(
-            date = today(),
-            endTime =
-                Instant.ofEpochMilli(System.currentTimeMillis())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime()
-        )
+    override fun invoke(): Long = statisticsDataSource.getScreenTime(today(), now())
+
+    companion object {
+        private fun now() =
+            Instant.ofEpochMilli(System.currentTimeMillis())
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDateTime()
+    }
 }

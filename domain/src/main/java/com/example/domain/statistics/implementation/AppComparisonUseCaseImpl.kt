@@ -34,6 +34,7 @@ constructor(
             }
         }
 
+    // TODO: Move this logic to the repository class
     private fun getComparisonReports(appName: String, userReports: Iterable<Report>) =
         userReports
             .sortedByDescending { it.dateOfRecording.value }
@@ -47,11 +48,9 @@ constructor(
                             AppDto(
                                 name = app.appName.value,
                                 icon =
-                                    packageManagerUtils.getAppIcon(app.appPackageName.value).fold({
-                                        null
-                                    }) { drawable ->
-                                        drawable
-                                    },
+                                    packageManagerUtils
+                                        .getAppIcon(app.appPackageName.value)
+                                        .getOrNull(),
                                 screenTime = app.screenTime.value,
                                 notificationsReceived = app.notificationsReceived.value,
                                 timesOpened = app.timesOpened.value

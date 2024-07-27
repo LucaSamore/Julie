@@ -21,8 +21,8 @@ constructor(
     private val packageManagerUtils: PackageManagerUtils
 ) : GetFavouriteAppsUseCase {
 
-    override suspend fun invoke(): Either<Problem, List<FavouriteAppDto>> {
-        return withContext(ioDispatcher) {
+    override suspend fun invoke(): Either<Problem, List<FavouriteAppDto>> =
+        withContext(ioDispatcher) {
             either {
                 val userId = userDatastore.getUserId().bind()
                 reportRepository
@@ -41,13 +41,12 @@ constructor(
                     }
             }
         }
-    }
 
     private fun getAppName(packageName: String) =
         packageManagerUtils.getAppNameFromPackageName(packageName)
 
     private fun getIcon(packageName: String) =
-        packageManagerUtils.getAppIcon(packageName).fold({ null }) { drawable -> drawable }
+        packageManagerUtils.getAppIcon(packageName).getOrNull()
 
     companion object {
         const val TIME_SPAN_IN_DAYS = 60

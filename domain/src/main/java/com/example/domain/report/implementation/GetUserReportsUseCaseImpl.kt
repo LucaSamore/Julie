@@ -36,7 +36,7 @@ constructor(
                                     icon =
                                         packageManagerUtils
                                             .getAppIcon(appReport.appPackageName.value)
-                                            .fold({ null }) { drawable -> drawable },
+                                            .getOrNull(),
                                     screenTime = appReport.screenTime.value,
                                     notificationsReceived = appReport.notificationsReceived.value,
                                     timesOpened = appReport.timesOpened.value

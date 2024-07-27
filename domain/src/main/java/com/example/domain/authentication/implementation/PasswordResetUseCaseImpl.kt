@@ -21,8 +21,7 @@ constructor(
         withContext(ioDispatcher) {
             either {
                 val email = EmailAddress(emailAddress).bind()
-                val passwordResetEvent = authenticationService.passwordReset(email).bind()
-                passwordResetEvent
+                authenticationService.passwordReset(email).bind()
             }
         }
 }
